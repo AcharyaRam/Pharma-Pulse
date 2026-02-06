@@ -1,0 +1,121 @@
+﻿body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(to right, #007bff, #00c6ff);
+}
+
+/* Center Container */
+.forgot-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Main Card Layout */
+.forgot-card {
+    width: 1100px; /* Bigger Width */
+    min-height: 650px; /* Flexible Height */
+    background: white;
+    border-radius: 20px;
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0px 10px 35px rgba(0, 0, 0, 0.25);
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+/* Left Side Form Box */
+.forgot-box {
+    width: 50%;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Title */
+.brand-title {
+    font-size: 30px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 30px;
+}
+
+/* Input Groups */
+.input-group {
+    text-align: left;
+    margin-bottom: 18px;
+}
+
+    .input-group label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 13px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        font-size: 14px;
+        outline: none;
+        transition: 0.3s;
+    }
+
+        .input-group input:focus {
+            border-color: #007bff;
+            box-shadow: 0px 0px 8px rgba(0, 123, 255, 0.4);
+        }
+
+/* Buttons (Same Style for Both) */
+.btn-submit {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    background: #007bff;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+    .btn-submit:hover {
+        background: #0056b3;
+    }
+
+/* Error Text */
+.error {
+    color: #e74c3c;
+    font-size: 13px;
+    margin-top: 6px;
+    display: block;
+}
+
+/* Right Side Image Panel */
+.forgot-image {
+    width: 50%;
+    background: url("/images/forgetpass.png") no-repeat center;
+    background-size: cover; /* Fit image properly */
+    background-color: #f5f9ff;
+    border-left:1px solid #eee/* Clean background */
+}
+
+/* Smooth Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

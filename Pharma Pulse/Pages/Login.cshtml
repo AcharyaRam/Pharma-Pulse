@@ -1,0 +1,53 @@
+﻿@page
+@model LoginPage.Pages.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<link rel="stylesheet" href="~/css/login.css" />
+
+<div class="login-wrapper">
+    <div class="login-card">
+
+        <!-- LEFT FORM -->
+        <div class="login-left">
+
+            <h1 class="brand-title">Pharma Pulse</h1>
+
+            <form method="post" novalidate>
+
+                <!-- Email -->
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input asp-for="Username" placeholder="Enter your email" />
+                    <span asp-validation-for="Username" class="error-text"></span>
+                </div>
+
+                <!-- Password -->
+                <div class="input-group">
+                    <label>Password</label>
+                    <input asp-for="Password" type="password" placeholder="Enter your password" />
+                    <span asp-validation-for="Password" class="error-text"></span>
+                </div>
+
+                <!-- Button -->
+                <button type="submit" class="btn-login">
+                    Login
+                </button>
+
+                <!-- Forgot -->
+                <a asp-page="/ForgotPassword" class="forgot-link">
+                    Forgot Password?
+                </a>
+
+            </form>
+
+        </div>
+
+        <!-- RIGHT IMAGE -->
+        <div class="login-right">
+            <img src="/images/BG.JPEG" alt="Login Illustration" />
+        </div>
+
+    </div>
+</div>
