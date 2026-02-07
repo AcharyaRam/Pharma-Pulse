@@ -1,0 +1,248 @@
+﻿body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: #f4f6f9;
+}
+
+/* ============================= */
+/* Main Container */
+/* ============================= */
+
+.dashboard-container {
+    padding: 30px;
+    min-height: calc(100vh - 160px);
+}
+
+/* Header */
+.dashboard-header h2 {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.dashboard-header p {
+    color: gray;
+}
+
+/* ============================= */
+/* Top Cards Section */
+/* ============================= */
+
+.stats-cards {
+    display: flex;
+    gap: 20px;
+    margin-top: 25px;
+}
+
+/* Card Link Wrapper (Clickable Cards) */
+.card-link {
+    text-decoration: none;
+    display: block;
+    flex: 1;
+}
+
+    .card-link:hover {
+        text-decoration: none;
+    }
+
+/* Card Style */
+.card {
+    padding: 25px;
+    border-radius: 15px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Hover Effect */
+.card-link:hover .card {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.18);
+    opacity: 0.97;
+}
+
+.card p {
+    font-size: 26px;
+    margin-top: 10px;
+}
+
+/* Colors */
+.green {
+    background: #18a558;
+}
+
+.orange {
+    background: #f39c12;
+}
+
+.red {
+    background: #e74c3c;
+}
+
+.blue {
+    background: #2980b9;
+}
+
+/* ============================= */
+/* Dashboard Grid Layout */
+/* ============================= */
+
+.dashboard-grid {
+    display: flex;
+    gap: 25px;
+    margin-top: 35px;
+}
+
+/* Left Section */
+.left-section {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Right Section */
+.right-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* ============================= */
+/* Table Box */
+/* ============================= */
+
+.table-box {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    text-align: left;
+    background: #f1f1f1;
+}
+
+/* View All Button */
+.btn-viewall {
+    margin-top: 15px;
+    padding: 12px;
+    width: 220px;
+    border: none;
+    border-radius: 10px;
+    background: #2980b9;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .btn-viewall:hover {
+        background: #1f6fa5;
+    }
+
+/* ============================= */
+/* Sales Summary Box */
+/* ============================= */
+
+.sales-box {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+    .sales-box p {
+        margin: 10px 0;
+        font-size: 15px;
+    }
+
+/* ============================= */
+/* Alert Cards */
+/* ============================= */
+
+.alert-card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.low-stock {
+    border-top: 6px solid orange;
+}
+
+.expiry-alert {
+    border-top: 6px solid red;
+}
+
+/* Alert Buttons */
+.btn-alert {
+    margin-top: 15px;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    background: #2980b9;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .btn-alert:hover {
+        background: #1f6fa5;
+    }
+
+/* ============================= */
+/* Quick Billing Section */
+/* ============================= */
+
+.quick-billing {
+    background: #18a558;
+    padding: 25px;
+    border-radius: 18px;
+    color: white;
+    width: 100%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+    .quick-billing h3 {
+        margin-bottom: 10px;
+        font-size: 20px;
+    }
+
+    .quick-billing p {
+        margin: 0;
+        font-size: 14px;
+    }
+
+/* Billing Button */
+.btn-billing {
+    margin-top: 20px;
+    padding: 14px;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    background: white;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .btn-billing:hover {
+        background: #f2f2f2;
+    }
