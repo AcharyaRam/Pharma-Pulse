@@ -30,10 +30,10 @@
         </div>
         </a>
 
-        <a class="card-link">
+        <a asp-page="/ExpiryAlerts" class="card-link">
         <div class="card red">
             <h3>Expiry Alerts</h3>
-            <p>3 Items</p>
+            <p>@Model.ExpiryCount Items</p>
         </div>
         </a>
 
@@ -133,13 +133,27 @@
 
             <!-- Expiry Alerts -->
             <div class="alert-card expiry-alert">
-                <h3>Expiry Alerts</h3>
-                <p><b>Cetirizine</b> - Expiring Soon!</p>
 
-                <button class="btn-alert">
+                <h3>Expiry Alerts (@Model.ExpiryCount)</h3>
+
+                @if (Model.NearestExpiryMedicine != null)
+                {
+                    <p>
+                        <b>@Model.NearestExpiryMedicine.MedicineName</b>
+                        - Expiring Soon!
+                    </p>
+                }
+                else
+                {
+                    <p>No expiry medicines found.</p>
+                }
+
+                <button class="btn-alert" onclick="window.location.href='/ExpiryAlerts'">
                     Check Expiries
                 </button>
+
             </div>
+
 
         </div>
 

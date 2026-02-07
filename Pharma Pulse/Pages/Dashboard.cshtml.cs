@@ -20,11 +20,27 @@ namespace Pharma_Pulse.Pages
         //lowest stock among all medicine
         public Medicine? LowestStockMedicine { get; set; }
 
+        // expiry count 
+        public int ExpiryCount { get; set; }
 
+        //nearest expiry medicine
+        public Medicine? NearestExpiryMedicine { get; set; }
         public void OnGet()
         {
             // Load full list once
             var allMedicines = MedicineService.GetAllMedicines();
+
+            // First one to get expire 
+            // Expiry medicines count (next 30 days)
+            ExpiryCount = allMedicines.Count(m =>
+                m.ExpiryDate <= DateTime.Now.AddDays(30)
+            );
+
+            // Find medicine which will expire first
+            NearestExpiryMedicine = allMedicines
+                .OrderBy(m => m.ExpiryDate)
+                .FirstOrDefault();
+
 
             // ✅ Total count for card
             TotalMedicineCount = allMedicines.Count;
@@ -37,6 +53,10 @@ namespace Pharma_Pulse.Pages
 
             // ✅ Find medicine with lowest stock
             LowestStockMedicine = allMedicines.OrderBy(m => m.Stock).FirstOrDefault();
+
+            // expiry count 
+            ExpiryCount = allMedicines.Count(m => m.ExpiryDate <= DateTime.Now.AddDays(30));
+
         }
     }
 }
