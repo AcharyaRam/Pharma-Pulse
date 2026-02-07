@@ -19,14 +19,14 @@
         <a asp-page="/TotalMedicine" class="card-link">
         <div class="card green">
             <h3>Total Medicines</h3>
-            <p>250</p>
+            <p>@Model.TotalMedicineCount</p>
         </div>
         </a>
 
-        <a class="card-link">
+        <a asp-page="/LowStockAlerts" class="card-link">
         <div class="card orange">
             <h3>Low Stock Alerts</h3>
-            <p>5 Items</p>
+            <p>@Model.LowStockCount</p>
         </div>
         </a>
 
@@ -57,69 +57,28 @@
                 <h3>Available Medicines</h3>
 
                 <table>
-                    <tr>
-                        <th>Medicine Name</th>
-                        <th>Category</th>
-                        <th>Stock</th>
-                        <th>Expiry Date</th>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>Medicine Name</th>
+                            <th>Category</th>
+                            <th>Stock</th>
+                            <th>Expiry Date</th>
+                        </tr>
+                    </thead>
 
-                    <tr>
-                        <td>Paracetamol</td>
-                        <td>Pain Relief</td>
-                        <td>120</td>
-                        <td>12/10/2026</td>
-                    </tr>
-
-                    <tr>
-                        <td>Amoxicillin</td>
-                        <td>Antibiotic</td>
-                        <td>5</td>
-                        <td>15/09/2026</td>
-                    </tr>
-
-                    <tr>
-                        <td>Azithromycin</td>
-                        <td>Antibiotic</td>
-                        <td>70</td>
-                        <td>16/09/2026</td>
-                    </tr>
-
-                    <tr>
-                        <td>Lisinopril</td>
-                        <td>ACE</td>
-                        <td>40</td>
-                        <td>19/11/2026</td>
-                    </tr>
-
-                    <tr>
-                        <td>Cetirizine</td>
-                        <td>Antihistamine</td>
-                        <td>50</td>
-                        <td>28/01/2027</td>
-                    </tr>
-
-                    <tr>
-                        <td>Omeprazole</td>
-                        <td>PPI</td>
-                        <td>60</td>
-                        <td>26/07/2026</td>
-                    </tr>
-
-                    <tr>
-                        <td>Amlodipine</td>
-                        <td>Calcium Channel Blocker</td>
-                        <td>30</td>
-                        <td>19/06/2026</td>
-                    </tr>
-
-                    <tr>
-                        <td>Atorvastatin</td>
-                        <td>Statin</td>
-                        <td>90</td>
-                        <td>17/10/2026</td>
-                    </tr>
+                    <tbody>
+                        @foreach (var med in Model.Medicines)
+                        {
+                            <tr>
+                                <td>@med.MedicineName</td>
+                                <td>@med.Category</td>
+                                <td>@med.Stock</td>
+                                <td>@med.ExpiryDate.ToShortDateString()</td>
+                            </tr>
+                        }
+                    </tbody>
                 </table>
+
                 
                 <button class="btn-viewall" onclick="window.location.href='/TotalMedicine'">
                     View All Medicines →
@@ -154,9 +113,20 @@
             <!-- Low Stock Alerts -->
             <div class="alert-card low-stock">
                 <h3>Low Stock Alerts</h3>
-                <p><b>Amoxicillin</b> - Only 5 left!</p>
 
-                <button class="btn-alert">
+                @if (Model.LowestStockMedicine != null)
+                {
+                    <p>
+                        <b>@Model.LowestStockMedicine.MedicineName</b>
+                        - Only @Model.LowestStockMedicine.Stock left!
+                    </p>
+                }
+                else
+                {
+                    <p>No low stock medicines found.</p>
+                }
+
+                <button class="btn-alert" onclick="window.location.href='/LowStockAlerts'">
                     Manage Stock
                 </button>
             </div>
