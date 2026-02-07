@@ -1,0 +1,89 @@
+﻿@page
+@model MedicinesModel
+@{
+    ViewData["Title"] = "TotalMedicines";
+}
+
+<link rel="stylesheet" href="~/css/medicine.css" />
+
+
+<div class="dashboard-container">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
+        <ul>
+            <li><a asp-page="/Dashboard">🏠 Dashboard</a></li>
+            <li>📊 Sales Summary</li>
+            <li>💵 Quick Billing</li>
+            <li class="active">💊 Medicines</li>
+            <li>⚠ Low Stock Alerts</li>
+            <li>⏳ Expiry Alerts</li>
+            
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <div class="breadcrumb">
+            Dashboard / Medicines
+        </div>
+
+        <div class="content-card">
+
+            <div class="card-header">
+                <h2>Available Medicines</h2>
+                <button class="btn-add">+ Add Medicine</button>
+            </div>
+
+            <div class="table-top">
+                <input type="text" placeholder="🔍 Search medicines..." />
+                <div class="entries">
+                    Showing 1-10 of 250
+                    <select>
+                        <option>10</option>
+                        <option>25</option>
+                        <option>50</option>
+                    </select>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Medicine Name</th>
+                        <th>Category</th>
+                        <th>Stock</th>
+                        <th>Expiry Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var med in Model.Medicines)
+                    {
+                        <tr>
+                            <td>@med.MedicineName</td>
+                            <td>@med.Category</td>
+                            <td>@med.Stock</td>
+                            <td>@med.ExpiryDate.ToShortDateString()</td>
+                            <td>
+                                <button class="btn-edit">Edit</button>
+                                <button class="btn-delete">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <button>Previous</button>
+                <button class="active">1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>Next</button>
+            </div>
+
+        </div>
+    </div>
+</div>

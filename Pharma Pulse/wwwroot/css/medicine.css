@@ -1,0 +1,152 @@
+﻿body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f7fc;
+}
+
+/* TOP NAVBAR */
+.top-navbar {
+    background: white;
+    padding: 20px 40px;
+}
+
+.main-logo {
+    height: 80px;
+}
+
+/* Layout */
+.dashboard-container {
+    display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 230px;
+    background: white;
+    height: 100vh;
+    padding: 20px;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+}
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .sidebar li {
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        cursor: pointer;
+    }
+
+        .sidebar li.active {
+            background: #e6f0ff;
+            color: #2d6cdf;
+        }
+
+/* Main */
+.main-content {
+    flex: 1;
+    padding: 30px;
+}
+
+.breadcrumb {
+    margin-bottom: 20px;
+    color: #555;
+}
+
+
+/* Card */
+.content-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-add {
+    background: #1f7a54;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+}
+
+/* Table Top */
+.table-top {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+    .table-top input {
+        width: 300px;
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+.entries select {
+    padding: 5px;
+}
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #f0f3f9;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+tr {
+    border-bottom: 1px solid #eee;
+}
+
+/* Buttons */
+.btn-edit {
+    background: #2d6cdf;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+.btn-delete {
+    background: #e74c3c;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 15px;
+}
+
+    .pagination button {
+        padding: 6px 12px;
+        margin-right: 5px;
+        border: 1px solid #ccc;
+        background: white;
+    }
+
+    .pagination .active {
+        background: #2d6cdf;
+        color: white;
+    }
