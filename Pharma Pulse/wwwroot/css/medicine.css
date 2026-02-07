@@ -1,163 +1,298 @@
 ﻿body {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: "Segoe UI", sans-serif;
     background: #f4f7fc;
 }
 
+/* ========================= */
 /* TOP NAVBAR */
+/* ========================= */
+
 .top-navbar {
     background: white;
-    padding: 20px 40px;
+    padding: 18px 40px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
 }
 
 .main-logo {
-    height: 80px;
+    height: 75px;
 }
 
-/* Layout */
+/* ========================= */
+/* MAIN LAYOUT */
+/* ========================= */
+
 .dashboard-container {
     display: flex;
+    gap: 25px;
+    padding: 30px;
+    align-items: flex-start; /* ✅ Top aligned */
 }
 
-/* Sidebar */
+/* ========================= */
+/* MODERN SIDEBAR */
+/* ========================= */
+
 .sidebar {
-    width: 230px;
+    width: 250px;
     background: white;
-    height: 100vh;
-    padding: 20px;
-    box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+    border-radius: 18px;
+    padding: 25px 18px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    margin-top: 40px; /* ✅ Sidebar thoda niche */
 }
 
-    .sidebar ul {
-        list-style: none;
-        padding: 0;
+/* Sidebar Title */
+.sidebar-title {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 25px;
+    color: #2980b9;
+}
+
+/* Sidebar Menu */
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-top: 20px;
+}
+
+    /* Sidebar Items */
+    .sidebar-menu li {
+        margin: 10px 0;
     }
 
-    .sidebar li {
-        padding: 12px;
-        border-radius: 8px;
-        margin-bottom: 8px;
-        cursor: pointer;
+/* Sidebar Links */
+.menu-link {
+    display: block;
+    padding: 14px 18px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+    transition: 0.3s ease;
+}
+
+    /* Hover Effect */
+    .menu-link:hover {
+        background: #f2f7ff;
+        color: #2980b9;
+        transform: translateX(6px);
     }
 
-        .sidebar li.active {
-            background: #e6f0ff;
-            color: #2d6cdf;
-        }
+    /* Active Page */
+    .menu-link.active {
+        background: #2980b9;
+        color: white;
+        font-weight: bold;
+    }
 
-/* Main */
+/* ========================= */
+/* MAIN CONTENT */
+/* ========================= */
+
 .main-content {
     flex: 1;
-    padding: 30px;
+    margin-top: 40px; /* ✅ Same level as sidebar */
 }
 
+/* Breadcrumb */
 .breadcrumb {
-    margin-bottom: 20px;
-    color: #555;
+    font-size: 14px;
+    margin-bottom: 18px;
+    color: #666;
 }
 
+/* ========================= */
+/* CONTENT CARD */
+/* ========================= */
 
-/* Card */
 .content-card {
     background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    padding: 28px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.06);
 }
 
+/* Header */
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 15px;
 }
 
+    .card-header h2 {
+        font-size: 26px;
+        font-weight: bold;
+    }
+
+/* Add Button */
 .btn-add {
     background: #1f7a54;
     color: white;
-    padding: 8px 16px;
+    padding: 10px 18px;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-/* Table Top */
+    .btn-add:hover {
+        background: #14563b;
+    }
+
+/* ========================= */
+/* TABLE TOP BAR */
+/* ========================= */
+
 .table-top {
     display: flex;
     justify-content: space-between;
-    margin: 20px 0;
+    align-items: center;
+    margin: 18px 0;
 }
 
+    /* Search */
     .table-top input {
-        width: 300px;
-        padding: 8px;
-        border-radius: 6px;
+        width: 320px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        outline: none;
+        transition: 0.2s;
+    }
+
+        .table-top input:focus {
+            border-color: #2980b9;
+        }
+
+/* Entries */
+.entries {
+    font-size: 14px;
+    color: #555;
+}
+
+    .entries select {
+        padding: 6px 10px;
+        border-radius: 8px;
         border: 1px solid #ccc;
     }
 
-.entries select {
-    padding: 5px;
-}
+/* ========================= */
+/* TABLE DESIGN */
+/* ========================= */
 
-/* Table */
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 10px;
 }
 
 thead {
     background: #f0f3f9;
 }
 
-th, td {
-    padding: 12px;
-    text-align: left;
+th {
+    padding: 14px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+td {
+    padding: 14px;
+    font-size: 14px;
 }
 
 tr {
     border-bottom: 1px solid #eee;
 }
 
-/* Buttons */
+tbody tr:hover {
+    background: #f9fbff;
+}
+
+/* ========================= */
+/* ACTION BUTTONS */
+/* ========================= */
+
 .btn-edit {
     background: #2d6cdf;
     color: white;
-    padding: 5px 10px;
+    padding: 7px 14px;
     border: none;
-    border-radius: 5px;
-    margin-right: 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
 }
+
+    .btn-edit:hover {
+        background: #1e4fb8;
+    }
 
 .btn-delete {
     background: #e74c3c;
     color: white;
-    padding: 5px 10px;
+    padding: 7px 14px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
-/* Pagination */
+    .btn-delete:hover {
+        background: #c0392b;
+    }
+
+/* ========================= */
+/* PAGINATION */
+/* ========================= */
+
 .pagination {
-    margin-top: 15px;
+    margin-top: 20px;
+    text-align: center;
 }
 
     .pagination button {
-        padding: 6px 12px;
-        margin-right: 5px;
+        padding: 8px 14px;
+        margin: 0 4px;
+        border-radius: 8px;
         border: 1px solid #ccc;
         background: white;
+        cursor: pointer;
+        transition: 0.2s;
     }
 
+        .pagination button:hover {
+            background: #f2f7ff;
+        }
+
     .pagination .active {
-        background: #2d6cdf;
+        background: #2980b9;
         color: white;
+        border: none;
     }
+
+/* ========================= */
+/* BADGES */
+/* ========================= */
+
 .badge {
     padding: 8px 14px;
     border-radius: 12px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
     color: white;
 }
 
 .expiry-badge {
     background: #e74c3c;
+}
+
+.lowstock-badge {
+    background: orange;
 }

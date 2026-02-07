@@ -11,34 +11,51 @@
 
     <!-- LEFT SIDEBAR -->
     <div class="sidebar">
-        <ul>
-            
-            <li><a asp-page="/Dashboard">🏠 Dashboard</a></li>
+        <h2 class="sidebar-title">Pharma Pulse</h2>
 
-            <li><a asp-page="">📊 Sales Summary</a></li>
-
-            <li><a asp-page="">💵 Quick Billing</a></li>
+        <ul class="sidebar-menu">
 
             <li>
-                <a asp-page="/TotalMedicine">💊 Medicines</a>
-            </li>
-
-            <li class="active">
-                <a asp-page="/LowStockAlerts">⚠ Low Stock Alerts</a>
+                <a asp-page="/Dashboard" class="menu-link">
+                    🏠 Dashboard
+                </a>
             </li>
 
             <li>
-                <a asp-page="/ExpiryAlerts">⏳ Expiry Alerts</a>
+                <a asp-page="/SalesSummary" class="menu-link">
+                    📊 Sales Summary
+                </a>
             </li>
+
+            <li>
+                <a asp-page="/QuickBilling" class="menu-link">
+                    💵 Quick Billing
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/TotalMedicine" class="menu-link">
+                    💊 Medicines
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/LowStockAlerts" class="menu-link active">
+                    ⚠ Low Stock Alerts
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/ExpiryAlerts" class="menu-link">
+                    ⏳ Expiry Alerts
+                </a>
+            </li>
+
         </ul>
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
-
-        <div class="breadcrumb">
-            Dashboard / Low Stock Alerts
-        </div>
 
         <div class="content-card">
 
