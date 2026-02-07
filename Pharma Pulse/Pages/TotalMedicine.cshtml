@@ -11,31 +11,52 @@
 
     <!-- LEFT SIDEBAR -->
     <div class="sidebar">
-        <ul>
-            <li><a asp-page="/Dashboard">🏠 Dashboard</a></li>
-            <li><a asp-page="" > 📊 Sales Summary</a></li>
-            <li><a asp-page="">💵 Quick Billing</a></li>
+    <h2 class="sidebar-title">Pharma Pulse</h2>
 
-            <li class="active">
-                <a asp-page="/TotalMedicine">💊 Medicines</a>
-            </li>
+    <ul class="sidebar-menu">
 
-            <li>
-                <a asp-page="/LowStockAlerts">⚠ Low Stock Alerts</a>
-            </li>
+        <li>
+            <a asp-page="/Dashboard" class="menu-link">
+                🏠 Dashboard
+            </a>
+        </li>
 
-            <li>
-                <a asp-page="/ExpiryAlerts">⏳ Expiry Alerts</a>
-            </li>
-        </ul>
-    </div>
+        <li>
+            <a asp-page="/SalesSummary" class="menu-link">
+                📊 Sales Summary
+            </a>
+        </li>
+
+        <li>
+            <a asp-page="/QuickBilling" class="menu-link">
+                💵 Quick Billing
+            </a>
+        </li>
+
+        <li>
+                <a asp-page="/TotalMedicine" class="menu-link active">
+                💊 Medicines
+            </a>
+        </li>
+
+        <li>
+            <a asp-page="/LowStockAlerts" class="menu-link">
+                ⚠ Low Stock Alerts
+            </a>
+        </li>
+
+        <li>
+            <a asp-page="/ExpiryAlerts" class="menu-link">
+                ⏳ Expiry Alerts
+            </a>
+        </li>
+
+    </ul>
+</div>
+
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
-
-        <div class="breadcrumb">
-            Dashboard / Medicines
-        </div>
 
         <div class="content-card">
 

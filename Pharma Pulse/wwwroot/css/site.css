@@ -1,63 +1,96 @@
+/* =============================== */
+/* GLOBAL BASE SETTINGS */
+/* =============================== */
+
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
-}
-
+/* Remove default Bootstrap bottom margin issue */
 body {
-  margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    background: #f4f7fc;
+    font-family: "Segoe UI", sans-serif;
 }
+
+
+/* =============================== */
+/* NAVBAR SETTINGS */
+/* =============================== */
+
+.navbar {
+    height: 75px;
+    padding: 10px 30px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Logo Size */
 .nav-logo {
-    height: 45px; /* Perfect size */
+    height: 55px;
     width: auto;
     object-fit: contain;
 }
 
-/* Reduce Navbar Height */
-.navbar {
-    height: 70px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-}
-
-/* Brand Text Smaller */
+/* Navbar Brand Text */
 .navbar-brand span {
     font-size: 18px;
     font-weight: bold;
 }
-html, body {
-    height: 100%;
-    margin: 0;
-}
 
-/* Wrapper makes full height layout */
+
+/* =============================== */
+/* PAGE WRAPPER (Sticky Footer Fix) */
+/* =============================== */
+
 .page-wrapper {
-    min-height: 100vh;
+    flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-/* Main content expands */
+/* Main Content Area Expands */
 .content-area {
     flex: 1;
-    padding-top: 20px;
-}
-.footer {
-    background: #fff;
-    padding: 15px 0;
-    text-align: center;
+    padding: 25px 0;
 }
 
+
+/* =============================== */
+/* FOOTER FIXED AT BOTTOM */
+/* =============================== */
+
+.site-footer {
+    background: white;
+    border-top: 1px solid #ddd;
+    text-align: center;
+    padding: 15px;
+    font-size: 14px;
+    color: gray;
+}
+
+
+/* =============================== */
+/* BOOTSTRAP FOCUS FIX */
+/* =============================== */
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
