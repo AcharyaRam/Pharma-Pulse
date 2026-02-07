@@ -1,8 +1,8 @@
 ﻿@page
-@model Pharma_Pulse.Pages.TotalMedicineModel
+@model Pharma_Pulse.Pages.LowStockAlertsModel
 
 @{
-    ViewData["Title"] = "TotalMedicines";
+    ViewData["Title"] = "LowStockAlerts";
 }
 
 <link rel="stylesheet" href="~/css/medicine.css" />
@@ -12,15 +12,18 @@
     <!-- LEFT SIDEBAR -->
     <div class="sidebar">
         <ul>
+            
             <li><a asp-page="/Dashboard">🏠 Dashboard</a></li>
-            <li><a asp-page="" > 📊 Sales Summary</a></li>
+
+            <li><a asp-page="">📊 Sales Summary</a></li>
+
             <li><a asp-page="">💵 Quick Billing</a></li>
 
-            <li class="active">
+            <li>
                 <a asp-page="/TotalMedicine">💊 Medicines</a>
             </li>
 
-            <li>
+            <li class="active">
                 <a asp-page="/LowStockAlerts">⚠ Low Stock Alerts</a>
             </li>
 
@@ -34,32 +37,15 @@
     <div class="main-content">
 
         <div class="breadcrumb">
-            Dashboard / Medicines
+            Dashboard / Low Stock Alerts
         </div>
 
         <div class="content-card">
 
-            <!-- Header -->
             <div class="card-header">
-                <h2>Available Medicines</h2>
-                <button class="btn-add">+ Add Medicine</button>
+                <h2>Low Stock Medicines</h2>
             </div>
 
-            <!-- Search + Entries -->
-            <div class="table-top">
-                <input type="text" placeholder="🔍 Search medicines..." />
-
-                <div class="entries">
-                    Showing 1-10 of 250
-                    <select>
-                        <option>10</option>
-                        <option>25</option>
-                        <option>50</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Table -->
             <table>
                 <thead>
                     <tr>
@@ -67,36 +53,32 @@
                         <th>Category</th>
                         <th>Stock</th>
                         <th>Expiry Date</th>
-                        <th>Actions</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach (var med in Model.Medicines)
+                    @foreach (var med in Model.LowStockMedicines)
                     {
                         <tr>
                             <td>@med.MedicineName</td>
                             <td>@med.Category</td>
-                            <td>@med.Stock</td>
+                            <td style="color:red; font-weight:bold;">
+                                @med.Stock
+                            </td>
                             <td>@med.ExpiryDate.ToShortDateString()</td>
                             <td>
-                                <button class="btn-edit">Edit</button>
-                                <button class="btn-delete">Delete</button>
+                                <span style="background:red;color:white;padding:5px 10px;border-radius:10px;">
+                                    Low Stock
+                                </span>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
 
-            <!-- Pagination -->
-            <div class="pagination">
-                <button>Previous</button>
-                <button class="active">1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>Next</button>
-            </div>
-
         </div>
+
     </div>
+
 </div>
