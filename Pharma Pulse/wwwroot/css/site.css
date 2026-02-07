@@ -38,3 +38,26 @@ body {
     font-size: 18px;
     font-weight: bold;
 }
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+/* Wrapper makes full height layout */
+.page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Main content expands */
+.content-area {
+    flex: 1;
+    padding-top: 20px;
+}
+.footer {
+    background: #fff;
+    padding: 15px 0;
+    text-align: center;
+}
+

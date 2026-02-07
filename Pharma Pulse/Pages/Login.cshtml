@@ -8,29 +8,30 @@
 
 <div class="login-wrapper">
     <div class="login-card">
-        <!--  by meeet new comment by comment  -->
-        <!--  by meeet new comment -->
-        <!-- LEFT FORM -->
-        <!-- this comment was added by meet -->
+
         <!-- LEFT FORM -->
         <div class="login-left">
 
             <h1 class="brand-title">Pharma Pulse</h1>
 
-            <form method="post" novalidate>
+            <form onsubmit="demoLogin(event)" novalidate>
 
-                <!-- Email -->
+                <!-- Username -->
                 <div class="input-group">
                     <label>Username</label>
-                    <input asp-for="Username" placeholder="Enter your Username" />
-                    <span asp-validation-for="Username" class="error-text"></span>
+                    <input id="username" placeholder="Enter your Username" />
+
+                    <!-- Error Message -->
+                    <span id="userError" class="error-text"></span>
                 </div>
 
                 <!-- Password -->
                 <div class="input-group">
                     <label>Password</label>
-                    <input asp-for="Password" type="password" placeholder="Enter your password" />
-                    <span asp-validation-for="Password" class="error-text"></span>
+                    <input id="password" type="password" placeholder="Enter your password" />
+
+                    <!-- Error Message -->
+                    <span id="passError" class="error-text"></span>
                 </div>
 
                 <!-- Button -->
@@ -38,7 +39,6 @@
                     Login
                 </button>
 
-                <!-- Forgot -->
                 <a asp-page="/ForgotPassword" class="forgot-link">
                     Forgot Password?
                 </a>
@@ -54,3 +54,42 @@
 
     </div>
 </div>
+
+<script>
+    function demoLogin(event) {
+        event.preventDefault();
+
+        // Values
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+
+        // Error spans
+        let userError = document.getElementById("userError");
+        let passError = document.getElementById("passError");
+
+        // Clear old errors
+        userError.innerText = "";
+        passError.innerText = "";
+
+        // Validation
+        if (username === "" ) {
+            userError.innerText = "Username is required!";
+            return;
+        }
+
+        if (password === "") {
+            passError.innerText = "Password is required!";
+            return;
+        }
+
+        // Wrong Credentials
+        if (username !== "user" || password !== "user") {
+            userError.innerText = "Invalid Username!";
+            passError.innerText = "Invalid Password!";
+            return;
+        }
+
+        // Success Redirect
+        window.location.href = "/Dashboard";
+    }
+</script>

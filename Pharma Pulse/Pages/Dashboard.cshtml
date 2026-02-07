@@ -1,0 +1,178 @@
+﻿@page
+@model Pharma_Pulse.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<link rel="stylesheet" href="~/css/dashboard.css" />
+
+<div class="dashboard-container">
+
+    <!-- Header -->
+    <div class="dashboard-header">
+        <h2>Pharmacist Dashboard</h2>
+        <p>Welcome back, Pharmacist</p>
+    </div>
+
+    <!-- Top Cards -->
+    <div class="stats-cards">
+        <a asp-page="/TotalMedicine" class="card-link">
+        <div class="card green">
+            <h3>Total Medicines</h3>
+            <p>250</p>
+        </div>
+        </a>
+
+        <a class="card-link">
+        <div class="card orange">
+            <h3>Low Stock Alerts</h3>
+            <p>5 Items</p>
+        </div>
+        </a>
+
+        <a class="card-link">
+        <div class="card red">
+            <h3>Expiry Alerts</h3>
+            <p>3 Items</p>
+        </div>
+        </a>
+
+        <a class="card-link">
+        <div class="card blue">
+            <h3>Sales Today</h3>
+            <p>₹12,000</p>
+        </div>
+        </a>
+
+    </div>
+
+    <!-- Main Dashboard Layout -->
+    <div class="dashboard-grid">
+
+        <!-- LEFT SIDE -->
+        <div class="left-section">
+
+            <!-- Medicines Table -->
+            <div class="table-box">
+                <h3>Available Medicines</h3>
+
+                <table>
+                    <tr>
+                        <th>Medicine Name</th>
+                        <th>Category</th>
+                        <th>Stock</th>
+                        <th>Expiry Date</th>
+                    </tr>
+
+                    <tr>
+                        <td>Paracetamol</td>
+                        <td>Pain Relief</td>
+                        <td>120</td>
+                        <td>12/10/2026</td>
+                    </tr>
+
+                    <tr>
+                        <td>Amoxicillin</td>
+                        <td>Antibiotic</td>
+                        <td>5</td>
+                        <td>15/09/2026</td>
+                    </tr>
+
+                    <tr>
+                        <td>Azithromycin</td>
+                        <td>Antibiotic</td>
+                        <td>70</td>
+                        <td>16/09/2026</td>
+                    </tr>
+
+                    <tr>
+                        <td>Lisinopril</td>
+                        <td>ACE</td>
+                        <td>40</td>
+                        <td>19/11/2026</td>
+                    </tr>
+
+                    <tr>
+                        <td>Cetirizine</td>
+                        <td>Antihistamine</td>
+                        <td>50</td>
+                        <td>28/01/2027</td>
+                    </tr>
+
+                    <tr>
+                        <td>Omeprazole</td>
+                        <td>PPI</td>
+                        <td>60</td>
+                        <td>26/07/2026</td>
+                    </tr>
+
+                    <tr>
+                        <td>Amlodipine</td>
+                        <td>Calcium Channel Blocker</td>
+                        <td>30</td>
+                        <td>19/06/2026</td>
+                    </tr>
+
+                    <tr>
+                        <td>Atorvastatin</td>
+                        <td>Statin</td>
+                        <td>90</td>
+                        <td>17/10/2026</td>
+                    </tr>
+                </table>
+
+                <button class="btn-viewall">
+                    View All Medicines →
+                </button>
+            </div>
+
+            <!-- Sales Summary -->
+            <div class="sales-box">
+                <h3>Today's Sales Summary</h3>
+
+                <p><b>Total Sales:</b> ₹12,000</p>
+                <p><b>Total Bills:</b> 45</p>
+                <p><b>Top Seller:</b> Paracetamol</p>
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="right-section">
+
+            <!-- Quick Billing -->
+
+            <div class="quick-billing">
+                <h3>Quick Billing</h3>
+                <p>Create a new bill quickly</p>
+
+                <button class="btn-billing">
+                    Start Billing
+                </button>
+            </div>
+
+            <!-- Low Stock Alerts -->
+            <div class="alert-card low-stock">
+                <h3>Low Stock Alerts</h3>
+                <p><b>Amoxicillin</b> - Only 5 left!</p>
+
+                <button class="btn-alert">
+                    Manage Stock
+                </button>
+            </div>
+
+            <!-- Expiry Alerts -->
+            <div class="alert-card expiry-alert">
+                <h3>Expiry Alerts</h3>
+                <p><b>Cetirizine</b> - Expiring Soon!</p>
+
+                <button class="btn-alert">
+                    Check Expiries
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
