@@ -1,0 +1,71 @@
+﻿@page
+@model Pharma_Pulse.Pages.ExpiryAlertsModel
+@{
+    ViewData["Title"] = "Expiry Alerts";
+}
+
+<link rel="stylesheet" href="~/css/medicine.css" />
+
+<div class="dashboard-container">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
+        <ul>
+            <li><a asp-page="/Dashboard">🏠 Dashboard</a></li>
+            <li><a asp-page="">📊 Sales Summary</a></li>
+            <li><a asp-page="">💵 Quick Billing</a></li>
+            <li><a asp-page="/TotalMedicine">💊 Medicines</a></li>
+            <li><a asp-page="/LowStockAlerts">⚠ Low Stock Alerts</a></li>
+
+            <!-- ACTIVE PAGE -->
+            <li class="active">⏳ Expiry Alerts</li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <div class="breadcrumb">
+            Dashboard / Expiry Alerts
+        </div>
+
+        <div class="content-card">
+
+            <div class="card-header">
+                <h2>Expiry Alert Medicines</h2>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Medicine Name</th>
+                        <th>Category</th>
+                        <th>Stock</th>
+                        <th>Expiry Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var med in Model.ExpiryMedicines)
+                    {
+                        <tr>
+                            <td>@med.MedicineName</td>
+                            <td>@med.Category</td>
+                            <td>@med.Stock</td>
+                            <td>@med.ExpiryDate.ToShortDateString()</td>
+
+                            <td>
+                                <span class="badge expiry-badge">
+                                    Expiring Soon
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+</div>

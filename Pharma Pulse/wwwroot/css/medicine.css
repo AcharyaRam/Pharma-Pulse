@@ -150,3 +150,14 @@ tr {
         background: #2d6cdf;
         color: white;
     }
+.badge {
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+}
+
+.expiry-badge {
+    background: #e74c3c;
+}
