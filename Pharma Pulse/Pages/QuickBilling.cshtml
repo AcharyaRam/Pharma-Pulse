@@ -36,10 +36,11 @@
                 <p><b>Invoice:</b> @Model.InvoiceNumber</p>
             </div>
 
-            <!-- ✅ ONE SINGLE FORM -->
+            <!-- ============================= -->
+            <!-- ADD ITEM FORM -->
+            <!-- ============================= -->
             <form method="post" asp-page-handler="AddItem">
 
-                <!-- Customer Info -->
                 <h3>Customer Details</h3>
 
                 <div class="billing-form">
@@ -49,7 +50,6 @@
 
                 <hr />
 
-                <!-- Medicine Add -->
                 <h3>Add Medicines</h3>
 
                 <div class="billing-form">
@@ -76,7 +76,9 @@
 
             </form>
 
-            <!-- Bill Table -->
+            <!-- ============================= -->
+            <!-- BILL TABLE -->
+            <!-- ============================= -->
             <table class="sales-table" style="margin-top:20px;">
                 <thead>
                     <tr>
@@ -100,22 +102,30 @@
                 </tbody>
             </table>
 
-            <!-- Grand Total -->
+            <!-- ============================= -->
+            <!-- GRAND TOTAL -->
+            <!-- ============================= -->
             <h2 style="margin-top:20px;">
-                Grand Total: ₹@Model.GrandTotal
+                Grand Total: ₹@Model.GrandTotal.ToString("0.00")
             </h2>
 
-            <!-- Complete Sale -->
+            <!-- ============================= -->
+            <!-- COMPLETE SALE BUTTON -->
+            <!-- ============================= -->
             <form method="post" asp-page-handler="CompleteSale">
                 <button type="submit" class="btn-alert" style="margin-top:15px;">
                     Complete Sale & Send to Sales Summary
                 </button>
             </form>
 
-            <!-- Print -->
-            <button onclick="window.print()" class="btn-alert">
-                🖨 Print Invoice
-            </button>
+            <!-- ============================= -->
+            <!-- PRINT BILL BUTTON (NEW) -->
+            <!-- ============================= -->
+            <form method="post" asp-page-handler="PrintBill">
+                <button type="submit" class="btn-alert" style="margin-top:10px;">
+                    🖨 Print Invoice
+                </button>
+            </form>
 
         </div>
 
