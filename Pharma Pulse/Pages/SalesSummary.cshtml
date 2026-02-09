@@ -1,0 +1,150 @@
+﻿@page
+@model Pharma_Pulse.Pages.SalesSummaryModel
+
+<link rel="stylesheet" href="~/css/medicine.css" />
+
+<div class="dashboard-container">
+
+    <!-- ✅ Sidebar -->
+    <div class="sidebar">
+        <h2 class="sidebar-title">Pharma Pulse</h2>
+
+        <ul class="sidebar-menu">
+
+            <li>
+                <a asp-page="/Dashboard" class="menu-link">
+                    🏠 Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/SalesSummary" class="menu-link active">
+                    📊 Sales Summary
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/QuickBilling" class="menu-link">
+                    💵 Quick Billing
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/TotalMedicine" class="menu-link">
+                    💊 Medicines
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/LowStockAlerts" class="menu-link">
+                    ⚠ Low Stock Alerts
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/ExpiryAlerts" class="menu-link">
+                    ⏳ Expiry Alerts
+                </a>
+            </li>
+
+        </ul>
+    </div>
+
+    <!-- ✅ Main Content -->
+    <div class="main-content">
+
+
+        <!-- Content Card -->
+        <div class="content-card">
+
+            <!-- Header -->
+            <div class="card-header">
+                <h2>Sales Summary Report</h2>
+
+                <!-- Report Filter Dropdown -->
+                <form method="get">
+                    <select name="ReportType"
+                            onchange="this.form.submit()"
+                            class="report-select">
+
+                        <option value="Daily"
+                                selected="@(Model.ReportType=="Daily")">
+                            Daily Report
+                        </option>
+
+                        <option value="Monthly"
+                                selected="@(Model.ReportType=="Monthly")">
+                            Monthly Report
+                        </option>
+
+                        <option value="Yearly"
+                                selected="@(Model.ReportType=="Yearly")">
+                            Yearly Report
+                        </option>
+
+                    </select>
+                </form>
+            </div>
+
+            <!-- ✅ Top Summary Cards -->
+            <div class="sales-cards">
+
+                <!-- Total Sales -->
+                <div class="sales-box green">
+                    <h3>Total Sales (@Model.ReportType)</h3>
+                    <p>₹@Model.TotalSales</p>
+                </div>
+
+                <!-- Total Profit -->
+                <div class="sales-box blue">
+                    <h3>Total Profit (@Model.ReportType)</h3>
+                    <p>₹@Model.TotalProfit</p>
+                </div>
+
+                <!-- Total Loss -->
+                <div class="sales-box red">
+                    <h3>Total Loss (@Model.ReportType)</h3>
+                    <p>₹0</p>
+                </div>
+
+            </div>
+
+            <!-- ✅ Profit Breakdown Table -->
+            <h3 class="table-title">
+    Sales Breakdown
+</h3>
+
+<table class="sales-table">
+    <thead>
+        <tr>
+            <th>Medicine</th>
+            <th>Qty Sold</th>
+            <th>Total Amount</th>
+            <th>Profit</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+
+    <tbody>
+                    @foreach (var sale in Model.FilteredSales)
+                    {
+                <tr>
+                    <td>@sale.MedicineName</td>
+                    <td>@sale.QuantitySold</td>
+                    <td>₹@sale.TotalAmount</td>
+                    <td style="font-weight:bold; color:green;">
+                        ₹@sale.Profit
+                    </td>
+                    <td>@sale.SaleDate.ToShortDateString()</td>
+                </tr>
+                    }
+    </tbody>
+</table>
+
+
+            
+
+        </div>
+
+    </div>
+</div>

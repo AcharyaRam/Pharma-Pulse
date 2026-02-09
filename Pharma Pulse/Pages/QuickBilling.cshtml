@@ -1,0 +1,141 @@
+﻿@page
+@model Pharma_Pulse.Pages.QuickBillingModel
+
+<link rel="stylesheet" href="~/css/medicine.css" />
+
+<div class="dashboard-container">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="sidebar-title">Pharma Pulse</h2>
+
+        <ul class="sidebar-menu">
+
+            <li>
+                <a asp-page="/Dashboard" class="menu-link">
+                    🏠 Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/SalesSummary" class="menu-link">
+                    📊 Sales Summary
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/QuickBilling" class="menu-link active">
+                    💵 Quick Billing
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/TotalMedicine" class="menu-link">
+                    💊 Medicines
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/LowStockAlerts" class="menu-link">
+                    ⚠ Low Stock Alerts
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/ExpiryAlerts" class="menu-link">
+                    ⏳ Expiry Alerts
+                </a>
+            </li>
+
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <div class="content-card">
+
+            <div class="card-header">
+                <h2>Quick Billing</h2>
+                <p><b>Invoice:</b> @Model.InvoiceNumber</p>
+            </div>
+
+            <!-- Customer Info -->
+            <h3>Customer Details</h3>
+
+            <div class="billing-form">
+
+                <input asp-for="CustomerName" placeholder="Customer Name" />
+
+                <input asp-for="MobileNumber" placeholder="Mobile Number" />
+
+            </div>
+
+            <hr />
+
+            <!-- Medicine Add -->
+            <h3>Add Medicines</h3>
+
+            <form method="post" asp-page-handler="AddItem">
+
+                <select asp-for="SelectedMedicine">
+                    <option value="">-- Select Medicine --</option>
+                    @foreach (var med in Model.AllMedicines)
+                    {
+                        <option value="@med.MedicineName">@med.MedicineName</option>
+                    }
+                </select>
+
+                <input asp-for="Quantity" type="number" placeholder="Qty" />
+
+                <button type="submit" class="btn-add">
+                    + Add Item
+                </button>
+
+            </form>
+
+            <!-- Bill Table -->
+            <table class="sales-table" style="margin-top:20px;">
+                <thead>
+                    <tr>
+                        <th>Medicine</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.BillItems)
+                    {
+                        <tr>
+                            <td>@item.MedicineName</td>
+                            <td>@item.Quantity</td>
+                            <td>₹@item.Price</td>
+                            <td>₹@item.Total</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <!-- Grand Total -->
+            <h2 style="margin-top:20px;">
+                Grand Total: ₹@Model.GrandTotal
+            </h2>
+
+            <form method="post" asp-page-handler="CompleteSale">
+                <button type="submit" class="btn-alert" style="margin-top:15px;">
+                    Complete Sale & Send to Sales Summary
+                </button>
+            </form>
+
+
+            <!-- Print Button -->
+            <button onclick="window.print()" class="btn-alert">
+                🖨 Print Invoice
+            </button>
+
+        </div>
+
+    </div>
+</div>
