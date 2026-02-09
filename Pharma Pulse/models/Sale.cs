@@ -13,5 +13,7 @@ namespace Pharma_Pulse.Models
         public decimal TotalAmount { get; set; }
 
         public decimal Profit { get; set; }
+
+        public string InvoiceNumber { get; set; }   // ✅ NEW
     }
 }

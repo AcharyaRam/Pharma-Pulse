@@ -66,6 +66,7 @@ namespace Pharma_Pulse.Pages
 
                 Sale sale = new Sale
                 {
+                    
                     MedicineName = item.MedicineName,
                     QuantitySold = item.Quantity,
                     SaleDate = DateTime.Now,
