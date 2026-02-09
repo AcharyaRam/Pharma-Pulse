@@ -40,7 +40,7 @@
         <a class="card-link">
         <div class="card blue">
             <h3>Sales Today</h3>
-            <p>₹12,000</p>
+            <p>₹@Model.SalesToday</p>
         </div>
         </a>
 
@@ -89,9 +89,9 @@
             <div class="sales-box">
                 <h3>Today's Sales Summary</h3>
 
-                <p><b>Total Sales:</b> ₹12,000</p>
-                <p><b>Total Bills:</b> 45</p>
-                <p><b>Top Seller:</b> Paracetamol</p>
+                <p><b>Total Sales:</b> ₹@Model.SalesToday</p>
+                <p><b>Total Bills:</b> @Model.TotalBillsToday</p>
+                <p><b>Top Seller:</b> @Model.TopSellerToday</p>
             </div>
 
         </div>
