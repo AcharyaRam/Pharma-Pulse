@@ -296,3 +296,87 @@ tbody tr:hover {
 .lowstock-badge {
     background: orange;
 }
+
+/* ======================= */
+/* SALES SUMMARY PAGE */
+/* ======================= */
+
+.sales-cards {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.sales-box {
+    flex: 1;
+    min-width: 220px;
+    padding: 20px;
+    border-radius: 15px;
+    color: white;
+    font-size: 18px;
+}
+
+    .sales-box h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .sales-box p {
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .sales-box.green {
+        background: #27ae60;
+    }
+
+    .sales-box.blue {
+        background: #2980b9;
+    }
+
+    .sales-box.red {
+        background: #c0392b;
+    }
+
+/* Dropdown */
+.report-select {
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+/* Table */
+.table-title {
+    margin-top: 35px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.sales-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+    .sales-table thead {
+        background: #f3f6fb;
+    }
+
+    .sales-table th {
+        padding: 14px;
+        text-align: left;
+        font-size: 15px;
+    }
+
+    .sales-table td {
+        padding: 14px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .sales-table tr:hover {
+        background: #f9fcff;
+    }
+
