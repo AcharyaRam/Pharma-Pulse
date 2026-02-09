@@ -1,0 +1,201 @@
+﻿/* ============================= */
+/* ✅ PAGE BASE */
+/* ============================= */
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: #f4f7fc;
+}
+
+/* ============================= */
+/* ✅ DASHBOARD LAYOUT */
+/* ============================= */
+
+.dashboard-container {
+    display: flex;
+    gap: 25px;
+    padding: 30px;
+}
+
+/* ============================= */
+/* ✅ SIDEBAR */
+/* ============================= */
+
+.sidebar {
+    width: 250px;
+    background: white;
+    border-radius: 18px;
+    padding: 25px 18px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.sidebar-title {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 25px;
+    color: #2980b9;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+    .sidebar-menu li {
+        margin: 12px 0;
+    }
+
+    .sidebar-menu a {
+        display: block;
+        padding: 14px 18px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        color: #333;
+        transition: 0.3s;
+    }
+
+        .sidebar-menu a:hover {
+            background: #f2f7ff;
+            color: #2980b9;
+            transform: translateX(5px);
+        }
+
+        .sidebar-menu a.active {
+            background: #2980b9;
+            color: white;
+            font-weight: bold;
+        }
+
+/* ============================= */
+/* ✅ MAIN CONTENT */
+/* ============================= */
+
+.main-content {
+    flex: 1;
+}
+
+/* ============================= */
+/* ✅ CONTENT CARD */
+/* ============================= */
+
+.content-card {
+    background: white;
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+}
+
+/* Header */
+.card-header h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.card-header p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+/* ============================= */
+/* ✅ FORM DESIGN */
+/* ============================= */
+
+.medicine-form {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Form Row */
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+    .form-row label {
+        font-size: 15px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    /* Input */
+    .form-row input {
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        outline: none;
+        transition: 0.2s;
+    }
+
+        .form-row input:focus {
+            border-color: #2980b9;
+            box-shadow: 0 0 8px rgba(41, 128, 185, 0.3);
+        }
+
+/* Grid Inputs */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+/* ============================= */
+/* ✅ BUTTON */
+/* ============================= */
+
+.btn-save {
+    margin-top: 10px;
+    padding: 14px;
+    background: #1f7a54;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+    .btn-save:hover {
+        background: #14563b;
+    }
+
+/* ============================= */
+/* ✅ SUCCESS MESSAGE */
+/* ============================= */
+
+.success-msg {
+    margin-top: 18px;
+    text-align: center;
+    font-weight: bold;
+    color: green;
+}
+
+/* ============================= */
+/* ✅ RESPONSIVE */
+/* ============================= */
+
+@media(max-width: 768px) {
+
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}

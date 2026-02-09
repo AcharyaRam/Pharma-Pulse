@@ -1,0 +1,128 @@
+﻿@page
+@model Pharma_Pulse.Pages.AddMedicineModel
+
+<link rel="stylesheet" href="~/css/addmedicine.css" />
+
+<div class="dashboard-container">
+
+    <!-- ✅ Sidebar -->
+    <div class="sidebar">
+        <h2 class="sidebar-title">Pharma Pulse</h2>
+
+        <ul class="sidebar-menu">
+
+            <li>
+                <a asp-page="/Dashboard" class="menu-link">
+                    🏠 Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/TotalMedicine" class="menu-link">
+                    💊 Medicines
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/AddMedicine" class="menu-link active">
+                    ➕ Add Medicine
+                </a>
+            </li>
+
+        </ul>
+    </div>
+
+    <!-- ✅ Main Content -->
+    <div class="main-content">
+
+        <div class="content-card">
+
+            <!-- Header -->
+            <div class="card-header">
+                <h2>Add New Medicine</h2>
+                <p>Fill all details carefully</p>
+            </div>
+
+            <!-- ✅ Form -->
+            <form method="post" class="medicine-form">
+
+                <div class="form-row">
+                    <label>Medicine Name</label>
+                    <input asp-for="Medicine.MedicineName"
+                           placeholder="Enter medicine name"
+                           required />
+                </div>
+
+                <div class="form-row">
+                    <label>Category</label>
+                    <input asp-for="Medicine.Category"
+                           placeholder="Enter category"
+                           required />
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-row">
+                        <label>Stock Quantity</label>
+                        <input asp-for="Medicine.Stock"
+                               type="number"
+                               placeholder="Stock"
+                               required />
+                    </div>
+
+                    <div class="form-row">
+                        <label>Low Stock Limit</label>
+                        <input asp-for="Medicine.LowStockLimit"
+                               type="number"
+                               placeholder="Alert Limit"
+                               required />
+                    </div>
+
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-row">
+                        <label>Buying Price (₹)</label>
+                        <input asp-for="Medicine.BuyingPrice"
+                               type="number"
+                               step="0.01"
+                               placeholder="Purchase price"
+                               required />
+                    </div>
+
+                    <div class="form-row">
+                        <label>Selling Price (₹)</label>
+                        <input asp-for="Medicine.SellingPrice"
+                               type="number"
+                               step="0.01"
+                               placeholder="Selling price"
+                               required />
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+                    <label>Expiry Date</label>
+                    <input asp-for="Medicine.ExpiryDate"
+                           type="date"
+                           required />
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="btn-save">
+                    ✅ Save Medicine
+                </button>
+
+            </form>
+
+            <!-- Success Message -->
+            @if (Model.SuccessMessage != null)
+            {
+                <p class="success-msg">@Model.SuccessMessage</p>
+            }
+
+        </div>
+
+    </div>
+</div>
