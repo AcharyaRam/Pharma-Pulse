@@ -24,31 +24,26 @@ namespace Pharma_Pulse.Pages
         public int Quantity { get; set; }
 
         public List<Medicine> AllMedicines { get; set; }
-
         public List<BillItem> BillItems { get; set; }
 
         public string InvoiceNumber { get; set; }
-
         public decimal GrandTotal { get; set; }
 
         // ===========================
-        // ✅ GET PAGE LOAD
+        // ✅ PAGE LOAD
         // ===========================
         public void OnGet()
         {
             AllMedicines = MedicineService.GetAllMedicines();
 
-            // ✅ Load Customer Info from Session
             CustomerName = HttpContext.Session.GetString("CustomerName");
             MobileNumber = HttpContext.Session.GetString("MobileNumber");
 
-            // ✅ Load Bill Items
             BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems")
                         ?? new List<BillItem>();
 
             GrandTotal = BillItems.Sum(x => x.Total);
 
-            // ✅ Invoice Number Fix
             InvoiceNumber = HttpContext.Session.GetString("InvoiceNumber");
 
             if (string.IsNullOrEmpty(InvoiceNumber))
@@ -59,38 +54,26 @@ namespace Pharma_Pulse.Pages
         }
 
         // ===========================
-        // ✅ ADD ITEM BUTTON
+        // ✅ ADD ITEM
         // ===========================
         public IActionResult OnPostAddItem()
         {
             AllMedicines = MedicineService.GetAllMedicines();
 
-            // ✅ Save Customer Info only if not null
             if (!string.IsNullOrEmpty(CustomerName))
                 HttpContext.Session.SetString("CustomerName", CustomerName);
 
             if (!string.IsNullOrEmpty(MobileNumber))
                 HttpContext.Session.SetString("MobileNumber", MobileNumber);
 
-            // Load bill items
             BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems")
                         ?? new List<BillItem>();
-
-            // Invoice Fix
-            InvoiceNumber = HttpContext.Session.GetString("InvoiceNumber");
-
-            if (string.IsNullOrEmpty(InvoiceNumber))
-            {
-                InvoiceNumber = "INV-" + DateTime.Now.Ticks.ToString().Substring(10);
-                HttpContext.Session.SetString("InvoiceNumber", InvoiceNumber);
-            }
 
             var med = AllMedicines.FirstOrDefault(m => m.MedicineName == SelectedMedicine);
 
             if (med == null)
                 return RedirectToPage();
 
-            // ✅ Same medicine quantity increase
             var existingItem = BillItems.FirstOrDefault(x => x.MedicineName == med.MedicineName);
 
             if (existingItem != null)
@@ -108,9 +91,28 @@ namespace Pharma_Pulse.Pages
             return RedirectToPage();
         }
 
+        // ===========================
+        // ✅ PRINT BILL
+        // ===========================
+        public IActionResult OnPostPrintBill()
+        {
+            BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems")
+                        ?? new List<BillItem>();
+
+            if (BillItems.Count == 0)
+                return RedirectToPage();
+
+            if (!string.IsNullOrEmpty(CustomerName))
+                HttpContext.Session.SetString("CustomerName", CustomerName);
+
+            if (!string.IsNullOrEmpty(MobileNumber))
+                HttpContext.Session.SetString("MobileNumber", MobileNumber);
+
+            return RedirectToPage("/Bill");
+        }
 
         // ===========================
-        // ✅ COMPLETE SALE BUTTON
+        // ✅ COMPLETE SALE
         // ===========================
         public IActionResult OnPostCompleteSale()
         {
@@ -131,7 +133,6 @@ namespace Pharma_Pulse.Pages
 
                 decimal profit = (med.SellingPrice - med.BuyingPrice) * item.Quantity;
 
-                // ✅ Save Sale Record
                 SalesService.AddSale(new Sale
                 {
                     InvoiceNumber = InvoiceNumber,
@@ -143,7 +144,6 @@ namespace Pharma_Pulse.Pages
                 });
             }
 
-            // ✅ Clear Everything After Sale
             HttpContext.Session.Remove("BillItems");
             HttpContext.Session.Remove("InvoiceNumber");
             HttpContext.Session.Remove("CustomerName");
