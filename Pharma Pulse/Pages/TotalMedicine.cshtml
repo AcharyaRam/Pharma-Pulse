@@ -11,48 +11,23 @@
 
     <!-- LEFT SIDEBAR -->
     <div class="sidebar">
-    <h2 class="sidebar-title">Pharma Pulse</h2>
+        <h2 class="sidebar-title">Pharma Pulse</h2>
 
-    <ul class="sidebar-menu">
+        <ul class="sidebar-menu">
+            <li><a asp-page="/Dashboard" class="menu-link">🏠 Dashboard</a></li>
+            <li><a asp-page="/SalesSummary" class="menu-link">📊 Sales Summary</a></li>
+            <li><a asp-page="/QuickBilling" class="menu-link">💵 Quick Billing</a></li>
 
-        <li>
-            <a asp-page="/Dashboard" class="menu-link">
-                🏠 Dashboard
-            </a>
-        </li>
-
-        <li>
-            <a asp-page="/SalesSummary" class="menu-link">
-                📊 Sales Summary
-            </a>
-        </li>
-
-        <li>
-            <a asp-page="/QuickBilling" class="menu-link">
-                💵 Quick Billing
-            </a>
-        </li>
-
-        <li>
+            <li>
                 <a asp-page="/TotalMedicine" class="menu-link active">
-                💊 Medicines
-            </a>
-        </li>
+                    💊 Medicines
+                </a>
+            </li>
 
-        <li>
-            <a asp-page="/LowStockAlerts" class="menu-link">
-                ⚠ Low Stock Alerts
-            </a>
-        </li>
-
-        <li>
-            <a asp-page="/ExpiryAlerts" class="menu-link">
-                ⏳ Expiry Alerts
-            </a>
-        </li>
-
-    </ul>
-</div>
+            <li><a asp-page="/LowStockAlerts" class="menu-link">⚠ Low Stock Alerts</a></li>
+            <li><a asp-page="/ExpiryAlerts" class="menu-link">⏳ Expiry Alerts</a></li>
+        </ul>
+    </div>
 
 
     <!-- MAIN CONTENT -->
@@ -63,22 +38,29 @@
             <!-- Header -->
             <div class="card-header">
                 <h2>Available Medicines</h2>
-                <button class="btn-add">+ Add Medicine</button>
+
+                <button onclick="location.href='@Url.Page("/AddMedicine")'"
+                        class="btn-add">
+                    + Add Medicine
+                </button>
             </div>
 
-            <!-- Search + Entries -->
-            <div class="table-top">
-                <input type="text" placeholder="🔍 Search medicines..." />
+            <!-- ✅ Search Form -->
+            <form method="get" class="table-top">
 
+                <!-- Search Input -->
+                <input type="text"
+                       name="searchTerm"
+                       value="@Model.SearchTerm"
+                       placeholder="🔍 Search medicines..." />
+
+                <!-- Showing Info -->
                 <div class="entries">
-                    Showing 1-10 of 250
-                    <select>
-                        <option>10</option>
-                        <option>25</option>
-                        <option>50</option>
-                    </select>
+                    Showing @Model.Medicines.Count of @Model.TotalCount Medicines
                 </div>
-            </div>
+
+            </form>
+
 
             <!-- Table -->
             <table>
@@ -109,13 +91,34 @@
                 </tbody>
             </table>
 
-            <!-- Pagination -->
+
+            <!-- ✅ Pagination -->
             <div class="pagination">
-                <button>Previous</button>
-                <button class="active">1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>Next</button>
+
+                @if (Model.CurrentPage > 1)
+                {
+                    <a class="page-btn"
+                       asp-page="/TotalMedicine"
+                       asp-route-pageNumber="@(Model.CurrentPage - 1)"
+                       asp-route-searchTerm="@Model.SearchTerm">
+                        ⬅ Previous
+                    </a>
+                }
+
+                <span class="page-info">
+                    Page @Model.CurrentPage of @Model.TotalPages
+                </span>
+
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <a class="page-btn"
+                       asp-page="/TotalMedicine"
+                       asp-route-pageNumber="@(Model.CurrentPage + 1)"
+                       asp-route-searchTerm="@Model.SearchTerm">
+                        Next ➡
+                    </a>
+                }
+
             </div>
 
         </div>
