@@ -10,18 +10,8 @@
         <h2 class="sidebar-title">Pharma Pulse</h2>
 
         <ul class="sidebar-menu">
-
-            <li>
-                <a asp-page="/Dashboard" class="menu-link">
-                    🏠 Dashboard
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/SalesSummary" class="menu-link">
-                    📊 Sales Summary
-                </a>
-            </li>
+            <li><a asp-page="/Dashboard" class="menu-link">🏠 Dashboard</a></li>
+            <li><a asp-page="/SalesSummary" class="menu-link">📊 Sales Summary</a></li>
 
             <li>
                 <a asp-page="/QuickBilling" class="menu-link active">
@@ -29,24 +19,9 @@
                 </a>
             </li>
 
-            <li>
-                <a asp-page="/TotalMedicine" class="menu-link">
-                    💊 Medicines
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/LowStockAlerts" class="menu-link">
-                    ⚠ Low Stock Alerts
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/ExpiryAlerts" class="menu-link">
-                    ⏳ Expiry Alerts
-                </a>
-            </li>
-
+            <li><a asp-page="/TotalMedicine" class="menu-link">💊 Medicines</a></li>
+            <li><a asp-page="/LowStockAlerts" class="menu-link">⚠ Low Stock Alerts</a></li>
+            <li><a asp-page="/ExpiryAlerts" class="menu-link">⏳ Expiry Alerts</a></li>
         </ul>
     </div>
 
@@ -55,46 +30,55 @@
 
         <div class="content-card">
 
+            <!-- Header -->
             <div class="card-header">
                 <h2>Quick Billing</h2>
                 <p><b>Invoice:</b> @Model.InvoiceNumber</p>
             </div>
 
-            <!-- Customer Info -->
-            <h3>Customer Details</h3>
-
-            <div class="billing-form">
-
-                <input asp-for="CustomerName" placeholder="Customer Name" />
-
-                <input asp-for="MobileNumber" placeholder="Mobile Number" />
-
-            </div>
-
-            <hr />
-
-            <!-- Medicine Add -->
-            <h3>Add Medicines</h3>
-
+            <!-- ============================= -->
+            <!-- ADD ITEM FORM -->
+            <!-- ============================= -->
             <form method="post" asp-page-handler="AddItem">
 
-                <select asp-for="SelectedMedicine">
-                    <option value="">-- Select Medicine --</option>
-                    @foreach (var med in Model.AllMedicines)
-                    {
-                        <option value="@med.MedicineName">@med.MedicineName</option>
-                    }
-                </select>
+                <h3>Customer Details</h3>
 
-                <input asp-for="Quantity" type="number" placeholder="Qty" />
+                <div class="billing-form">
+                    <input asp-for="CustomerName" placeholder="Customer Name" />
+                    <input asp-for="MobileNumber" placeholder="Mobile Number" />
+                </div>
 
-                <button type="submit" class="btn-add">
-                    + Add Item
-                </button>
+                <hr />
+
+                <h3>Add Medicines</h3>
+
+                <div class="billing-form">
+
+                    <select asp-for="SelectedMedicine">
+                        <option value="">-- Select Medicine --</option>
+                        @foreach (var med in Model.AllMedicines)
+                        {
+                            <option value="@med.MedicineName">@med.MedicineName</option>
+                        }
+                    </select>
+
+                    <input asp-for="Quantity"
+                           type="number"
+                           placeholder="Qty"
+                           min="1"
+                           value="1" />
+
+                    <button type="submit" class="btn-add">
+                        + Add Item
+                    </button>
+
+                </div>
 
             </form>
 
-            <!-- Bill Table -->
+            <!-- ============================= -->
+            <!-- BILL TABLE -->
+            <!-- ============================= -->
             <table class="sales-table" style="margin-top:20px;">
                 <thead>
                     <tr>
@@ -118,22 +102,30 @@
                 </tbody>
             </table>
 
-            <!-- Grand Total -->
+            <!-- ============================= -->
+            <!-- GRAND TOTAL -->
+            <!-- ============================= -->
             <h2 style="margin-top:20px;">
-                Grand Total: ₹@Model.GrandTotal
+                Grand Total: ₹@Model.GrandTotal.ToString("0.00")
             </h2>
 
+            <!-- ============================= -->
+            <!-- COMPLETE SALE BUTTON -->
+            <!-- ============================= -->
             <form method="post" asp-page-handler="CompleteSale">
                 <button type="submit" class="btn-alert" style="margin-top:15px;">
                     Complete Sale & Send to Sales Summary
                 </button>
             </form>
 
-
-            <!-- Print Button -->
-            <button onclick="window.print()" class="btn-alert">
-                🖨 Print Invoice
-            </button>
+            <!-- ============================= -->
+            <!-- PRINT BILL BUTTON (NEW) -->
+            <!-- ============================= -->
+            <form method="post" asp-page-handler="PrintBill">
+                <button type="submit" class="btn-alert" style="margin-top:10px;">
+                    🖨 Print Invoice
+                </button>
+            </form>
 
         </div>
 

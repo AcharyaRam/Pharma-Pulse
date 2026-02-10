@@ -24,93 +24,132 @@ namespace Pharma_Pulse.Pages
         public int Quantity { get; set; }
 
         public List<Medicine> AllMedicines { get; set; }
-
         public List<BillItem> BillItems { get; set; }
 
         public string InvoiceNumber { get; set; }
-
         public decimal GrandTotal { get; set; }
 
+        // ===========================
+        // ✅ PAGE LOAD
+        // ===========================
         public void OnGet()
         {
             AllMedicines = MedicineService.GetAllMedicines();
 
-            // Load bill items from session
+            CustomerName = HttpContext.Session.GetString("CustomerName");
+            MobileNumber = HttpContext.Session.GetString("MobileNumber");
+
             BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems")
                         ?? new List<BillItem>();
 
             GrandTotal = BillItems.Sum(x => x.Total);
 
-            InvoiceNumber = "INV-" + DateTime.Now.Ticks.ToString().Substring(10);
-        }
+            InvoiceNumber = HttpContext.Session.GetString("InvoiceNumber");
 
-        public IActionResult OnPostCompleteSale()
-        {
-            // Load medicines again
-            AllMedicines = MedicineService.GetAllMedicines();
-
-            // Load bill items from session
-            BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems")
-                        ?? new List<BillItem>();
-
-            // If no items, return
-            if (BillItems.Count == 0)
-                return RedirectToPage();
-
-            // ✅ Convert BillItems into Sale records
-            foreach (var item in BillItems)
+            if (string.IsNullOrEmpty(InvoiceNumber))
             {
-                var med = AllMedicines.FirstOrDefault(m => m.MedicineName == item.MedicineName);
-
-                if (med == null) continue;
-
-                Sale sale = new Sale
-                {
-                    MedicineName = item.MedicineName,
-                    QuantitySold = item.Quantity,
-                    SaleDate = DateTime.Now,
-                    TotalAmount = item.Total,
-                    Profit = (med.SellingPrice - med.BuyingPrice) * item.Quantity
-                };
-
-                // ✅ Store into SalesService
-                SalesService.AddSale(sale);
+                InvoiceNumber = "INV-" + DateTime.Now.Ticks.ToString().Substring(10);
+                HttpContext.Session.SetString("InvoiceNumber", InvoiceNumber);
             }
-
-            // ✅ Clear Bill after sale complete
-            HttpContext.Session.Remove("BillItems");
-
-            // Redirect to Sales Summary
-            return RedirectToPage("/SalesSummary");
         }
 
-
-        public void OnPostAddItem()
+        // ===========================
+        // ✅ ADD ITEM
+        // ===========================
+        public IActionResult OnPostAddItem()
         {
             AllMedicines = MedicineService.GetAllMedicines();
 
-            // Load existing list from session
+            if (!string.IsNullOrEmpty(CustomerName))
+                HttpContext.Session.SetString("CustomerName", CustomerName);
+
+            if (!string.IsNullOrEmpty(MobileNumber))
+                HttpContext.Session.SetString("MobileNumber", MobileNumber);
+
             BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems")
                         ?? new List<BillItem>();
 
             var med = AllMedicines.FirstOrDefault(m => m.MedicineName == SelectedMedicine);
 
-            if (med == null) return;
+            if (med == null)
+                return RedirectToPage();
 
-            // Add new item
-            BillItems.Add(new BillItem
-            {
-                MedicineName = med.MedicineName,
-                Quantity = Quantity,
-                Price = med.SellingPrice
-            });
+            var existingItem = BillItems.FirstOrDefault(x => x.MedicineName == med.MedicineName);
 
-            // Save back into session
+            if (existingItem != null)
+                existingItem.Quantity += Quantity;
+            else
+                BillItems.Add(new BillItem
+                {
+                    MedicineName = med.MedicineName,
+                    Quantity = Quantity,
+                    Price = med.SellingPrice
+                });
+
             HttpContext.Session.SetObject("BillItems", BillItems);
 
-            GrandTotal = BillItems.Sum(x => x.Total);
+            return RedirectToPage();
+        }
 
-            InvoiceNumber = "INV-" + DateTime.Now.Ticks.ToString().Substring(10);
+        // ===========================
+        // ✅ PRINT BILL
+        // ===========================
+        public IActionResult OnPostPrintBill()
+        {
+            BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems")
+                        ?? new List<BillItem>();
+
+            if (BillItems.Count == 0)
+                return RedirectToPage();
+
+            if (!string.IsNullOrEmpty(CustomerName))
+                HttpContext.Session.SetString("CustomerName", CustomerName);
+
+            if (!string.IsNullOrEmpty(MobileNumber))
+                HttpContext.Session.SetString("MobileNumber", MobileNumber);
+
+            return RedirectToPage("/Bill");
+        }
+
+        // ===========================
+        // ✅ COMPLETE SALE
+        // ===========================
+        public IActionResult OnPostCompleteSale()
+        {
+            BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems")
+                        ?? new List<BillItem>();
+
+            InvoiceNumber = HttpContext.Session.GetString("InvoiceNumber");
+
+            if (BillItems.Count == 0)
+                return RedirectToPage();
+
+            foreach (var item in BillItems)
+            {
+                var med = MedicineService.GetAllMedicines()
+                            .FirstOrDefault(m => m.MedicineName == item.MedicineName);
+
+                if (med == null) continue;
+
+                decimal profit = (med.SellingPrice - med.BuyingPrice) * item.Quantity;
+
+                SalesService.AddSale(new Sale
+                {
+                    InvoiceNumber = InvoiceNumber,
+                    MedicineName = item.MedicineName,
+                    QuantitySold = item.Quantity,
+                    SaleDate = DateTime.Now,
+                    TotalAmount = item.Total,
+                    Profit = profit
+                });
+            }
+
+            HttpContext.Session.Remove("BillItems");
+            HttpContext.Session.Remove("InvoiceNumber");
+            HttpContext.Session.Remove("CustomerName");
+            HttpContext.Session.Remove("MobileNumber");
+
+            return RedirectToPage("/SalesSummary");
         }
     }
 }
