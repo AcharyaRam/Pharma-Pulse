@@ -252,30 +252,36 @@ tbody tr:hover {
 /* PAGINATION */
 /* ========================= */
 
+
 .pagination {
-    margin-top: 20px;
-    text-align: center;
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
 }
 
-    .pagination button {
-        padding: 8px 14px;
-        margin: 0 4px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        background: white;
-        cursor: pointer;
-        transition: 0.2s;
+.page-btn {
+    padding: 10px 20px;
+    background: #2c6cb0;
+    color: white !important;
+    font-weight: 600;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+    .page-btn:hover {
+        background: #1e4e82;
     }
 
-        .pagination button:hover {
-            background: #f2f7ff;
-        }
+.page-info {
+    font-size: 15px;
+    font-weight: bold;
+    color: #222;
+}
 
-    .pagination .active {
-        background: #2980b9;
-        color: white;
-        border: none;
-    }
+
 
 /* ========================= */
 /* BADGES */
