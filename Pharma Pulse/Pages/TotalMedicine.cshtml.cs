@@ -1,5 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Pharma_Pulse.Models;
 using Pharma_Pulse.Services;
 using System;
@@ -17,9 +16,26 @@ namespace Pharma_Pulse.Pages
         public int PageSize { get; set; } = 10;
         public int TotalPages { get; set; }
 
-        public void OnGet(int pageNumber = 1)
+        // ✅ Search Term
+        public string SearchTerm { get; set; }
+
+        public void OnGet(int pageNumber = 1, string search = "")
         {
             var allMedicines = MedicineService.GetAllMedicines();
+
+            // ✅ Store search term
+            SearchTerm = search;
+
+            // ✅ Apply Search Filter
+            if (!string.IsNullOrEmpty(search))
+            {
+                allMedicines = allMedicines
+                    .Where(m =>
+                         m.MedicineName.StartsWith(search, StringComparison.OrdinalIgnoreCase)
+                    )
+                    .ToList();
+
+            }
 
             // Total Pages Calculation
             TotalPages = (int)Math.Ceiling(allMedicines.Count / (double)PageSize);

@@ -28,14 +28,31 @@
 
         <div class="content-card">
 
+            <!-- Header -->
             <div class="card-header">
                 <h2>Available Medicines</h2>
+
                 <button onclick="location.href='@Url.Page("/AddMedicine")'"
                         class="btn-add">
                     + Add Medicine
                 </button>
             </div>
 
+            <!-- ✅ Search Form -->
+            <form method="get" class="search-bar">
+
+                <input type="text"
+                       name="search"
+                       value="@Model.SearchTerm"
+                       placeholder="🔍 Search medicine name or category..." />
+
+                <button type="submit" class="btn-search">
+                    Search
+                </button>
+
+            </form>
+
+            <!-- Table -->
             <table class="sales-table">
                 <thead>
                     <tr>
@@ -64,14 +81,14 @@
             </table>
 
             <!-- Pagination -->
-            <!-- ✅ Pagination Controls -->
             <div class="pagination">
 
                 @if (Model.CurrentPage > 1)
                 {
                     <a class="page-btn"
                        asp-page="/TotalMedicine"
-                       asp-route-pageNumber="@(Model.CurrentPage - 1)">
+                       asp-route-pageNumber="@(Model.CurrentPage - 1)"
+                       asp-route-search="@Model.SearchTerm">
                         ⬅ Previous
                     </a>
                 }
@@ -84,14 +101,13 @@
                 {
                     <a class="page-btn"
                        asp-page="/TotalMedicine"
-                       asp-route-pageNumber="@(Model.CurrentPage + 1)">
+                       asp-route-pageNumber="@(Model.CurrentPage + 1)"
+                       asp-route-search="@Model.SearchTerm">
                         Next ➡
                     </a>
                 }
 
             </div>
-
-
 
         </div>
     </div>

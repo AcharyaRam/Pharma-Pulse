@@ -377,3 +377,34 @@ tbody tr:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 18px rgba(220,38,38,0.4);
     }
+
+
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+    .search-bar input {
+        flex: 1;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        font-size: 15px;
+    }
+/*search button*/
+
+.btn-search {
+    padding: 12px 18px;
+    border: none;
+    background: #2d6cdf;
+    color: white;
+    font-size: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+    .btn-search:hover {
+        background: #1f4fa8;
+    }
+
