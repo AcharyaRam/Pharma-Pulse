@@ -214,6 +214,7 @@ tbody tr:hover {
     border-radius: 8px;
     cursor: pointer;
     transition: 0.2s;
+    margin-left:8px;
 }
 
     .btn-edit:hover {
@@ -371,6 +372,7 @@ tbody tr:hover {
     font-size: 13px;
     cursor: pointer;
     transition: 0.3s ease;
+
 }
 
     .btn-delete:hover {
