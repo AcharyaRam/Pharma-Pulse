@@ -138,5 +138,17 @@ namespace Pharma_Pulse.Services
         {
             return MedicinesList.FirstOrDefault(m => m.MedicineName == name);
         }
+        // ✅ Update Stock
+        public static void UpdateMedicine(Medicine updatedMedicine)
+        {
+            var med = MedicinesList
+                .FirstOrDefault(m => m.MedicineName == updatedMedicine.MedicineName);
+
+            if (med != null)
+            {
+                med.Stock = updatedMedicine.Stock;
+            }
+        }
+
     }
 }

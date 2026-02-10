@@ -53,18 +53,13 @@ namespace Pharma_Pulse.Pages
             }
         }
 
+
         // ===========================
         // ✅ ADD ITEM
         // ===========================
         public IActionResult OnPostAddItem()
         {
             AllMedicines = MedicineService.GetAllMedicines();
-
-            if (!string.IsNullOrEmpty(CustomerName))
-                HttpContext.Session.SetString("CustomerName", CustomerName);
-
-            if (!string.IsNullOrEmpty(MobileNumber))
-                HttpContext.Session.SetString("MobileNumber", MobileNumber);
 
             BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems")
                         ?? new List<BillItem>();
@@ -74,6 +69,18 @@ namespace Pharma_Pulse.Pages
             if (med == null)
                 return RedirectToPage();
 
+            // ❌ Stock check
+            if (med.Stock < Quantity)
+            {
+                ModelState.AddModelError("", "Not enough stock available.");
+                return RedirectToPage();
+            }
+
+            // ✅ Reduce stock immediately
+            med.Stock -= Quantity;
+            MedicineService.UpdateMedicine(med);
+
+            // Add to bill
             var existingItem = BillItems.FirstOrDefault(x => x.MedicineName == med.MedicineName);
 
             if (existingItem != null)
@@ -90,6 +97,38 @@ namespace Pharma_Pulse.Pages
 
             return RedirectToPage();
         }
+
+        // ===========================
+        // ✅ DELETE ITEM
+        // ===========================
+        public IActionResult OnPostDeleteItem(string medicineName)
+        {
+            BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems")
+                        ?? new List<BillItem>();
+
+            var item = BillItems.FirstOrDefault(x => x.MedicineName == medicineName);
+
+            if (item != null)
+            {
+                // ✅ Stock wapas add karo
+                var med = MedicineService.GetAllMedicines()
+                            .FirstOrDefault(m => m.MedicineName == item.MedicineName);
+
+                if (med != null)
+                {
+                    med.Stock += item.Quantity;
+                    MedicineService.UpdateMedicine(med);
+                }
+
+                BillItems.Remove(item);
+                HttpContext.Session.SetObject("BillItems", BillItems);
+            }
+
+            return RedirectToPage();
+        }
+
+
+
 
         // ===========================
         // ✅ PRINT BILL
