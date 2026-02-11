@@ -14,7 +14,7 @@ namespace Pharma_Pulse.Services
             {
                 MedicineName="Paracetamol",
                 Category="Pain Relief",
-                Stock=120,
+                StockUnits=120,
                 LowStockLimit=20,
                 BuyingPrice=1.50m,
                 SellingPrice=2.50m,
@@ -25,7 +25,7 @@ namespace Pharma_Pulse.Services
             {
                 MedicineName="Amoxicillin",
                 Category="Antibiotic",
-                Stock=5,
+                StockUnits=5,
                 LowStockLimit=10,
                 BuyingPrice=5.00m,
                 SellingPrice=8.00m,
@@ -36,7 +36,7 @@ namespace Pharma_Pulse.Services
             {
                 MedicineName="Cetirizine",
                 Category="Anti-Allergy",
-                Stock=8,
+                StockUnits=8,
                 LowStockLimit=15,
                 BuyingPrice=2.00m,
                 SellingPrice=4.00m,
@@ -47,7 +47,7 @@ namespace Pharma_Pulse.Services
             {
                 MedicineName="Metformin",
                 Category="Diabetes",
-                Stock=200,
+                StockUnits=200,
                 LowStockLimit=30,
                 BuyingPrice=3.50m,
                 SellingPrice=6.50m,
@@ -58,7 +58,7 @@ namespace Pharma_Pulse.Services
             {
                 MedicineName="Aspirin",
                 Category="Cardiac",
-                Stock=15,
+                StockUnits=15,
                 LowStockLimit=25,
                 BuyingPrice=1.00m,
                 SellingPrice=2.00m,
@@ -69,7 +69,7 @@ namespace Pharma_Pulse.Services
             {
                 MedicineName="Atorvastatin",
                 Category="Cholesterol",
-                Stock=30,
+                StockUnits=30,
                 LowStockLimit=12,
                 BuyingPrice=8.00m,
                 SellingPrice=12.00m,
@@ -80,7 +80,7 @@ namespace Pharma_Pulse.Services
             {
                 MedicineName="Omeprazole",
                 Category="Gastric",
-                Stock=9,
+                StockUnits=9,
                 LowStockLimit=10,
                 BuyingPrice=4.00m,
                 SellingPrice=7.00m,
@@ -91,7 +91,7 @@ namespace Pharma_Pulse.Services
             {
                 MedicineName="Azithromycin",
                 Category="Antibiotic",
-                Stock=50,
+                StockUnits=50,
                 LowStockLimit=18,
                 BuyingPrice=6.00m,
                 SellingPrice=10.00m,
@@ -102,7 +102,7 @@ namespace Pharma_Pulse.Services
             {
                 MedicineName="Lisinopril",
                 Category="Blood Pressure",
-                Stock=6,
+                StockUnits=6,
                 LowStockLimit=8,
                 BuyingPrice=7.00m,
                 SellingPrice=11.00m,
@@ -113,7 +113,7 @@ namespace Pharma_Pulse.Services
             {
                 MedicineName="Ibuprofen",
                 Category="Pain Relief",
-                Stock=90,
+                StockUnits=90,
                 LowStockLimit=25,
                 BuyingPrice=2.50m,
                 SellingPrice=4.50m,
@@ -146,7 +146,7 @@ namespace Pharma_Pulse.Services
 
             if (med != null)
             {
-                med.Stock = updatedMedicine.Stock;
+                med.StockUnits = updatedMedicine.StockUnits;
             }
         }
 

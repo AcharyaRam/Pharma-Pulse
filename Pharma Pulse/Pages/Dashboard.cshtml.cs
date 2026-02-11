@@ -44,11 +44,11 @@ namespace Pharma_Pulse.Pages
             Medicines = allMedicines.Take(10).ToList();
 
             // ✅ Low Stock Count (based on medicine LowStockLimit)
-            LowStockCount = allMedicines.Count(m => m.Stock <= m.LowStockLimit);
+            LowStockCount = allMedicines.Count(m => m.StockUnits <= m.LowStockLimit);
 
             // ✅ Lowest Stock Medicine
             LowestStockMedicine = allMedicines
-                .OrderBy(m => m.Stock)
+                .OrderBy(m => m.StockUnits)
                 .FirstOrDefault();
 
             // ✅ Expiry Count (next 30 days)
