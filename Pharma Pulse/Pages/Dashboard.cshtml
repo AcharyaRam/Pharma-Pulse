@@ -7,154 +7,130 @@
 <link rel="stylesheet" href="~/css/dashboard.css" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<div class="dashboard-container">
+<div class="dashboard-wrapper">
 
-    <!-- Header -->
-    <div class="dashboard-header">
-        <h2>Pharmacist Dashboard</h2>
-        <p>Welcome back, Pharmacist</p>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="sidebar-title">Pharma Pulse</h2>
+
+        <ul class="sidebar-menu">
+            <li><a asp-page="/Dashboard" class="menu-link active">🏠 Dashboard</a></li>
+            <li><a asp-page="/SalesSummary" class="menu-link">📊 Sales Summary</a></li>
+            <li><a asp-page="/QuickBilling" class="menu-link">💵 Quick Billing</a></li>
+            <li><a asp-page="/TotalMedicine" class="menu-link">💊 Medicines</a></li>
+            <li><a asp-page="/LowStockAlerts" class="menu-link">⚠ Low Stock Alerts</a></li>
+            <li><a asp-page="/ExpiryAlerts" class="menu-link">⏳ Expiry Alerts</a></li>
+            <li><a asp-page="/Login" class="menu-link">➜] Logout</a></li>
+        </ul>
     </div>
 
-    <!-- Top Cards -->
-    <div class="stats-cards">
-        <a asp-page="/TotalMedicine" class="card-link">
-        <div class="card green">
-            <h3>Total Medicines</h3>
-            <p>@Model.TotalMedicineCount</p>
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <div class="dashboard-header">
+            <h2>Pharmacist Dashboard</h2>
+            <p>Welcome back, Pharmacist</p>
         </div>
-        </a>
 
-        <a asp-page="/LowStockAlerts" class="card-link">
-        <div class="card orange">
-            <h3>Low Stock Alerts</h3>
-            <p>@Model.LowStockCount</p>
-        </div>
-        </a>
-
-        <a asp-page="/ExpiryAlerts" class="card-link">
-        <div class="card red">
-            <h3>Expiry Alerts</h3>
-            <p>@Model.ExpiryCount Items</p>
-        </div>
-        </a>
-
-        <a asp-page="/SalesSummary" class="card-link">
-        <div class="card blue">
-            <h3>Sales Today</h3>
-            <p>₹@Model.SalesToday</p>
-        </div>
-        </a>
-
-    </div>
-
-    <!-- Main Dashboard Layout -->
-    <div class="dashboard-grid">
-
-        <!-- LEFT SIDE -->
-        <div class="left-section">
-
-            <!-- Medicines Table -->
-            <div class="table-box">
-                <h3>Available Medicines</h3>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Medicine Name</th>
-                            <th>Category</th>
-                            <th>Stock</th>
-                            <th>Expiry Date</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach (var med in Model.Medicines)
-                        {
-                            <tr>
-                                <td>@med.MedicineName</td>
-                                <td>@med.Category</td>
-                                <td>@med.Stock</td>
-                                <td>@med.ExpiryDate.ToShortDateString()</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-
-                
-                <button class="btn-viewall" onclick="window.location.href='/TotalMedicine'">
-                    View All Medicines →
-                </button>
+        <!-- Top Cards -->
+        <div class="stats-cards">
+            <div class="card green">
+                <h3>Total Medicines</h3>
+                <p>@Model.TotalMedicineCount</p>
             </div>
 
-            <!-- Sales Summary -->
-            <div class="sales-box">
-                <h3>Today's Sales Summary</h3>
-
-                <p><b>Total Sales:</b> ₹@Model.SalesToday</p>
-                <p><b>Total Bills:</b> @Model.TotalBillsToday</p>
-                <p><b>Top Seller:</b> @Model.TopSellerToday</p>
-            </div>
-
-        </div>
-
-        <!-- RIGHT SIDE -->
-        <div class="right-section">
-
-            <!-- Quick Billing -->
-
-            <div class="quick-billing">
-                <h3>Quick Billing</h3>
-                <p>Create a new bill quickly</p>
-
-                <button class="btn-billing" onclick="window.location.href='/QuickBilling'">
-                    Start Billing
-                </button>
-            </div>
-
-            <!-- Low Stock Alerts -->
-            <div class="alert-card low-stock">
+            <div class="card orange">
                 <h3>Low Stock Alerts</h3>
-
-                @if (Model.LowestStockMedicine != null)
-                {
-                    <p>
-                        <b>@Model.LowestStockMedicine.MedicineName</b>
-                        - Only @Model.LowestStockMedicine.Stock left!
-                    </p>
-                }
-                else
-                {
-                    <p>No low stock medicines found.</p>
-                }
-
-                <button class="btn-alert" onclick="window.location.href='/LowStockAlerts'">
-                    Manage Stock
-                </button>
+                <p>@Model.LowStockCount</p>
             </div>
 
-            <!-- Expiry Alerts -->
-            <div class="alert-card expiry-alert">
+            <div class="card red">
+                <h3>Expiry Alerts</h3>
+                <p>@Model.ExpiryCount Items</p>
+            </div>
 
-                <h3>Expiry Alerts (@Model.ExpiryCount)</h3>
+            <div class="card blue">
+                <h3>Sales Today</h3>
+                <p>₹@Model.SalesToday</p>
+            </div>
+        </div>
 
-                @if (Model.NearestExpiryMedicine != null)
-                {
-                    <p>
-                        <b>@Model.NearestExpiryMedicine.MedicineName</b>
-                        - Expiring Soon!
-                    </p>
-                }
-                else
-                {
-                    <p>No expiry medicines found.</p>
-                }
+        <!-- Grid -->
+        <div class="dashboard-grid">
 
-                <button class="btn-alert" onclick="window.location.href='/ExpiryAlerts'">
-                    Check Expiries
-                </button>
+            <!-- Left -->
+            <div class="left-section">
+
+                <div class="box">
+                    <h3>Available Medicines</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Medicine</th>
+                                <th>Category</th>
+                                <th>Stock</th>
+                                <th>Expiry</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var med in Model.Medicines)
+                            {
+                                <tr>
+                                    <td>@med.MedicineName</td>
+                                    <td>@med.Category</td>
+                                    <td>@med.Stock</td>
+                                    <td>@med.ExpiryDate.ToShortDateString()</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="box">
+                    <h3>Today's Sales Summary</h3>
+                    <p><b>Total Sales:</b> ₹@Model.SalesToday</p>
+                    <p><b>Total Bills:</b> @Model.TotalBillsToday</p>
+                    <p><b>Top Seller:</b> @Model.TopSellerToday</p>
+                </div>
 
             </div>
 
+            <!-- Right -->
+            <div class="right-section">
+
+                <div class="quick-box">
+                    <h3>Quick Billing</h3>
+                    <p>Create a new bill quickly</p>
+                    <button onclick="window.location.href='/QuickBilling'">
+                        Start Billing
+                    </button>
+                </div>
+
+                <div class="box alert">
+                    <h3>Low Stock Alerts</h3>
+                    @if (Model.LowestStockMedicine != null)
+                    {
+                        <p><b>@Model.LowestStockMedicine.MedicineName</b> - Only @Model.LowestStockMedicine.Stock left!</p>
+                    }
+                    else
+                    {
+                        <p>No low stock medicines found.</p>
+                    }
+                </div>
+
+                <div class="box alert-red">
+                    <h3>Expiry Alerts (@Model.ExpiryCount)</h3>
+                    @if (Model.NearestExpiryMedicine != null)
+                    {
+                        <p><b>@Model.NearestExpiryMedicine.MedicineName</b> - Expiring Soon!</p>
+                    }
+                    else
+                    {
+                        <p>No expiry medicines found.</p>
+                    }
+                </div>
+
+            </div>
 
         </div>
 
