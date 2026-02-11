@@ -8,178 +8,13 @@
         font-family: 'Poppins', sans-serif;
         background: linear-gradient(135deg, #eef2ff, #ffffff);
         margin: 0;
-        animation: fadeIn 0.6s ease-in-out;
     }
 
-    /* Page animation */
-    @@keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Main Layout */
     .dashboard-container {
         display: flex;
     }
 
-    /* Keep sidebar same */
-    .sidebar {
-        width: 250px;
-    }
-
-    /* Main Content */
-    .main-content {
-        flex: 1;
-        padding: 40px;
-    }
-
-    /* Premium Card */
-    .content-card {
-        background: #fff;
-        padding: 35px;
-        border-radius: 20px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.08);
-        transition: 0.3s ease;
-    }
-
-        .content-card:hover {
-            transform: translateY(-4px);
-        }
-
-    /* Header */
-    .card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-    }
-
-        .card-header h2 {
-            font-weight: 600;
-        }
-
-    /* Input Group */
-    .billing-form {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 15px;
-    }
-
-    input, select {
-        padding: 12px;
-        border-radius: 10px;
-        border: 1px solid #ddd;
-        transition: 0.3s ease;
-        font-size: 14px;
-        width: 100%;
-    }
-
-        input:focus, select:focus {
-            border-color: #6366f1;
-            box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
-            transform: scale(1.02);
-            outline: none;
-        }
-
-    /* Add Button */
-    .btn-add {
-        background: linear-gradient(135deg, #16a34a, #22c55e);
-        color: white;
-        padding: 12px 18px;
-        border-radius: 12px;
-        border: none;
-        font-weight: 500;
-        cursor: pointer;
-        transition: 0.3s ease;
-    }
-
-        .btn-add:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(34,197,94,0.3);
-        }
-
-    /* Action Buttons */
-    .btn-alert {
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
-        color: white;
-        padding: 12px 18px;
-        border-radius: 12px;
-        border: none;
-        font-weight: 500;
-        cursor: pointer;
-        transition: 0.3s ease;
-    }
-
-        .btn-alert:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(139,92,246,0.3);
-        }
-
-    /* Table */
-    .sales-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 25px;
-        animation: fadeIn 0.4s ease-in-out;
-    }
-
-        .sales-table th {
-            background: #f3f4f6;
-            padding: 12px;
-            font-weight: 600;
-        }
-
-        .sales-table td {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            text-align: center;
-        }
-
-        .sales-table tr:hover {
-            background: #f9fafb;
-            transition: 0.2s;
-        }
-
-    /* Grand Total Animation */
-    .total-box {
-        margin-top: 25px;
-        font-size: 22px;
-        font-weight: 600;
-        text-align: right;
-        animation: pulse 2s infinite alternate;
-    }
-
-   @@keyframes pulse {
-        from {
-            transform: scale(1);
-        }
-
-        to {
-            transform: scale(1.02);
-        }
-    }
-
-    hr {
-        border: none;
-        height: 1px;
-        background: #eee;
-        margin: 20px 0;
-    }
-
-    body {
-        margin: 0;
-        font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #e0f2fe, #f8fafc);
-    }
-
-    /* Sidebar Container */
+    /* Sidebar */
     .sidebar {
         width: 250px;
         background: linear-gradient(160deg, #4f46e5, #7c3aed);
@@ -187,67 +22,24 @@
         border-top-right-radius: 30px;
         border-bottom-right-radius: 30px;
         box-shadow: 8px 0 40px rgba(0,0,0,0.15);
-        position: relative;
-        overflow: hidden;
     }
 
-        /* Soft animated glow background */
-        .sidebar::before {
-            content: "";
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255,255,255,0.15), transparent);
-            top: -100px;
-            left: -100px;
-            animation: rotateGlow 12s linear infinite;
-        }
-
-    @@keyframes rotateGlow {
-        from {
-            transform: rotate(0deg);
-        }
-
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    /* Title */
     .sidebar-title {
         font-size: 28px;
         font-weight: 700;
         color: white;
         margin-bottom: 40px;
-        letter-spacing: 1px;
-        animation: slideDown 0.6s ease;
     }
 
-    @@keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-15px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Remove bullets */
     .sidebar-menu {
         list-style: none;
         padding: 0;
-        margin: 0;
     }
 
-        /* Menu Items */
         .sidebar-menu li {
             margin-bottom: 18px;
         }
 
-    /* Links */
     .menu-link {
         display: flex;
         align-items: center;
@@ -256,77 +48,26 @@
         border-radius: 16px;
         color: white;
         text-decoration: none;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
+        transition: 0.3s;
     }
 
-        /* Hover effect */
         .menu-link:hover {
             background: rgba(255,255,255,0.15);
             transform: translateX(6px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
 
-        /* Active item (Quick Billing style white pill) */
         .menu-link.active {
             background: white;
             color: #4f46e5;
             font-weight: 600;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            transform: scale(1.03);
         }
 
-        /* Ripple effect on click */
-        .menu-link:active {
-            transform: scale(0.97);
-        }
-
-    /* Smooth appearance animation */
-    .sidebar-menu li {
-        animation: fadeSlide 0.6s ease forwards;
-        opacity: 0;
+    /* Main Content */
+    .main-content {
+        flex: 1;
+        padding: 40px;
     }
 
-        .sidebar-menu li:nth-child(1) {
-            animation-delay: 0.1s;
-        }
-
-        .sidebar-menu li:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .sidebar-menu li:nth-child(3) {
-            animation-delay: 0.3s;
-        }
-
-        .sidebar-menu li:nth-child(4) {
-            animation-delay: 0.4s;
-        }
-
-        .sidebar-menu li:nth-child(5) {
-            animation-delay: 0.5s;
-        }
-
-        .sidebar-menu li:nth-child(6) {
-            animation-delay: 0.6s;
-        }
-
-    @@keyframes fadeSlide {
-        from {
-            opacity: 0;
-            transform: translateX(-15px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-
-    /* Main Card */
     .content-card {
         background: white;
         padding: 35px;
@@ -334,38 +75,63 @@
         box-shadow: 0 25px 60px rgba(0,0,0,0.08);
     }
 
-    /* Headings */
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
     h2 {
+        margin: 0;
+        font-weight: 700;
         color: #1e293b;
     }
 
     h3 {
+        margin-top: 20px;
         color: #334155;
     }
 
-    /* Inputs */
+    /* Form Rows */
+    .billing-form {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
     input, select {
         padding: 12px;
         border-radius: 12px;
         border: 1px solid #ddd;
-        transition: 0.3s;
+        font-size: 14px;
+        width: 100%;
     }
 
         input:focus, select:focus {
             border-color: #7c3aed;
-            box-shadow: 0 0 0 4px rgba(124,58,237,0.15);
             outline: none;
+            box-shadow: 0 0 0 4px rgba(124,58,237,0.15);
         }
 
-    /* Add Button */
+    /* Quantity FIX */
+    .qty-box {
+        width: 120px !important;
+        flex: none !important;
+        text-align: center;
+    }
+
+    /* Buttons */
     .btn-add {
         background: linear-gradient(135deg, #22c55e, #16a34a);
         color: white;
         border: none;
-        padding: 12px 18px;
+        padding: 12px 20px;
         border-radius: 15px;
+        cursor: pointer;
         font-weight: 500;
         transition: 0.3s;
+        white-space: nowrap;
     }
 
         .btn-add:hover {
@@ -373,13 +139,13 @@
             box-shadow: 0 10px 20px rgba(34,197,94,0.3);
         }
 
-    /* Action Buttons */
     .btn-alert {
         background: linear-gradient(135deg, #6366f1, #8b5cf6);
         color: white;
         border: none;
         padding: 12px 20px;
         border-radius: 15px;
+        cursor: pointer;
         font-weight: 500;
         transition: 0.3s;
     }
@@ -389,56 +155,48 @@
             box-shadow: 0 10px 20px rgba(139,92,246,0.3);
         }
 
-    /* Table */
-    .sales-table th {
-        background: #f1f5f9;
-        padding: 12px;
-    }
-
-    .sales-table tr:hover {
-        background: #f8fafc;
-    }
-
-    /* Grand Total Highlight */
-    .total-box, h2[style*="Grand"] {
-        color: #7c3aed;
-        font-weight: 700;
-    }
-    /* ============================= */
-    /* PREMIUM DELETE BUTTON */
-    /* ============================= */
-
+    /* Delete Button */
     .btn-delete {
         background: linear-gradient(135deg, #ef4444, #dc2626);
         color: white;
         padding: 8px 16px;
         border: none;
         border-radius: 10px;
-        font-size: 13px;
-        font-weight: 500;
         cursor: pointer;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        box-shadow: 0 4px 12px rgba(220,38,38,0.3);
     }
 
-        .btn-delete:hover {
-            background: linear-gradient(135deg, #dc2626, #b91c1c);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 18px rgba(220,38,38,0.4);
+    /* Table */
+    .sales-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 25px;
+    }
+
+        .sales-table th {
+            background: #f1f5f9;
+            padding: 12px;
         }
 
-        .btn-delete:active {
-            transform: scale(0.95);
+        .sales-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
         }
+
+    /* Total */
+    .total-box {
+        margin-top: 25px;
+        font-size: 22px;
+        font-weight: 700;
+        text-align: right;
+        color: #7c3aed;
+    }
 
 </style>
 
 <div class="dashboard-container">
 
-    <!-- Sidebar (UNCHANGED) -->
+    <!-- Sidebar -->
     <div class="sidebar">
         <h2 class="sidebar-title">Pharma Pulse</h2>
 
@@ -462,17 +220,24 @@
                 <p><b>Invoice:</b> @Model.InvoiceNumber</p>
             </div>
 
+            <!-- FORM -->
             <form method="post" asp-page-handler="AddItem">
 
                 <h3>Customer Details</h3>
+
                 <div class="billing-form">
                     <input asp-for="CustomerName" placeholder="Enter Customer Name" />
                     <input asp-for="MobileNumber" placeholder="Enter Mobile Number" />
                 </div>
 
+                <div class="billing-form">
+                    <input asp-for="DoctorName" placeholder="Enter Doctor Name" />
+                </div>
+
                 <hr />
 
                 <h3>Add Medicines</h3>
+
                 <div class="billing-form">
                     <select asp-for="SelectedMedicine">
                         <option value="">-- Select Medicine --</option>
@@ -482,14 +247,27 @@
                         }
                     </select>
 
-                    <input asp-for="Quantity" type="number" min="1" placeholder="Quantity" value="1" />
+                    <select asp-for="SellMode">
+                        <option value="Tablet">Tablet</option>
+                        <option value="Strip">Strip</option>
+                    </select>
+
+
+                    <!-- Quantity Fixed -->
+                    <input asp-for="Quantity"
+                           class="qty-box"
+                           type="number"
+                           min="1"
+                           value="1" />
 
                     <button type="submit" class="btn-add">
                         ➕ Add Item
                     </button>
+
                 </div>
             </form>
 
+            <!-- TABLE -->
             <table class="sales-table">
                 <thead>
                     <tr>
@@ -500,6 +278,7 @@
                         <th>Action</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @foreach (var item in Model.BillItems)
                     {
@@ -511,36 +290,30 @@
                             <td>
                                 <form method="post" asp-page-handler="DeleteItem">
                                     <input type="hidden" name="medicineName" value="@item.MedicineName" />
-                                    <button type="submit" class="btn-delete">
-                                        Delete
-                                    </button>
+                                    <button type="submit" class="btn-delete">Delete</button>
                                 </form>
                             </td>
                         </tr>
-                        
                     }
                 </tbody>
             </table>
 
+            <!-- TOTAL -->
             <div class="total-box">
                 Grand Total: ₹@Model.GrandTotal.ToString("0.00")
             </div>
 
+            <!-- ACTION BUTTONS -->
             <div style="margin-top:25px; display:flex; gap:15px;">
                 <form method="post" asp-page-handler="CompleteSale">
-                    <button type="submit" class="btn-alert">
-                        ✅ Complete Sale
-                    </button>
+                    <button type="submit" class="btn-alert">✅ Complete Sale</button>
                 </form>
 
                 <form method="post" asp-page-handler="PrintBill">
-                    <button type="submit" class="btn-alert">
-                        🖨 Print Invoice
-                    </button>
+                    <button type="submit" class="btn-alert">🖨 Print Invoice</button>
                 </form>
             </div>
 
         </div>
-
     </div>
 </div>

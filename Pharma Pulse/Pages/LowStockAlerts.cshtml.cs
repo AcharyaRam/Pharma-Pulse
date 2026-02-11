@@ -17,7 +17,7 @@ namespace Pharma_Pulse.Pages
 
             // Filter only Low Stock Medicines (Stock <= 10)
             LowStockMedicines = allMedicines
-                .Where(m => m.Stock <= m.LowStockLimit)
+                .Where(m => m.StockUnits <= m.LowStockLimit)
                 .ToList();
         }
     }
