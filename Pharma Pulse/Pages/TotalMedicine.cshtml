@@ -38,9 +38,8 @@
                 </button>
             </div>
 
-            <!-- ✅ Search Form -->
+            <!-- Search -->
             <form method="get" class="search-bar">
-
                 <input type="text"
                        name="search"
                        value="@Model.SearchTerm"
@@ -49,7 +48,6 @@
                 <button type="submit" class="btn-search">
                     Search
                 </button>
-
             </form>
 
             <!-- Table -->
@@ -73,8 +71,11 @@
                             <td>@med.StockUnits</td>
                             <td>@med.ExpiryDate.ToShortDateString()</td>
                             <td>
-                                <button class="btn-delete">🗑 Delete</button>
-                                <button class="btn-edit"> Edit</button>
+                                <!-- ✅ ONLY UPDATE BUTTON -->
+                                <a href="@Url.Page("/UpdateMedicine", new { name = med.MedicineName })"
+                                   class="btn-update">
+                                    Update
+                                </a>
                             </td>
                         </tr>
                     }
