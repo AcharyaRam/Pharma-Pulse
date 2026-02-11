@@ -1,12 +1,10 @@
 ﻿@page
 @model Pharma_Pulse.Pages.SalesSummaryModel
-@{
-    ViewData["Title"] = "Sales Summary";
-}
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+
     body {
         margin: 0;
         font-family: 'Poppins', sans-serif;
@@ -16,38 +14,30 @@
     /* Layout */
     .dashboard-container {
         display: flex;
-        width: 100%;
-        min-height: calc(100vh - 80px);
     }
 
-    /* Sidebar */
-
+    /* Sidebar Container */
     .sidebar {
         width: 250px;
-        padding: 35px 25px;
-        margin-top: 0px;
         background: linear-gradient(160deg, #4f46e5, #7c3aed);
-        border-radius: 2px;
-        box-shadow: 0 25px 60px rgba(0,0,0,0.18);
+        padding: 35px 25px;
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 30px;
+        box-shadow: 8px 0 40px rgba(0,0,0,0.15);
         position: relative;
         overflow: hidden;
-        position: relative;
-        z-index: 1;
-        height: 900px;
     }
 
-        /* Animated glow */
+        /* Soft animated glow background */
         .sidebar::before {
             content: "";
             position: absolute;
             width: 300px;
             height: 300px;
-            background: radial-gradient(circle, rgba(255,255,255,0.2), transparent);
-            top: -120px;
-            left: -120px;
-            animation: rotateGlow 18s linear infinite;
-            pointer-events: none;
-            z-index: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.15), transparent);
+            top: -100px;
+            left: -100px;
+            animation: rotateGlow 12s linear infinite;
         }
 
     @@keyframes rotateGlow {
@@ -60,13 +50,26 @@
         }
     }
 
-    /* Sidebar Title */
+    /* Title */
     .sidebar-title {
-        font-size: 26px;
+        font-size: 28px;
         font-weight: 700;
         color: white;
         margin-bottom: 40px;
         letter-spacing: 1px;
+        animation: slideDown 0.6s ease;
+    }
+
+    @@keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-15px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     /* Remove bullets */
@@ -81,39 +84,120 @@
             margin-bottom: 18px;
         }
 
-    /* Menu Links */
+    /* Links */
     .menu-link {
         display: flex;
         align-items: center;
         gap: 12px;
         padding: 14px 18px;
         border-radius: 16px;
-        text-decoration: none;
         color: white;
+        text-decoration: none;
         font-weight: 500;
         transition: all 0.3s ease;
         position: relative;
-        z-index: 2;
+        overflow: hidden;
     }
 
-        /* Hover */
+        /* Hover effect */
         .menu-link:hover {
-            background: rgba(255,255,255,0.18);
+            background: rgba(255,255,255,0.15);
             transform: translateX(6px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
 
-        /* Active Item */
+        /* Active item (Quick Billing style white pill) */
         .menu-link.active {
             background: white;
             color: #4f46e5;
             font-weight: 600;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: scale(1.03);
         }
 
-    /* Main Content */
+        /* Ripple effect on click */
+        .menu-link:active {
+            transform: scale(0.97);
+        }
+
+    /* Smooth appearance animation */
+    .sidebar-menu li {
+        animation: fadeSlide 0.6s ease forwards;
+        opacity: 0;
+    }
+
+        .sidebar-menu li:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .sidebar-menu li:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .sidebar-menu li:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .sidebar-menu li:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .sidebar-menu li:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .sidebar-menu li:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+
+    @@keyframes fadeSlide {
+        from {
+            opacity: 0;
+            transform: translateX(-15px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+
+    .menu-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 15px;
+        border-radius: 14px;
+        text-decoration: none;
+        color: white;
+        font-weight: 500;
+        margin-bottom: 12px;
+        transition: 0.3s;
+    }
+
+        .menu-link:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .menu-link.active {
+            background: white;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+
+    /* ===== MAIN CONTENT ===== */
     .main-content {
         flex: 1;
         padding: 40px;
+    }
+
+    /* Card */
+    .content-card {
+        background: white;
+        padding: 35px;
+        border-radius: 30px;
+        box-shadow: 0 30px 70px rgba(0,0,0,0.08);
     }
 
     /* Header */
@@ -124,11 +208,23 @@
         margin-bottom: 30px;
     }
 
+        .card-header h2 {
+            font-weight: 600;
+        }
+
+    /* Dropdown */
     .report-select {
-        padding: 10px;
-        border-radius: 10px;
+        padding: 12px;
+        border-radius: 12px;
         border: 1px solid #ddd;
+        transition: 0.3s;
     }
+
+        .report-select:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+            outline: none;
+        }
 
     /* Summary Cards */
     .sales-cards {
@@ -140,37 +236,42 @@
     .sales-box {
         flex: 1;
         padding: 25px;
-        border-radius: 18px;
+        border-radius: 20px;
         color: white;
+        transition: 0.3s ease;
     }
 
+        .sales-box:hover {
+            transform: translateY(-6px);
+        }
+
+        .sales-box h3 {
+            margin: 0 0 10px;
+            font-weight: 500;
+        }
+
+        .sales-box p {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+        }
+
     .green {
-        background: #22c55e;
+        background: linear-gradient(135deg, #16a34a, #22c55e);
     }
 
     .blue {
-        background: #3b82f6;
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
     }
 
     .red {
-        background: #ef4444;
-    }
-
-    .sales-box h3 {
-        margin-bottom: 10px;
-        font-weight: 500;
-    }
-
-    .sales-box p {
-        font-size: 22px;
-        font-weight: 600;
+        background: linear-gradient(135deg, #dc2626, #ef4444);
     }
 
     /* Table */
     .sales-table {
         width: 100%;
         border-collapse: collapse;
-        background: white;
         border-radius: 15px;
         overflow: hidden;
     }
@@ -178,6 +279,7 @@
         .sales-table th {
             background: #f3f4f6;
             padding: 12px;
+            font-weight: 600;
             text-align: center;
         }
 
@@ -192,8 +294,13 @@
         }
 
     .profit {
-        color: #16a34a;
         font-weight: bold;
+        color: #16a34a;
+    }
+
+    .table-title {
+        font-weight: 600;
+        margin-bottom: 15px;
     }
 
 </style>
@@ -217,62 +324,71 @@
     <!-- Main Content -->
     <div class="main-content">
 
-        <div class="card-header">
-            <h2>Sales Summary Report</h2>
+        <div class="content-card">
 
-            <form method="get">
-                <select name="ReportType" onchange="this.form.submit()" class="report-select">
-                    <option value="Daily" selected="@(Model.ReportType == "Daily")">Daily</option>
-                    <option value="Monthly" selected="@(Model.ReportType == "Monthly")">Monthly</option>
-                    <option value="Yearly" selected="@(Model.ReportType == "Yearly")">Yearly</option>
-                </select>
-            </form>
-        </div>
+            <div class="card-header">
+                <h2>Sales Summary Report</h2>
 
-        <div class="sales-cards">
-            <div class="sales-box green">
-                <h3>Total Sales (@Model.ReportType)</h3>
-                <p>₹@Model.TotalSales.ToString("0.00")</p>
+                <form method="get">
+                    <select name="ReportType"
+                            onchange="this.form.submit()"
+                            class="report-select">
+
+                        <option value="Daily" selected="@(Model.ReportType == "Daily")">Daily Report</option>
+                        <option value="Monthly" selected="@(Model.ReportType == "Monthly")">Monthly Report</option>
+                        <option value="Yearly" selected="@(Model.ReportType == "Yearly")">Yearly Report</option>
+
+                    </select>
+                </form>
             </div>
 
-            <div class="sales-box blue">
-                <h3>Total Profit (@Model.ReportType)</h3>
-                <p>₹@Model.TotalProfit.ToString("0.00")</p>
+            <div class="sales-cards">
+
+                <div class="sales-box green">
+                    <h3>Total Sales (@Model.ReportType)</h3>
+                    <p>₹@Model.TotalSales.ToString("0.00")</p>
+                </div>
+
+                <div class="sales-box blue">
+                    <h3>Total Profit (@Model.ReportType)</h3>
+                    <p>₹@Model.TotalProfit.ToString("0.00")</p>
+                </div>
+
+                <div class="sales-box red">
+                    <h3>Total Loss (@Model.ReportType)</h3>
+                    <p>₹0.00</p>
+                </div>
+
             </div>
 
-            <div class="sales-box red">
-                <h3>Total Loss (@Model.ReportType)</h3>
-                <p>₹0.00</p>
-            </div>
-        </div>
+            <h3 class="table-title">Sales Breakdown</h3>
 
-        <h3>Sales Breakdown</h3>
-
-        <table class="sales-table">
-            <thead>
-                <tr>
-                    <th>Medicine</th>
-                    <th>Qty Sold</th>
-                    <th>Total Amount</th>
-                    <th>Profit</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach (var sale in Model.FilteredSales)
-                {
+            <table class="sales-table">
+                <thead>
                     <tr>
-                        <td>@sale.MedicineName</td>
-                        <td>@sale.QuantitySold</td>
-                        <td>₹@sale.TotalAmount.ToString("0.00")</td>
-                        <td class="profit">₹@sale.Profit.ToString("0.00")</td>
-                        <td>@sale.SaleDate.ToShortDateString()</td>
+                        <th>Medicine</th>
+                        <th>Qty Sold</th>
+                        <th>Total Amount</th>
+                        <th>Profit</th>
+                        <th>Date</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+
+                <tbody>
+                    @foreach (var sale in Model.FilteredSales)
+                    {
+                        <tr>
+                            <td>@sale.MedicineName</td>
+                            <td>@sale.QuantitySold</td>
+                            <td>₹@sale.TotalAmount.ToString("0.00")</td>
+                            <td class="profit">₹@sale.Profit.ToString("0.00")</td>
+                            <td>@sale.SaleDate.ToShortDateString()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
 
     </div>
-
 </div>

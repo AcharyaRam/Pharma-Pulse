@@ -42,9 +42,9 @@ body {
 .sidebar {
     width: 250px;
     padding: 35px 25px;
-    margin-top: 0px;
+    margin-top: 40px;
     background: linear-gradient(160deg, #4f46e5, #7c3aed);
-    border-radius: 2px;
+    border-radius: 22px;
     box-shadow: 0 25px 60px rgba(0,0,0,0.18);
     position: relative;
     z-index: 1;
