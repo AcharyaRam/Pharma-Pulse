@@ -5,11 +5,317 @@
 body {
     margin: 0;
     font-family: "Segoe UI", sans-serif;
-    background: #f4f7fc;
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
 }
+
 /* ============================= */
-/*Delete Button*/
-/*==============================*/
+/* ✅ DASHBOARD LAYOUT */
+/* ============================= */
+
+.dashboard-container {
+    display: flex;
+    gap: 25px;
+    padding: 30px;
+    animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================= */
+/* ✅ SIDEBAR */
+/* ============================= */
+
+.sidebar {
+    width: 250px;
+    padding: 35px 25px;
+    background: linear-gradient(160deg, #4f46e5, #7c3aed);
+    border-radius: 22px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.18);
+}
+
+.sidebar-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 40px;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+    .sidebar-menu li {
+        margin-bottom: 18px;
+    }
+
+.menu-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 16px;
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    transition: 0.3s ease;
+}
+
+    .menu-link:hover {
+        background: rgba(255,255,255,0.18);
+        transform: translateX(6px);
+    }
+
+    .menu-link.active {
+        background: white;
+        color: #4f46e5;
+        font-weight: 600;
+    }
+
+/* ============================= */
+/* ✅ MAIN CONTENT */
+/* ============================= */
+
+.main-content {
+    flex: 1;
+}
+
+/* ============================= */
+/* ✅ CONTENT CARD */
+/* ============================= */
+
+.content-card {
+    background: white;
+    padding: 40px;
+    border-radius: 25px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.06);
+    animation: slideUp 0.6s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+    .card-header h2 {
+        font-size: 32px;
+        font-weight: 700;
+    }
+
+    .card-header p {
+        color: #64748b;
+    }
+
+/* ============================= */
+/* ✅ FORM GRID */
+ /* ============================= */
+/* PREMIUM FORM GRID */
+/* ============================= */
+.medicine-form {
+    margin-top: 30px;
+    animation: fadeSlide 0.6s ease;
+}
+
+@keyframes fadeSlide {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px 40px;
+}
+
+/* Make expiry full width */
+.full-width {
+    grid-column: span 2;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+    .form-group label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #1e293b;
+        font-size: 15px;
+    }
+
+.form-input {
+    padding: 16px 18px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    font-size: 15px;
+    background: #f8fafc;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+}
+
+    .form-input:focus {
+        border-color: #6366f1;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(99,102,241,0.15);
+        transform: translateY(-2px);
+    }
+
+/* Remove default arrow */
+select.form-input {
+    appearance: none;
+    cursor: pointer;
+}
+
+/* ============================= */
+/* PREMIUM SAVE BUTTON */
+/* ============================= */
+
+.btn-save {
+    margin-top: 40px;
+    width: 100%;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    padding: 18px;
+    border-radius: 20px;
+    border: none;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .btn-save:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 18px 35px rgba(34,197,94,0.35);
+    }
+
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: span 1;
+    }
+}
+
+
+
+/* Remove default arrow */
+select.form-input {
+    appearance: none;
+    cursor: pointer;
+}
+
+/* Save Button */
+.btn-save {
+    margin-top: 35px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    padding: 16px 32px;
+    border-radius: 18px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+    .btn-save:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(34,197,94,0.35);
+    }
+
+
+/* ============================= */
+/* ✅ INPUT DESIGN */
+/* ============================= */
+
+.form-input {
+    width: 100%;
+    padding: 16px 20px;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    font-size: 15px;
+    outline: none;
+    transition: 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.04);
+}
+
+    .form-input:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 4px rgba(99,102,241,0.15);
+        transform: scale(1.02);
+    }
+
+/* Dropdown */
+select.form-input {
+    appearance: none;
+    cursor: pointer;
+}
+
+/* ============================= */
+/* ✅ SAVE BUTTON */
+/* ============================= */
+
+.btn-save {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    padding: 16px 30px;
+    border-radius: 16px;
+    border: none;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin-top: 20px;
+}
+
+    .btn-save:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(34,197,94,0.35);
+    }
+
+/* ============================= */
+/* ✅ DELETE BUTTON */
+/* ============================= */
 
 .btn-delete {
     background: #dc2626;
@@ -27,228 +333,13 @@ body {
         transform: scale(1.05);
     }
 
-
-/* ============================= */
-/* ✅ DASHBOARD LAYOUT */
-/* ============================= */
-
-.dashboard-container {
-    display: flex;
-    gap: 25px;
-    padding: 30px;
-}
-
-/* ============================= */
-/* ✅ SIDEBAR */
-/* ============================= */
-
-.sidebar {
-    width: 250px;
-    padding: 35px 25px;
-    margin-top: 40px;
-    background: linear-gradient(160deg, #4f46e5, #7c3aed);
-    border-radius: 22px;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.18);
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
-}
-
-    /* Animated glow */
-    .sidebar::before {
-        content: "";
-        position: absolute;
-        pointer-events: none;
-        z-index: 0;
-        width: 300px;
-        height: 300px;
-        background: radial-gradient(circle, rgba(255,255,255,0.2), transparent);
-        top: -120px;
-        left: -120px;
-        animation: rotateGlow 18s linear infinite;
-    }
-
-@keyframes rotateGlow {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* Sidebar Title */
-.sidebar-title {
-    font-size: 26px;
-    font-weight: 700;
-    color: white;
-    margin-bottom: 40px;
-    letter-spacing: 1px;
-}
-
-/* Remove bullets */
-.sidebar-menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-    /* Menu Items */
-    .sidebar-menu li {
-        margin-bottom: 18px;
-    }
-
-/* Menu Links */
-.menu-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 18px;
-    border-radius: 16px;
-    text-decoration: none;
-    color: white;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 2;
-}
-
-    /* Hover */
-    .menu-link:hover {
-        background: rgba(255,255,255,0.18);
-        transform: translateX(6px);
-    }
-
-    /* Active Item */
-    .menu-link.active {
-        background: white;
-        color: #4f46e5;
-        font-weight: 600;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-    }
-/* ============================= */
-/* ✅ MAIN CONTENT */
-/* ============================= */
-
-.main-content {
-    flex: 1;
-}
-
-/* ============================= */
-/* ✅ CONTENT CARD */
-/* ============================= */
-
-.content-card {
-    background: white;
-    padding: 35px;
-    border-radius: 18px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-}
-
-/* Header */
-.card-header h2 {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 6px;
-}
-
-.card-header p {
-    margin: 0;
-    color: #666;
-    font-size: 14px;
-}
-
-/* ============================= */
-/* ✅ FORM DESIGN */
-/* ============================= */
-
-.medicine-form {
-    margin-top: 25px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-
-/* Form Row */
-.form-row {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-    .form-row label {
-        font-size: 15px;
-        font-weight: 600;
-        color: #333;
-    }
-
-    /* Input */
-    .form-row input {
-        padding: 12px;
-        border-radius: 10px;
-        border: 1px solid #ccc;
-        font-size: 14px;
-        outline: none;
-        transition: 0.2s;
-    }
-
-        .form-row input:focus {
-            border-color: #2980b9;
-            box-shadow: 0 0 8px rgba(41, 128, 185, 0.3);
-        }
-
-/* Grid Inputs */
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-}
-
-/* ============================= */
-/* ✅ BUTTON */
-/* ============================= */
-
-.btn-save {
-    margin-top: 10px;
-    padding: 14px;
-    background: #1f7a54;
-    color: white;
-    font-size: 15px;
-    font-weight: bold;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-    .btn-save:hover {
-        background: #14563b;
-    }
-
-/* ============================= */
-/* ✅ SUCCESS MESSAGE */
-/* ============================= */
-
-.success-msg {
-    margin-top: 18px;
-    text-align: center;
-    font-weight: bold;
-    color: green;
-}
-
 /* ============================= */
 /* ✅ RESPONSIVE */
 /* ============================= */
 
 @media(max-width: 768px) {
-
     .dashboard-container {
         flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
     }
 
     .form-grid {

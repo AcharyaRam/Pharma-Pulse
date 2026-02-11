@@ -1,7 +1,7 @@
 ﻿@page
 @model Pharma_Pulse.Pages.AddMedicineModel
 
-<link rel="stylesheet" href="~/css/medicine.css" />
+<link rel="stylesheet" href="~/css/addmedicine.css" />
 
 <div class="dashboard-container">
 
@@ -18,7 +18,6 @@
 
     <!-- Main Content -->
     <div class="main-content">
-
         <div class="content-card">
 
             <div class="card-header">
@@ -28,52 +27,69 @@
 
             <form method="post" class="medicine-form">
 
-                <!-- Medicine Name -->
-                <label>Medicine Name</label>
-                <input asp-for="Medicine.MedicineName" required />
+                <div class="form-grid">
 
-                <!-- Category -->
-                <label>Category</label>
-                <input asp-for="Medicine.Category" required />
+                    <div class="form-group">
+                        <label>Medicine Name</label>
+                        <input type="text" class="form-input" />
+                    </div>
 
-                <!-- Stock Units -->
-                <label>Total Stock Units (Tablets)</label>
-                <input asp-for="Medicine.StockUnits" type="number" required />
+                    <div class="form-group">
+                        <label>Category</label>
+                        <input type="text" class="form-input" />
+                    </div>
 
-                <!-- Units Per Strip -->
-                <label>Units Per Strip</label>
-                <input asp-for="Medicine.UnitsPerStrip" type="number" required />
+                    <div class="form-group">
+                        <label>Total Stock Units (Tablets)</label>
+                        <input type="number" class="form-input" />
+                    </div>
 
-                <!-- Sell Type -->
-                <label>Selling Type</label>
-                <select asp-for="Medicine.SellType" required>
-                    <option value="Tablet">Tablet Only</option>
-                    <option value="Strip">Strip Only</option>
-                    <option value="Both">Both (Tablet + Strip)</option>
-                </select>
+                    <div class="form-group">
+                        <label>Units Per Strip</label>
+                        <input type="number" class="form-input" />
+                    </div>
 
-                <!-- Low Stock Limit -->
-                <label>Low Stock Alert Limit</label>
-                <input asp-for="Medicine.LowStockLimit" type="number" required />
+                    <div class="form-group">
+                        <label>Selling Type</label>
+                        <select class="form-input">
+                            <option>Tablet Only</option>
+                            <option>Strip</option>
+                            <option>Both</option>
+                        </select>
+                    </div>
 
-                <!-- Buying Price -->
-                <label>Buying Price</label>
-                <input asp-for="Medicine.BuyingPrice" type="number" step="0.01" required />
+                    <div class="form-group">
+                        <label>Low Stock Alert Limit</label>
+                        <input type="number" class="form-input" />
+                    </div>
 
-                <!-- Selling Price -->
-                <label>Selling Price</label>
-                <input asp-for="Medicine.SellingPrice" type="number" step="0.01" required />
+                    <div class="form-group">
+                        <label>Buying Price</label>
+                        <input type="number" class="form-input" />
+                    </div>
 
-                <!-- Expiry Date -->
-                <label>Expiry Date</label>
-                <input asp-for="Medicine.ExpiryDate" type="date" required />
+                    <div class="form-group">
+                        <label>Selling Price</label>
+                        <input type="number" class="form-input" />
+                    </div>
 
-                <!-- Submit -->
-                <button type="submit" class="btn-add">
+                    <div class="form-group full-width">
+                        <label>Expiry Date</label>
+                        <input type="date" class="form-input" />
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn-save">
                     ✅ Save Medicine
                 </button>
 
             </form>
+
+
+        </div>
+    </div>
+
 
             @if (Model.SuccessMessage != null)
             {
