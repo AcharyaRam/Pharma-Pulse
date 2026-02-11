@@ -1,7 +1,21 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Pharma_Pulse.Data;
+using Pharma_Pulse.Services;   // ✅ Add this using
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // ✅ Add services to the container
 builder.Services.AddRazorPages();
+
+// ✅ Database Connection
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    )
+);
+
+// ✅ Register MedicineService (Add this line)
+builder.Services.AddScoped<MedicineService>();
 
 // ✅ Session Services MUST be before Build()
 builder.Services.AddDistributedMemoryCache();
@@ -27,7 +41,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// ✅ Session Middleware MUST be after Routing and before Authorization
+// ✅ Session Middleware MUST be after Routing
 app.UseSession();
 
 app.UseAuthorization();

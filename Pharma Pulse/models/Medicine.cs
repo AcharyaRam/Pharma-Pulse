@@ -4,6 +4,8 @@ namespace Pharma_Pulse.Models
 {
     public class Medicine
     {
+        public int Id { get; set; }
+
         public string MedicineName { get; set; }
         public string Category { get; set; }
         public DateTime ExpiryDate { get; set; }
@@ -21,7 +23,7 @@ namespace Pharma_Pulse.Models
 
         public int UnitsPerStrip { get; set; }
 
-        public string SellType { get; set; }
+        public string SellType { get; set; } = "Tablet Only";
 
     }
 }

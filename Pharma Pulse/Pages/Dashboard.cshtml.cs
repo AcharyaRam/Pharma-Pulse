@@ -9,6 +9,14 @@ namespace Pharma_Pulse.Pages
 {
     public class DashboardModel : PageModel
     {
+        // ✅ Inject MedicineService
+        private readonly MedicineService _service;
+
+        public DashboardModel(MedicineService service)
+        {
+            _service = service;
+        }
+
         public List<Medicine> Medicines { get; set; }
 
         // ✅ Total medicines count for card
@@ -35,15 +43,15 @@ namespace Pharma_Pulse.Pages
 
         public void OnGet()
         {
-            // ✅ Load Medicines
-            var allMedicines = MedicineService.GetAllMedicines();
+            // ✅ Load Medicines from Database
+            var allMedicines = _service.GetAllMedicines();
 
             TotalMedicineCount = allMedicines.Count;
 
             // Show only top 10 medicines in dashboard table
             Medicines = allMedicines.Take(10).ToList();
 
-            // ✅ Low Stock Count (based on medicine LowStockLimit)
+            // ✅ Low Stock Count
             LowStockCount = allMedicines.Count(m => m.StockUnits <= m.LowStockLimit);
 
             // ✅ Lowest Stock Medicine
@@ -62,7 +70,7 @@ namespace Pharma_Pulse.Pages
                 .FirstOrDefault();
 
             // ====================================================
-            // ✅ Load Sales Only ONCE
+            // ✅ Sales Data (unchanged)
             // ====================================================
             var sales = SalesService.GetAllSales() ?? new List<Sale>();
 
@@ -71,7 +79,7 @@ namespace Pharma_Pulse.Pages
                 .Where(s => s.SaleDate.Date == DateTime.Today)
                 .Sum(s => s.TotalAmount);
 
-            // ✅ Total Bills Today (unique invoices)
+            // ✅ Total Bills Today
             TotalBillsToday = sales
                 .Where(s => s.SaleDate.Date == DateTime.Today)
                 .Select(s => s.InvoiceNumber)
