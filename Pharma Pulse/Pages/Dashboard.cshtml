@@ -73,7 +73,7 @@
                             <tr>
                                 <td>@med.MedicineName</td>
                                 <td>@med.Category</td>
-                                <td>@med.Stock</td>
+                                <td>@med.StockUnits</td>
                                 <td>@med.ExpiryDate.ToShortDateString()</td>
                             </tr>
                         }
@@ -119,7 +119,7 @@
                 {
                     <p>
                         <b>@Model.LowestStockMedicine.MedicineName</b>
-                        - Only @Model.LowestStockMedicine.Stock left!
+                        - Only @Model.LowestStockMedicine.StockUnits left!
                     </p>
                 }
                 else

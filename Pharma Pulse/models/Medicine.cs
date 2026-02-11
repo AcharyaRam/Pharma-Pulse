@@ -6,7 +6,6 @@ namespace Pharma_Pulse.Models
     {
         public string MedicineName { get; set; }
         public string Category { get; set; }
-        public int Stock { get; set; }
         public DateTime ExpiryDate { get; set; }
 
         // ✅ Low stock threshold (har medicine ka alag hoga)
@@ -17,5 +16,12 @@ namespace Pharma_Pulse.Models
 
         // ✅ Selling Price (Customer selling rate)
         public decimal SellingPrice { get; set; }
+
+        public int StockUnits { get; set; }
+
+        public int UnitsPerStrip { get; set; }
+
+        public string SellType { get; set; }
+
     }
 }

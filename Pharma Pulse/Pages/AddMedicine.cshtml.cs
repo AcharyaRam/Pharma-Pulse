@@ -14,20 +14,13 @@ namespace Pharma_Pulse.Pages
 
         public void OnGet()
         {
-            Medicine = new Medicine();
         }
 
-        public IActionResult OnPost()
+        public void OnPost()
         {
-            if (!ModelState.IsValid)
-                return Page();
-
-            // ✅ Add medicine into MedicineService list (temporary)
             MedicineService.AddMedicine(Medicine);
 
             SuccessMessage = "Medicine Added Successfully!";
-
-            return Page();
         }
     }
 }

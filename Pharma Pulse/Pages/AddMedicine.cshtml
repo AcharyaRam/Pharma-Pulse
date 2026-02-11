@@ -1,128 +1,87 @@
 ﻿@page
 @model Pharma_Pulse.Pages.AddMedicineModel
 
-<link rel="stylesheet" href="~/css/addmedicine.css" />
+<link rel="stylesheet" href="~/css/medicine.css" />
 
 <div class="dashboard-container">
 
-    <!-- ✅ Sidebar -->
+    <!-- Sidebar -->
     <div class="sidebar">
         <h2 class="sidebar-title">Pharma Pulse</h2>
 
         <ul class="sidebar-menu">
-
-            <li>
-                <a asp-page="/Dashboard" class="menu-link">
-                    🏠 Dashboard
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/TotalMedicine" class="menu-link">
-                    💊 Medicines
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/AddMedicine" class="menu-link active">
-                    ➕ Add Medicine
-                </a>
-            </li>
-
+            <li><a asp-page="/Dashboard" class="menu-link">🏠 Dashboard</a></li>
+            <li><a asp-page="/TotalMedicine" class="menu-link">💊 Medicines</a></li>
+            <li><a asp-page="/AddMedicine" class="menu-link active">➕ Add Medicine</a></li>
         </ul>
     </div>
 
-    <!-- ✅ Main Content -->
+    <!-- Main Content -->
     <div class="main-content">
 
         <div class="content-card">
 
-            <!-- Header -->
             <div class="card-header">
                 <h2>Add New Medicine</h2>
-                <p>Fill all details carefully</p>
+                <p>Fill all medicine details carefully</p>
             </div>
 
-            <!-- ✅ Form -->
             <form method="post" class="medicine-form">
 
-                <div class="form-row">
-                    <label>Medicine Name</label>
-                    <input asp-for="Medicine.MedicineName"
-                           placeholder="Enter medicine name"
-                           required />
-                </div>
+                <!-- Medicine Name -->
+                <label>Medicine Name</label>
+                <input asp-for="Medicine.MedicineName" required />
 
-                <div class="form-row">
-                    <label>Category</label>
-                    <input asp-for="Medicine.Category"
-                           placeholder="Enter category"
-                           required />
-                </div>
+                <!-- Category -->
+                <label>Category</label>
+                <input asp-for="Medicine.Category" required />
 
-                <div class="form-grid">
+                <!-- Stock Units -->
+                <label>Total Stock Units (Tablets)</label>
+                <input asp-for="Medicine.StockUnits" type="number" required />
 
-                    <div class="form-row">
-                        <label>Stock Quantity</label>
-                        <input asp-for="Medicine.Stock"
-                               type="number"
-                               placeholder="Stock"
-                               required />
-                    </div>
+                <!-- Units Per Strip -->
+                <label>Units Per Strip</label>
+                <input asp-for="Medicine.UnitsPerStrip" type="number" required />
 
-                    <div class="form-row">
-                        <label>Low Stock Limit</label>
-                        <input asp-for="Medicine.LowStockLimit"
-                               type="number"
-                               placeholder="Alert Limit"
-                               required />
-                    </div>
+                <!-- Sell Type -->
+                <label>Selling Type</label>
+                <select asp-for="Medicine.SellType" required>
+                    <option value="Tablet">Tablet Only</option>
+                    <option value="Strip">Strip Only</option>
+                    <option value="Both">Both (Tablet + Strip)</option>
+                </select>
 
-                </div>
+                <!-- Low Stock Limit -->
+                <label>Low Stock Alert Limit</label>
+                <input asp-for="Medicine.LowStockLimit" type="number" required />
 
-                <div class="form-grid">
+                <!-- Buying Price -->
+                <label>Buying Price</label>
+                <input asp-for="Medicine.BuyingPrice" type="number" step="0.01" required />
 
-                    <div class="form-row">
-                        <label>Buying Price (₹)</label>
-                        <input asp-for="Medicine.BuyingPrice"
-                               type="number"
-                               step="0.01"
-                               placeholder="Purchase price"
-                               required />
-                    </div>
+                <!-- Selling Price -->
+                <label>Selling Price</label>
+                <input asp-for="Medicine.SellingPrice" type="number" step="0.01" required />
 
-                    <div class="form-row">
-                        <label>Selling Price (₹)</label>
-                        <input asp-for="Medicine.SellingPrice"
-                               type="number"
-                               step="0.01"
-                               placeholder="Selling price"
-                               required />
-                    </div>
-
-                </div>
-
-                <div class="form-row">
-                    <label>Expiry Date</label>
-                    <input asp-for="Medicine.ExpiryDate"
-                           type="date"
-                           required />
-                </div>
+                <!-- Expiry Date -->
+                <label>Expiry Date</label>
+                <input asp-for="Medicine.ExpiryDate" type="date" required />
 
                 <!-- Submit -->
-                <button type="submit" class="btn-save">
+                <button type="submit" class="btn-add">
                     ✅ Save Medicine
                 </button>
 
             </form>
 
-            <!-- Success Message -->
             @if (Model.SuccessMessage != null)
             {
-                <p class="success-msg">@Model.SuccessMessage</p>
+                <p style="color:green; margin-top:15px;">
+                    @Model.SuccessMessage
+                </p>
             }
 
         </div>
-
     </div>
 </div>
