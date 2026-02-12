@@ -7,6 +7,13 @@ namespace Pharma_Pulse.Pages
 {
     public class AddMedicineModel : PageModel
     {
+        private readonly MedicineService _service;
+
+        public AddMedicineModel(MedicineService service)
+        {
+            _service = service;
+        }
+
         [BindProperty]
         public Medicine Medicine { get; set; }
 
@@ -16,11 +23,18 @@ namespace Pharma_Pulse.Pages
         {
         }
 
-        public void OnPost()
+        public IActionResult OnPost()
         {
-            MedicineService.AddMedicine(Medicine);
+            if (Medicine.SellType == "Unit")
+            {
+                Medicine.UnitsPerStrip = 1;
+            }
+
+            _service.AddMedicine(Medicine);
 
             SuccessMessage = "Medicine Added Successfully!";
+
+            return RedirectToPage();
         }
     }
 }

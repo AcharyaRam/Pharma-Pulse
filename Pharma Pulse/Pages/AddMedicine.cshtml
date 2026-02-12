@@ -31,51 +31,52 @@
 
                     <div class="form-group">
                         <label>Medicine Name</label>
-                        <input type="text" class="form-input" />
+                        <input asp-for="Medicine.MedicineName" type="text" class="form-input" />
                     </div>
 
                     <div class="form-group">
                         <label>Category</label>
-                        <input type="text" class="form-input" />
+                        <input asp-for="Medicine.Category" type="text" class="form-input" />
                     </div>
 
                     <div class="form-group">
-                        <label>Total Stock Units (Tablets)</label>
-                        <input type="number" class="form-input" />
+                        <label>Total Stock Units</label>
+                        <input asp-for="Medicine.StockUnits" type="number" class="form-input" />
+                    </div>
+
+                    <!-- ✅ Units Per Strip Field (Hide for Unit Sale) -->
+                    <div class="form-group" id="stripField">
+                        <label>Units Per Pack (Strip/Box)</label>
+                        <input asp-for="Medicine.UnitsPerStrip" type="number" class="form-input" />
                     </div>
 
                     <div class="form-group">
-                        <label>Units Per Strip</label>
-                        <input type="number" class="form-input" />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Selling Type</label>
-                        <select class="form-input">
-                            <option>Tablet Only</option>
-                            <option>Strip</option>
-                            <option>Both</option>
+                        <label>Selling Mode</label>
+                        <select asp-for="Medicine.SellType" class="form-input" id="sellType">
+                            <option value="Unit">Unit (Single Item)</option>
+                            <option value="Pack">Pack (Strip/Box)</option>
+                            <option value="Both">Both</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label>Low Stock Alert Limit</label>
-                        <input type="number" class="form-input" />
+                        <input asp-for="Medicine.LowStockLimit" type="number" class="form-input" />
                     </div>
 
                     <div class="form-group">
                         <label>Buying Price</label>
-                        <input type="number" class="form-input" />
+                        <input asp-for="Medicine.BuyingPrice" type="number" step="0.01" class="form-input" />
                     </div>
 
                     <div class="form-group">
                         <label>Selling Price</label>
-                        <input type="number" class="form-input" />
+                        <input asp-for="Medicine.SellingPrice" type="number" step="0.01" class="form-input" />
                     </div>
 
                     <div class="form-group full-width">
                         <label>Expiry Date</label>
-                        <input type="date" class="form-input" />
+                        <input asp-for="Medicine.ExpiryDate" type="date" class="form-input" />
                     </div>
 
                 </div>
@@ -85,11 +86,6 @@
                 </button>
 
             </form>
-
-
-        </div>
-    </div>
-
 
             @if (Model.SuccessMessage != null)
             {
@@ -101,3 +97,31 @@
         </div>
     </div>
 </div>
+
+<!-- ✅ JavaScript (No CSS Change) -->
+<script>
+    const sellType = document.getElementById("sellType");
+    const stripField = document.getElementById("stripField");
+    const stripInput = stripField.querySelector("input");
+
+    function toggleStripField() {
+
+        if (sellType.value === "Unit") {
+
+            // Hide Strip Field
+            stripField.style.display = "none";
+
+            // Auto set UnitsPerStrip = 1
+            stripInput.value = 1;
+        }
+        else {
+            // Show Strip Field
+            stripField.style.display = "flex";
+        }
+    }
+
+    sellType.addEventListener("change", toggleStripField);
+
+    // Run on page load
+    toggleStripField();
+</script>

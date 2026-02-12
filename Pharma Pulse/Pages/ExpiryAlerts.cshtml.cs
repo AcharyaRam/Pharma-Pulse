@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Pharma_Pulse.Models;
 using Pharma_Pulse.Services;
 using System;
@@ -9,11 +9,19 @@ namespace Pharma_Pulse.Pages
 {
     public class ExpiryAlertsModel : PageModel
     {
+        private readonly MedicineService _service;
+
+        public ExpiryAlertsModel(MedicineService service)
+        {
+            _service = service;
+        }
+
         public List<Medicine> ExpiryMedicines { get; set; }
 
         public void OnGet()
         {
-            var allMedicines = MedicineService.GetAllMedicines();
+            // ✅ Load medicines from Database
+            var allMedicines = _service.GetAllMedicines();
 
             // Expiry within next 30 days
             ExpiryMedicines = allMedicines

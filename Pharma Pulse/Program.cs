@@ -1,10 +1,10 @@
 ﻿using Pharma_Pulse.Data;
-using Pharma_Pulse.Services;   // ✅ Add this using
+using Pharma_Pulse.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ Add services to the container
+// ✅ Razor Pages
 builder.Services.AddRazorPages();
 
 // ✅ Database Connection
@@ -14,10 +14,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     )
 );
 
-// ✅ Register MedicineService (Add this line)
+// ✅ Register Services
 builder.Services.AddScoped<MedicineService>();
 
-// ✅ Session Services MUST be before Build()
+// ✅ Session
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
@@ -29,7 +29,16 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
+
+// ✅ AUTO APPLY MIGRATIONS (Database + Tables Auto Create)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();   // ✅ Tables automatically create
+}
+
+
+// Configure Middleware
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -41,7 +50,6 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// ✅ Session Middleware MUST be after Routing
 app.UseSession();
 
 app.UseAuthorization();
