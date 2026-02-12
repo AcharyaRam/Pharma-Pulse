@@ -17,6 +17,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // ✅ Register Services
 builder.Services.AddScoped<MedicineService>();
 
+//register sales
+builder.Services.AddScoped<SalesService>();
+
+
 // ✅ Session
 builder.Services.AddDistributedMemoryCache();
 

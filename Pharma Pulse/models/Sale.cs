@@ -4,6 +4,8 @@ namespace Pharma_Pulse.Models
 {
     public class Sale
     {
+        public int Id { get; set; }  // ✅ Primary Key
+
         public string MedicineName { get; set; }
 
         public int QuantitySold { get; set; }
@@ -14,6 +16,6 @@ namespace Pharma_Pulse.Models
 
         public decimal Profit { get; set; }
 
-        public string InvoiceNumber { get; set; }   // ✅ NEW
+        public string InvoiceNumber { get; set; }
     }
 }
