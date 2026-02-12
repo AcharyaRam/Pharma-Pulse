@@ -10,6 +10,14 @@ namespace Pharma_Pulse.Pages
 {
     public class SalesSummaryModel : PageModel
     {
+        // ✅ Inject SalesService (Database)
+        private readonly SalesService _salesService;
+
+        public SalesSummaryModel(SalesService salesService)
+        {
+            _salesService = salesService;
+        }
+
         // ✅ Filtered Sales List (Daily/Monthly/Yearly)
         public List<Sale> FilteredSales { get; set; } = new List<Sale>();
 
@@ -27,8 +35,8 @@ namespace Pharma_Pulse.Pages
             if (string.IsNullOrEmpty(ReportType))
                 ReportType = "Daily";
 
-            // ✅ Load All Sales from Service
-            var sales = SalesService.GetAllSales();
+            // ✅ Load All Sales from Database
+            var sales = _salesService.GetAllSales();
 
             // ✅ Apply Filter Based on ReportType
             if (ReportType == "Daily")

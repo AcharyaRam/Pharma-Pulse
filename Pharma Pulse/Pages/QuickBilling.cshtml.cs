@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Pharma_Pulse.Helpers;
 using Pharma_Pulse.Models;
 using Pharma_Pulse.Services;
+using Pharma_Pulse.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,20 @@ namespace Pharma_Pulse.Pages
         // ✅ Inject MedicineService
         private readonly MedicineService _service;
 
-        public QuickBillingModel(MedicineService service)
+        // ✅ Inject SalesService (Database)
+        private readonly SalesService _salesService;
+
+        // ✅ Inject DbContext (Bill Save)
+        private readonly AppDbContext _context;
+
+        public QuickBillingModel(
+            MedicineService service,
+            SalesService salesService,
+            AppDbContext context)
         {
             _service = service;
+            _salesService = salesService;
+            _context = context;
         }
 
         // ===========================
@@ -94,8 +106,22 @@ namespace Pharma_Pulse.Pages
             if (med == null)
                 return RedirectToPage();
 
-            if (string.IsNullOrEmpty(SellMode))
-                SellMode = "Tablet";
+            // ===========================
+            // ✅ FIX SELL MODE BASED ON SELLTYPE
+            // ===========================
+            if (med.SellType == "Unit")
+            {
+                SellMode = "Tablet"; // Fixed mode
+            }
+            else if (med.SellType == "Pack")
+            {
+                SellMode = "Strip";  // Fixed mode
+            }
+            else if (med.SellType == "Both")
+            {
+                if (string.IsNullOrEmpty(SellMode))
+                    SellMode = "Tablet"; // Default for Both
+            }
 
             // ===========================
             // CALCULATE UNITS TO SELL
@@ -123,7 +149,7 @@ namespace Pharma_Pulse.Pages
             _service.UpdateMedicine(med);
 
             // ===========================
-            // ADD TO BILL
+            // ADD ITEM TO SESSION
             // ===========================
             BillItems.Add(new BillItem
             {
@@ -158,9 +184,7 @@ namespace Pharma_Pulse.Pages
                     int restoreUnits = item.Quantity;
 
                     if (item.SaleMode == "Strip")
-                    {
                         restoreUnits = item.Quantity * med.UnitsPerStrip;
-                    }
 
                     med.StockUnits += restoreUnits;
                     _service.UpdateMedicine(med);
@@ -174,21 +198,7 @@ namespace Pharma_Pulse.Pages
         }
 
         // ===========================
-        // PRINT BILL
-        // ===========================
-        public IActionResult OnPostPrintBill()
-        {
-            BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems")
-                        ?? new List<BillItem>();
-
-            if (BillItems.Count == 0)
-                return RedirectToPage();
-
-            return RedirectToPage("/Bill");
-        }
-
-        // ===========================
-        // COMPLETE SALE
+        // COMPLETE SALE + BILL SAVE
         // ===========================
         public IActionResult OnPostCompleteSale()
         {
@@ -200,16 +210,63 @@ namespace Pharma_Pulse.Pages
             if (BillItems.Count == 0)
                 return RedirectToPage();
 
+            // GST Load
+            decimal gstPercent =
+                _context.GstSettings.FirstOrDefault()?.GstPercent ?? 5;
+
+            decimal subTotal = BillItems.Sum(x => x.Total);
+
+            decimal cgst = subTotal * (gstPercent / 100) / 2;
+            decimal sgst = subTotal * (gstPercent / 100) / 2;
+
+            decimal grandTotal = subTotal + cgst + sgst;
+
+            // SAVE BILL HEADER
+            Bill bill = new Bill
+            {
+                InvoiceNumber = InvoiceNumber,
+                CustomerName = HttpContext.Session.GetString("CustomerName"),
+                MobileNumber = HttpContext.Session.GetString("MobileNumber"),
+                DoctorName = HttpContext.Session.GetString("DoctorName"),
+
+                SubTotal = subTotal,
+                GstPercent = gstPercent,
+                CGST = cgst,
+                SGST = sgst,
+                GrandTotal = grandTotal,
+                BillDate = DateTime.Now
+            };
+
+            _context.Bills.Add(bill);
+            _context.SaveChanges();
+
+            // SAVE BILL DETAILS
+            foreach (var item in BillItems)
+            {
+                _context.BillDetails.Add(new BillDetail
+                {
+                    BillId = bill.Id,
+                    MedicineName = item.MedicineName,
+                    Quantity = item.Quantity,
+                    Price = item.Price,
+                    Total = item.Total
+                });
+            }
+
+            _context.SaveChanges();
+
+            // SAVE SALES REPORT
             foreach (var item in BillItems)
             {
                 var med = _service.GetAllMedicines()
-                            .FirstOrDefault(m => m.MedicineName == item.MedicineName);
+                    .FirstOrDefault(m => m.MedicineName == item.MedicineName);
 
                 if (med == null) continue;
 
-                decimal profit = (med.SellingPrice - med.BuyingPrice) * item.Quantity;
+                decimal profit =
+                    (med.SellingPrice - med.BuyingPrice) * item.Quantity;
 
-                SalesService.AddSale(new Sale
+                _salesService.AddSale(new Sale
                 {
                     InvoiceNumber = InvoiceNumber,
                     MedicineName = item.MedicineName,
@@ -220,12 +277,8 @@ namespace Pharma_Pulse.Pages
                 });
             }
 
-            // Clear Session
-            HttpContext.Session.Remove("BillItems");
-            HttpContext.Session.Remove("InvoiceNumber");
-            HttpContext.Session.Remove("CustomerName");
-            HttpContext.Session.Remove("MobileNumber");
-            HttpContext.Session.Remove("DoctorName");
+            // CLEAR SESSION
+            HttpContext.Session.Clear();
 
             return RedirectToPage("/SalesSummary");
         }

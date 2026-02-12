@@ -9,11 +9,16 @@ namespace Pharma_Pulse.Pages
 {
     public class DashboardModel : PageModel
     {
+        // ✅ Medicine Service
         private readonly MedicineService _service;
 
-        public DashboardModel(MedicineService service)
+        // ✅ Sales Service (Database)
+        private readonly SalesService _salesService;
+
+        public DashboardModel(MedicineService service, SalesService salesService)
         {
             _service = service;
+            _salesService = salesService;
         }
 
         public List<Medicine> Medicines { get; set; }
@@ -55,20 +60,24 @@ namespace Pharma_Pulse.Pages
                 .FirstOrDefault();
 
             // ============================
-            // Sales Section (unchanged)
+            // ✅ Sales Section (Database)
             // ============================
-            var sales = SalesService.GetAllSales() ?? new List<Sale>();
 
+            var sales = _salesService.GetAllSales() ?? new List<Sale>();
+
+            // ✅ Total Sales Today
             SalesToday = sales
                 .Where(s => s.SaleDate.Date == DateTime.Today)
                 .Sum(s => s.TotalAmount);
 
+            // ✅ Total Bills Today
             TotalBillsToday = sales
                 .Where(s => s.SaleDate.Date == DateTime.Today)
                 .Select(s => s.InvoiceNumber)
                 .Distinct()
                 .Count();
 
+            // ✅ Top Seller Medicine Today
             TopSellerToday = sales
                 .Where(s => s.SaleDate.Date == DateTime.Today)
                 .GroupBy(s => s.MedicineName)

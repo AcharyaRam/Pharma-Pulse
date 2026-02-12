@@ -74,6 +74,7 @@
 
     <div class="invoice-container">
 
+        <!-- HEADER -->
         <div class="header">
             <div>
                 <div class="store-name">PHARMA PULSE</div>
@@ -82,18 +83,20 @@
             </div>
 
             <div>
-                Invoice: @Model.InvoiceNumber <br />
+                Invoice: <b>@Model.InvoiceNumber</b> <br />
                 Date: @DateTime.Now.ToString("dd-MM-yyyy HH:mm")
             </div>
         </div>
 
         <hr />
 
+        <!-- CUSTOMER -->
         <p>
             <b>Customer:</b> @Model.CustomerName <br />
             <b>Mobile:</b> @Model.MobileNumber
         </p>
 
+        <!-- ITEMS TABLE -->
         <table>
             <thead>
                 <tr>
@@ -110,27 +113,48 @@
                     <tr>
                         <td>@item.MedicineName</td>
                         <td>@item.Quantity</td>
-                        <td>₹@item.Price</td>
-                        <td>₹@item.Total</td>
+                        <td>₹@item.Price.ToString("0.00")</td>
+                        <td>₹@item.Total.ToString("0.00")</td>
                     </tr>
                 }
             </tbody>
         </table>
 
+        <!-- TOTALS -->
         <div class="totals">
-            <p>Subtotal: ₹@Model.SubTotal</p>
-            <p>CGST (2.5%): ₹@Model.CGST.ToString("0.00")</p>
-            <p>SGST (2.5%): ₹@Model.SGST.ToString("0.00")</p>
-            <h2>Grand Total: ₹@Model.GrandTotal.ToString("0.00")</h2>
+
+            <p><b>Subtotal:</b> ₹@Model.SubTotal.ToString("0.00")</p>
+
+            <p>
+                <b>GST (@Model.GstPercent% Total)</b>
+            </p>
+
+            <p>
+                CGST (@(Model.GstPercent / 2)%):
+                ₹@Model.CGST.ToString("0.00")
+            </p>
+
+            <p>
+                SGST (@(Model.GstPercent / 2)%):
+                ₹@Model.SGST.ToString("0.00")
+            </p>
+
+            <hr />
+
+            <h2>
+                Grand Total: ₹@Model.GrandTotal.ToString("0.00")
+            </h2>
 
         </div>
 
+        <!-- FOOTER -->
         <div class="footer">
             Thank You! Visit Again 🙏
         </div>
 
+        <!-- BUTTONS -->
         <form method="post">
-            <button onclick="window.print()">Print</button>
+            <button type="button" onclick="window.print()">Print</button>
             <button asp-page-handler="Finish">Finish</button>
         </form>
 

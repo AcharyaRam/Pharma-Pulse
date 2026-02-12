@@ -1,23 +1,30 @@
-﻿using Pharma_Pulse.Models;
+﻿using Pharma_Pulse.Data;
+using Pharma_Pulse.Models;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Pharma_Pulse.Services
 {
-    public static class SalesService
+    public class SalesService
     {
-        private static List<Sale> SalesList = new List<Sale>();
+        private readonly AppDbContext _context;
 
-        // Add Sale Record (Billing ke baad call होगा)
-        public static void AddSale(Sale sale)
+        public SalesService(AppDbContext context)
         {
-            SalesList.Add(sale);
+            _context = context;
         }
 
-        // Get All Sales
-        public static List<Sale> GetAllSales()
+        // ✅ Add Sale Record into Database
+        public void AddSale(Sale sale)
         {
-            return SalesList;
+            _context.Sales.Add(sale);
+            _context.SaveChanges();
+        }
+
+        // ✅ Get All Sales from Database
+        public List<Sale> GetAllSales()
+        {
+            return _context.Sales.ToList();
         }
     }
 }
