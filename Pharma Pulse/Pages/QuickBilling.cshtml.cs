@@ -11,6 +11,17 @@ namespace Pharma_Pulse.Pages
 {
     public class QuickBillingModel : PageModel
     {
+        // ✅ Inject MedicineService
+        private readonly MedicineService _service;
+
+        public QuickBillingModel(MedicineService service)
+        {
+            _service = service;
+        }
+
+        // ===========================
+        // CUSTOMER DETAILS
+        // ===========================
         [BindProperty]
         public string CustomerName { get; set; }
 
@@ -18,26 +29,36 @@ namespace Pharma_Pulse.Pages
         public string MobileNumber { get; set; }
 
         [BindProperty]
+        public string DoctorName { get; set; }
+
+        // ===========================
+        // MEDICINE DETAILS
+        // ===========================
+        [BindProperty]
         public string SelectedMedicine { get; set; }
 
         [BindProperty]
         public int Quantity { get; set; }
 
-        public List<Medicine> AllMedicines { get; set; }
-        public List<BillItem> BillItems { get; set; }
+        [BindProperty]
+        public string SellMode { get; set; }
+
+        public List<Medicine> AllMedicines { get; set; } = new();
+        public List<BillItem> BillItems { get; set; } = new();
 
         public string InvoiceNumber { get; set; }
         public decimal GrandTotal { get; set; }
 
         // ===========================
-        // ✅ PAGE LOAD
+        // PAGE LOAD
         // ===========================
         public void OnGet()
         {
-            AllMedicines = MedicineService.GetAllMedicines();
+            AllMedicines = _service.GetAllMedicines();
 
             CustomerName = HttpContext.Session.GetString("CustomerName");
             MobileNumber = HttpContext.Session.GetString("MobileNumber");
+            DoctorName = HttpContext.Session.GetString("DoctorName");
 
             BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems")
                         ?? new List<BillItem>();
@@ -53,13 +74,17 @@ namespace Pharma_Pulse.Pages
             }
         }
 
-
         // ===========================
-        // ✅ ADD ITEM
+        // ADD ITEM
         // ===========================
         public IActionResult OnPostAddItem()
         {
-            AllMedicines = MedicineService.GetAllMedicines();
+            AllMedicines = _service.GetAllMedicines();
+
+            // Save Customer Info
+            HttpContext.Session.SetString("CustomerName", CustomerName ?? "");
+            HttpContext.Session.SetString("MobileNumber", MobileNumber ?? "");
+            HttpContext.Session.SetString("DoctorName", DoctorName ?? "");
 
             BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems")
                         ?? new List<BillItem>();
@@ -69,29 +94,44 @@ namespace Pharma_Pulse.Pages
             if (med == null)
                 return RedirectToPage();
 
-            // ❌ Stock check
-            if (med.Stock < Quantity)
+            if (string.IsNullOrEmpty(SellMode))
+                SellMode = "Tablet";
+
+            // ===========================
+            // CALCULATE UNITS TO SELL
+            // ===========================
+            int unitsToSell = Quantity;
+
+            if (SellMode == "Strip")
             {
-                ModelState.AddModelError("", "Not enough stock available.");
+                unitsToSell = Quantity * med.UnitsPerStrip;
+            }
+
+            // ===========================
+            // STOCK CHECK
+            // ===========================
+            if (med.StockUnits < unitsToSell)
+            {
+                TempData["Error"] = "Not enough stock available!";
                 return RedirectToPage();
             }
 
-            // ✅ Reduce stock immediately
-            med.Stock -= Quantity;
-            MedicineService.UpdateMedicine(med);
+            // ===========================
+            // REDUCE STOCK
+            // ===========================
+            med.StockUnits -= unitsToSell;
+            _service.UpdateMedicine(med);
 
-            // Add to bill
-            var existingItem = BillItems.FirstOrDefault(x => x.MedicineName == med.MedicineName);
-
-            if (existingItem != null)
-                existingItem.Quantity += Quantity;
-            else
-                BillItems.Add(new BillItem
-                {
-                    MedicineName = med.MedicineName,
-                    Quantity = Quantity,
-                    Price = med.SellingPrice
-                });
+            // ===========================
+            // ADD TO BILL
+            // ===========================
+            BillItems.Add(new BillItem
+            {
+                MedicineName = med.MedicineName,
+                Quantity = Quantity,
+                SaleMode = SellMode,
+                Price = med.SellingPrice
+            });
 
             HttpContext.Session.SetObject("BillItems", BillItems);
 
@@ -99,7 +139,7 @@ namespace Pharma_Pulse.Pages
         }
 
         // ===========================
-        // ✅ DELETE ITEM
+        // DELETE ITEM
         // ===========================
         public IActionResult OnPostDeleteItem(string medicineName)
         {
@@ -110,14 +150,20 @@ namespace Pharma_Pulse.Pages
 
             if (item != null)
             {
-                // ✅ Stock wapas add karo
-                var med = MedicineService.GetAllMedicines()
+                var med = _service.GetAllMedicines()
                             .FirstOrDefault(m => m.MedicineName == item.MedicineName);
 
                 if (med != null)
                 {
-                    med.Stock += item.Quantity;
-                    MedicineService.UpdateMedicine(med);
+                    int restoreUnits = item.Quantity;
+
+                    if (item.SaleMode == "Strip")
+                    {
+                        restoreUnits = item.Quantity * med.UnitsPerStrip;
+                    }
+
+                    med.StockUnits += restoreUnits;
+                    _service.UpdateMedicine(med);
                 }
 
                 BillItems.Remove(item);
@@ -127,11 +173,8 @@ namespace Pharma_Pulse.Pages
             return RedirectToPage();
         }
 
-
-
-
         // ===========================
-        // ✅ PRINT BILL
+        // PRINT BILL
         // ===========================
         public IActionResult OnPostPrintBill()
         {
@@ -141,17 +184,11 @@ namespace Pharma_Pulse.Pages
             if (BillItems.Count == 0)
                 return RedirectToPage();
 
-            if (!string.IsNullOrEmpty(CustomerName))
-                HttpContext.Session.SetString("CustomerName", CustomerName);
-
-            if (!string.IsNullOrEmpty(MobileNumber))
-                HttpContext.Session.SetString("MobileNumber", MobileNumber);
-
             return RedirectToPage("/Bill");
         }
 
         // ===========================
-        // ✅ COMPLETE SALE
+        // COMPLETE SALE
         // ===========================
         public IActionResult OnPostCompleteSale()
         {
@@ -165,7 +202,7 @@ namespace Pharma_Pulse.Pages
 
             foreach (var item in BillItems)
             {
-                var med = MedicineService.GetAllMedicines()
+                var med = _service.GetAllMedicines()
                             .FirstOrDefault(m => m.MedicineName == item.MedicineName);
 
                 if (med == null) continue;
@@ -183,10 +220,12 @@ namespace Pharma_Pulse.Pages
                 });
             }
 
+            // Clear Session
             HttpContext.Session.Remove("BillItems");
             HttpContext.Session.Remove("InvoiceNumber");
             HttpContext.Session.Remove("CustomerName");
             HttpContext.Session.Remove("MobileNumber");
+            HttpContext.Session.Remove("DoctorName");
 
             return RedirectToPage("/SalesSummary");
         }

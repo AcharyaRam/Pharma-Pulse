@@ -68,10 +68,8 @@
     .sidebar-menu {
         list-style: none;
         padding: 0;
-        margin: 0;
     }
 
-        /* Menu Items */
         .sidebar-menu li {
             margin-bottom: 18px;
         }
@@ -234,7 +232,6 @@
 
     <aside class="sidebar">
         <h2 class="sidebar-title">Pharma Pulse</h2>
-
         <ul class="sidebar-menu">
 
             <li>
@@ -300,17 +297,24 @@
                 <p><b>Invoice:</b> @Model.InvoiceNumber</p>
             </div>
 
+            <!-- FORM -->
             <form method="post" asp-page-handler="AddItem">
 
                 <h3>Customer Details</h3>
+
                 <div class="billing-form">
                     <input asp-for="CustomerName" placeholder="Enter Customer Name" />
                     <input asp-for="MobileNumber" placeholder="Enter Mobile Number" />
                 </div>
 
+                <div class="billing-form">
+                    <input asp-for="DoctorName" placeholder="Enter Doctor Name" />
+                </div>
+
                 <hr />
 
                 <h3>Add Medicines</h3>
+
                 <div class="billing-form">
                     <select asp-for="SelectedMedicine">
                         <option value="">-- Select Medicine --</option>
@@ -318,6 +322,11 @@
                         {
                             <option value="@med.MedicineName">@med.MedicineName</option>
                         }
+                    </select>
+
+                    <select asp-for="SellMode">
+                        <option value="Tablet">Tablet</option>
+                        <option value="Strip">Strip</option>
                     </select>
 
                     <!-- ✅ Small Quantity Box -->
@@ -330,9 +339,11 @@
                     <button type="submit" class="btn-add">
                         ➕ Add Item
                     </button>
+
                 </div>
             </form>
 
+            <!-- TABLE -->
             <table class="sales-table">
                 <thead>
                     <tr>
@@ -343,6 +354,7 @@
                         <th>Action</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @foreach (var item in Model.BillItems)
                     {
@@ -362,6 +374,7 @@
                 </tbody>
             </table>
 
+            <!-- TOTAL -->
             <div class="total-box">
                 Grand Total: ₹@Model.GrandTotal.ToString("0.00")
             </div>
@@ -377,6 +390,5 @@
             </div>
 
         </div>
-
     </div>
 </div>

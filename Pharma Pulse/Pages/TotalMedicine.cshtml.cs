@@ -9,7 +9,15 @@ namespace Pharma_Pulse.Pages
 {
     public class TotalMedicineModel : PageModel
     {
-        public List<Medicine> Medicines { get; set; }
+        // ✅ Inject MedicineService
+        private readonly MedicineService _service;
+
+        public TotalMedicineModel(MedicineService service)
+        {
+            _service = service;
+        }
+
+        public List<Medicine> Medicines { get; set; } = new();
 
         // Pagination Variables
         public int CurrentPage { get; set; } = 1;
@@ -21,7 +29,8 @@ namespace Pharma_Pulse.Pages
 
         public void OnGet(int pageNumber = 1, string search = "")
         {
-            var allMedicines = MedicineService.GetAllMedicines();
+            // ✅ Load medicines from Database
+            var allMedicines = _service.GetAllMedicines();
 
             // ✅ Store search term
             SearchTerm = search;
@@ -31,10 +40,9 @@ namespace Pharma_Pulse.Pages
             {
                 allMedicines = allMedicines
                     .Where(m =>
-                         m.MedicineName.StartsWith(search, StringComparison.OrdinalIgnoreCase)
+                        m.MedicineName.StartsWith(search, StringComparison.OrdinalIgnoreCase)
                     )
                     .ToList();
-
             }
 
             // Total Pages Calculation

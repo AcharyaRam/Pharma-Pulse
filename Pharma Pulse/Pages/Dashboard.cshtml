@@ -121,7 +121,7 @@
                                 <tr>
                                     <td>@med.MedicineName</td>
                                     <td>@med.Category</td>
-                                    <td>@med.Stock</td>
+                                    <td>@med.StockUnits</td>
                                     <td>@med.ExpiryDate.ToShortDateString()</td>
                                 </tr>
                             }
@@ -153,7 +153,7 @@
                     <h3>Low Stock Alerts</h3>
                     @if (Model.LowestStockMedicine != null)
                     {
-                        <p><b>@Model.LowestStockMedicine.MedicineName</b> - Only @Model.LowestStockMedicine.Stock left!</p>
+                        <p><b>@Model.LowestStockMedicine.MedicineName</b> - Only @Model.LowestStockMedicine.StockUnits left!</p>
                     }
                     else
                     {
@@ -177,6 +177,6 @@
 
         </div>
 
-    </div>
+    </main>
 
 </div>
