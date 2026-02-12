@@ -4,35 +4,30 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Poppins',sans-serif;
-        background: linear-gradient(135deg,#e0f2fe,#f8fafc);
-    }
 
-    /* Layout */
-    .dashboard-container {
-        display: flex;
-        width: 100%;
-        min-height: 100vh;
-    }
-
-    /* Sidebar */
+    /* ================= COLLAPSIBLE SIDEBAR ================= */
 
     .sidebar {
-        width: 250px;
-        padding: 35px 25px;
+        width: 70px; /* ✅ collapsed width */
+        padding: 35px 10px;
         margin-top: 0px;
         background: linear-gradient(160deg, #4f46e5, #7c3aed);
         border-radius: 2px;
-        box-shadow: 0 25px 60px rgba(0,0,0,0.18);
-        position: relative;
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 30px;
+        box-shadow: 8px 0 40px rgba(0,0,0,0.25);
+        position: fixed;
         overflow: hidden;
-        position: relative;
         z-index: 1;
-        height: 900px;
+        height: 100vh;
+        transition: width 0.4s ease;
     }
+
+        /* Expand on hover */
+        .sidebar:hover {
+            width: 250px; /* ✅ expand */
+            padding: 35px 25px;
+        }
 
         /* Animated glow */
         .sidebar::before {
@@ -60,11 +55,13 @@
 
     /* Sidebar Title */
     .sidebar-title {
-        font-size: 26px;
-        font-weight: 700;
-        color: white;
-        margin-bottom: 40px;
-        letter-spacing: 1px;
+        white-space: nowrap;
+        transition: opacity 0.3s ease;
+    }
+
+    /* Hide title when collapsed */
+    .sidebar:not(:hover) .sidebar-title {
+        opacity: 0;
     }
 
     /* Remove bullets */
@@ -79,12 +76,22 @@
             margin-bottom: 18px;
         }
 
+    /* Hide text when collapsed */
+    .sidebar:not(:hover) .text {
+        display: none;
+    }
+
+    /* Center icons when collapsed */
+    .sidebar:not(:hover) .menu-link {
+        justify-content: center;
+    }
+
     /* Menu Links */
     .menu-link {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 14px 18px;
+        gap: 15px;
+        padding: 12px 15px;
         border-radius: 16px;
         text-decoration: none;
         color: white;
@@ -92,29 +99,45 @@
         transition: all 0.3s ease;
         position: relative;
         z-index: 2;
+        white-space: nowrap;
     }
 
-        /* Hover */
-        .menu-link:hover {
-            background: rgba(255,255,255,0.18);
-            transform: translateX(6px);
-        }
+    .icon {
+        font-size: 20px;
+        min-width: 20px;
+    }
 
-        /* Active Item */
-        .menu-link.active {
-            background: white;
-            color: #4f46e5;
-            font-weight: 600;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-        }
+    /* Hover */
+    .menu-link:hover {
+        background: rgba(255,255,255,0.2);
+        transform: translateX(5px);
+    }
 
-    /* Main */
+    /* Active Item */
+    .menu-link.active {
+        background: white;
+        color: #4f46e5;
+        font-weight: 600;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+
+    .menu-link.logout {
+        margin-top: 30px;
+        background: linear-gradient(135deg,#ef4444,#dc2626);
+        justify-content: center;
+    }
+
+    /* ================= MAIN SHIFT FIX ================= */
+
     .main-content {
+        margin-left: 80px; /* ✅ same as collapsed width */
         flex: 1;
         padding: 25px;
     }
 
-    /* Card */
+
+    /* ================= REST SAME ================= */
+
     .content-card {
         background: white;
         padding: 25px;
@@ -122,7 +145,6 @@
         box-shadow: 0 15px 35px rgba(0,0,0,0.08);
     }
 
-    /* Header */
     .card-header {
         display: flex;
         justify-content: space-between;
@@ -130,7 +152,6 @@
         margin-bottom: 20px;
     }
 
-    /* Forms */
     .billing-form {
         display: flex;
         gap: 12px;
@@ -146,13 +167,11 @@
         width: 100%;
     }
 
-    /* ✅ Quantity Small Box */
     .qty-input {
         width: 90px !important;
         text-align: center;
     }
 
-    /* Buttons */
     .btn-add {
         background: linear-gradient(135deg,#22c55e,#16a34a);
         color: white;
@@ -183,7 +202,6 @@
         cursor: pointer;
     }
 
-    /* Table */
     .sales-table {
         width: 100%;
         border-collapse: collapse;
@@ -197,12 +215,11 @@
         }
 
         .sales-table td {
-            padding: 8px;
+            padding: 10px;
             border-bottom: 1px solid #eee;
-            text-align: center;
+            text-align: left;
         }
 
-    /* Total */
     .total-box {
         margin-top: 20px;
         font-size: 20px;
@@ -210,22 +227,68 @@
         text-align: right;
         color: #7c3aed;
     }
+
 </style>
 
 <div class="dashboard-container">
 
-    <!-- Sidebar -->
-    <div class="sidebar">
+    <aside class="sidebar">
         <h2 class="sidebar-title">Pharma Pulse</h2>
+
         <ul class="sidebar-menu">
-            <li><a asp-page="/Dashboard" class="menu-link">🏠 Dashboard</a></li>
-            <li><a asp-page="/SalesSummary" class="menu-link">📊 Sales Summary</a></li>
-            <li><a asp-page="/QuickBilling" class="menu-link active">💵 Quick Billing</a></li>
-            <li><a asp-page="/TotalMedicine" class="menu-link">💊 Medicines</a></li>
-            <li><a asp-page="/LowStockAlerts" class="menu-link">⚠ Low Stock Alerts</a></li>
-            <li><a asp-page="/ExpiryAlerts" class="menu-link">⏳ Expiry Alerts</a></li>
+
+            <li>
+                <a asp-page="/Dashboard" class="menu-link">
+                    <span class="icon">🏠</span>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/SalesSummary" class="menu-link">
+                    <span class="icon">📊</span>
+                    <span class="text">Sales Summary</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/QuickBilling" class="menu-link active">
+                    <span class="icon">💵</span>
+                    <span class="text">Quick Billing</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/TotalMedicine" class="menu-link">
+                    <span class="icon">💊</span>
+                    <span class="text">Medicines</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/LowStockAlerts" class="menu-link">
+                    <span class="icon">⚠</span>
+                    <span class="text">Low Stock Alerts</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/ExpiryAlerts" class="menu-link">
+                    <span class="icon">⏳</span>
+                    <span class="text">Expiry Alerts</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/Login" class="menu-link">
+                    <span class="icon">→</span>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+
         </ul>
-    </div>
+    </aside>
+
 
     <!-- Main -->
     <div class="main-content">
