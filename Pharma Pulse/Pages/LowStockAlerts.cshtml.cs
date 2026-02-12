@@ -4,26 +4,16 @@ using Pharma_Pulse.Services;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace Pharma_Pulse.Pages
 {
     public class LowStockAlertsModel : PageModel
     {
-        private readonly MedicineService _service;
-
-        public List<Medicine> LowStockMedicines { get; set; } = new();
-
-        public LowStockAlertsModel(MedicineService service)
-        {
-            _service = service;
-        }
-
+        public List<Medicine> LowStockMedicines { get; set; }
 
         public void OnGet()
         {
             // Load same common medicines list
-            var allMedicines = _service.GetAllMedicines();
-
+            var allMedicines = MedicineService.GetAllMedicines();
 
             // Filter only Low Stock Medicines (Stock <= 10)
             LowStockMedicines = allMedicines
