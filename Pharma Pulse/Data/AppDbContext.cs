@@ -23,6 +23,11 @@ namespace Pharma_Pulse.Data
         public DbSet<Bill> Bills { get; set; }
         public DbSet<BillDetail> BillDetails { get; set; }
 
+        //customer details
+        public DbSet<Customer> Customers { get; set; }
+
+
+
 
     }
 }
