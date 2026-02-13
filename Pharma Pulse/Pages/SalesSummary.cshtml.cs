@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using Pharma_Pulse.Data;
 using Pharma_Pulse.Models;
-using Pharma_Pulse.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,63 +11,90 @@ namespace Pharma_Pulse.Pages
 {
     public class SalesSummaryModel : PageModel
     {
-        // ✅ Inject SalesService (Database)
-        private readonly SalesService _salesService;
+        private readonly AppDbContext _context;
 
-        public SalesSummaryModel(SalesService salesService)
+        public SalesSummaryModel(AppDbContext context)
         {
-            _salesService = salesService;
+            _context = context;
         }
 
-        // ✅ Filtered Sales List (Daily/Monthly/Yearly)
-        public List<Sale> FilteredSales { get; set; } = new List<Sale>();
+        // ✅ Bills List
+        public List<Bill> AllBills { get; set; } = new();
 
         // ✅ Totals
         public decimal TotalSales { get; set; }
+        public decimal TotalGST { get; set; }
+
+        // ✅ NEW Total Profit
         public decimal TotalProfit { get; set; }
 
-        // ✅ Dropdown Selected Report Type
+        // ✅ Report Filter Dropdown
         [BindProperty(SupportsGet = true)]
         public string ReportType { get; set; }
 
         public void OnGet()
         {
-            // ✅ Default Report Type
             if (string.IsNullOrEmpty(ReportType))
                 ReportType = "Daily";
 
-            // ✅ Load All Sales from Database
-            var sales = _salesService.GetAllSales();
+            // ✅ Load Bills with BillDetails
+            var billsQuery = _context.Bills
+                .Include(b => b.BillDetails)
+                .AsQueryable();
 
-            // ✅ Apply Filter Based on ReportType
+            // ✅ Filter Bills
             if (ReportType == "Daily")
             {
-                sales = sales
-                    .Where(s => s.SaleDate.Date == DateTime.Today)
-                    .ToList();
+                billsQuery = billsQuery
+                    .Where(b => b.BillDate.Date == DateTime.Today);
             }
             else if (ReportType == "Monthly")
             {
-                sales = sales
-                    .Where(s =>
-                        s.SaleDate.Month == DateTime.Now.Month &&
-                        s.SaleDate.Year == DateTime.Now.Year
-                    )
-                    .ToList();
+                billsQuery = billsQuery
+                    .Where(b =>
+                        b.BillDate.Month == DateTime.Now.Month &&
+                        b.BillDate.Year == DateTime.Now.Year
+                    );
             }
             else if (ReportType == "Yearly")
             {
-                sales = sales
-                    .Where(s => s.SaleDate.Year == DateTime.Now.Year)
-                    .ToList();
+                billsQuery = billsQuery
+                    .Where(b => b.BillDate.Year == DateTime.Now.Year);
             }
 
-            // ✅ Store Filtered List for Table Display
-            FilteredSales = sales;
+            // ✅ Store Bills
+            AllBills = billsQuery
+                .OrderByDescending(b => b.BillDate)
+                .ToList();
 
-            // ✅ Calculate Totals
-            TotalSales = FilteredSales.Sum(s => s.TotalAmount);
-            TotalProfit = FilteredSales.Sum(s => s.Profit);
+            // ✅ Totals
+            TotalSales = AllBills.Sum(b => b.GrandTotal);
+
+            TotalGST = AllBills.Sum(b => b.CGST + b.SGST);
+
+            // ===========================================
+            // ✅ PROFIT CALCULATION (Main Fix)
+            // ===========================================
+
+            TotalProfit = 0;
+
+            foreach (var bill in AllBills)
+            {
+                foreach (var item in bill.BillDetails)
+                {
+                    // Find Medicine Buying Price
+                    var med = _context.Medicines
+                        .FirstOrDefault(m => m.MedicineName == item.MedicineName);
+
+                    if (med == null) continue;
+
+                    decimal profitPerUnit = med.SellingPrice - med.BuyingPrice;
+
+                    decimal itemProfit = profitPerUnit * item.Quantity;
+
+                    TotalProfit += itemProfit;
+                }
+            }
         }
     }
 }

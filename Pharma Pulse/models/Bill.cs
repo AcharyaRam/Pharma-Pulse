@@ -13,7 +13,8 @@ namespace Pharma_Pulse.Models
 
         public string MobileNumber { get; set; }
 
-        public string DoctorName { get; set; }
+        public string? DoctorName { get; set; }
+
 
         public decimal SubTotal { get; set; }
 
@@ -31,7 +32,7 @@ namespace Pharma_Pulse.Models
         public List<BillDetail> BillDetails { get; set; }
 
         public decimal DiscountPercent { get; set; }
-        public string PaymentMode { get; set; }
+        public string? PaymentMode { get; set; }
 
     }
 }
