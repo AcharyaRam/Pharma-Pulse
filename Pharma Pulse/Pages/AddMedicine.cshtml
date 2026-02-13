@@ -1,4 +1,5 @@
 ﻿@page
+
 @model Pharma_Pulse.Pages.AddMedicineModel
 
 <link rel="stylesheet" href="~/css/addmedicine.css" />
@@ -6,15 +7,33 @@
 <div class="dashboard-container">
 
     <!-- Sidebar -->
-    <div class="sidebar">
+    <aside class="sidebar">
         <h2 class="sidebar-title">Pharma Pulse</h2>
 
         <ul class="sidebar-menu">
-            <li><a asp-page="/Dashboard" class="menu-link">🏠 Dashboard</a></li>
-            <li><a asp-page="/TotalMedicine" class="menu-link">💊 Medicines</a></li>
-            <li><a asp-page="/AddMedicine" class="menu-link active">➕ Add Medicine</a></li>
+
+            <li>
+                <a asp-page="/Dashboard" class="menu-link">
+                    <span class="icon">🏠</span>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/TotalMedicine" class="menu-link">
+                    <span class="icon">💊</span>
+                    <span class="text"> Medicines</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/AddMedicine" class="menu-link active">
+                    <span class="icon">➕</span>
+                    <span class="text">Add Medicine</span>
+                </a>
+            </li>
         </ul>
-    </div>
+    </aside>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -82,16 +101,20 @@
                 </div>
 
                 <button type="submit" class="btn-save">
+
                     ✅ Save Medicine
                 </button>
 
             </form>
 
             @if (Model.SuccessMessage != null)
+
             {
                 <p style="color:green; margin-top:15px;">
+
                     @Model.SuccessMessage
                 </p>
+
             }
 
         </div>
@@ -100,8 +123,11 @@
 
 <!-- ✅ JavaScript (No CSS Change) -->
 <script>
+
     const sellType = document.getElementById("sellType");
+
     const stripField = document.getElementById("stripField");
+
     const stripInput = stripField.querySelector("input");
 
     function toggleStripField() {
@@ -109,19 +135,29 @@
         if (sellType.value === "Unit") {
 
             // Hide Strip Field
+
             stripField.style.display = "none";
 
             // Auto set UnitsPerStrip = 1
+
             stripInput.value = 1;
+
         }
+
         else {
+
             // Show Strip Field
+
             stripField.style.display = "flex";
+
         }
+
     }
 
     sellType.addEventListener("change", toggleStripField);
 
     // Run on page load
+
     toggleStripField();
 </script>
+
