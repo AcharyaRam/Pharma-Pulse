@@ -29,6 +29,7 @@ body {
     /* LEFT SIDE */
     .login-left {
         width: 45%;
+        height:100%;
         padding: 70px;
         display: flex;
         flex-direction: column;
@@ -131,7 +132,7 @@ body {
 /* ================= RIGHT IMAGE NOT CUT ================= */
 /* RIGHT SIDE FIXED CONTAINER */
 .login-right {
-    width: 55%;
+    width: 90%;
     height: 105%;
     background: url('/images/pulse_digital.png') center center no-repeat;
     background-size: cover; /* full touch fit */
@@ -170,18 +171,7 @@ body {
         font-weight: 500;
     }
 
-.extra-links {
-    display: flex;
-    justify-content: center;
-    gap: 18px;
-    flex-wrap: wrap;
-    font-size: 14px;
-}
 
-    .extra-links a {
-        color: #2f55d4;
-        text-decoration: none;
-    }
 
 
 

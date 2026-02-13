@@ -215,3 +215,83 @@
     font-weight: 600;
     cursor: pointer;
 }
+
+/* SALES CARD */
+.sales-card {
+    margin-top: 20px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+/* HEADER */
+.sales-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.toggle {
+    background: #eef3f3;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+    .toggle span {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+    }
+
+    .toggle .active {
+        background: #6EB6B0;
+        color: white;
+    }
+
+/* GRAPH */
+.graph {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 180px;
+    margin: 20px 0;
+}
+
+.bar {
+    width: 30px;
+    height: 100%;
+    background: #f1f1f1;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.fill {
+    width: 100%;
+    background: #6EB6B0;
+    border-radius: 8px;
+}
+
+.bar span {
+    margin-top: 8px;
+    font-size: 12px;
+}
+
+/* MEDICINES */
+.top-medicines h4 {
+    margin-bottom: 10px;
+}
+
+.medicine {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+    .medicine:last-child {
+        border: none;
+    }
