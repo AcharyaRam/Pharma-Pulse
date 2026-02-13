@@ -1,7 +1,7 @@
 ﻿body {
     margin: 0;
     font-family: "Segoe UI", sans-serif;
-    background: linear-gradient(to right, #007bff, #00c6ff);
+    background: #6EB6B0;
 }
 
 /* Center Container */
@@ -14,31 +14,36 @@
 
 /* Main Card Layout */
 .forgot-card {
-    width: 1100px; /* Bigger Width */
-    min-height: 650px; /* Flexible Height */
+    width: 450px; /* smaller single card */
+    min-height: auto;
     background: white;
     border-radius: 20px;
-    display: flex;
+    display: block; /* flex hata diya */
     overflow: hidden;
     box-shadow: 0px 10px 35px rgba(0, 0, 0, 0.25);
     animation: fadeIn 0.6s ease-in-out;
+    padding: 50px; /* andar spacing */
 }
+
 
 /* Left Side Form Box */
 .forgot-box {
-    width: 50%;
-    padding: 60px;
+    width: 100%;
+    padding: 0; /* double padding avoid */
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
+
 /* Title */
 .brand-title {
-    font-size: 30px;
-    font-weight: bold;
-    color: #007bff;
-    margin-bottom: 30px;
+    text-align: center;
+    width: 100%;
+    font-size: 34px;
+    font-weight: 700;
+    color: #6EB6B0;
+    margin-bottom: 35px;
 }
 
 /* Input Groups */
@@ -76,7 +81,7 @@
     padding: 14px;
     margin-top: 10px;
     margin-bottom: 15px;
-    background: #007bff;
+    background: #6EB6B0;
     border: none;
     border-radius: 10px;
     color: white;
@@ -87,7 +92,7 @@
 }
 
     .btn-submit:hover {
-        background: #0056b3;
+        background: #6EB6B0;
     }
 
 /* Error Text */
@@ -98,14 +103,6 @@
     display: block;
 }
 
-/* Right Side Image Panel */
-.forgot-image {
-    width: 50%;
-    background: url("/images/forgetpass.png") no-repeat center;
-    background-size: cover; /* Fit image properly */
-    background-color: #f5f9ff;
-    border-left:1px solid #eee/* Clean background */
-}
 
 /* Smooth Animation */
 @keyframes fadeIn {

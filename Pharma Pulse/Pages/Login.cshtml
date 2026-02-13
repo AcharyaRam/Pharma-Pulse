@@ -1,8 +1,12 @@
-﻿@page
+﻿
+@page
 @model LoginPage.Pages.LoginModel
 @{
     ViewData["Title"] = "Login";
+    ViewData["Title"] = "Login";
+    ViewData["HideFooter"] = true;
 }
+
 
 <link rel="stylesheet" href="~/css/login.css" />
 
@@ -11,6 +15,10 @@
 
         <!-- LEFT FORM -->
         <div class="login-left">
+
+            <div class="login-logo">
+                <img src="~/images/pulse.png" alt="Pharma Pulse Logo">
+            </div>
 
             <h1 class="brand-title">Pharma Pulse</h1>
 
@@ -43,14 +51,31 @@
                     Forgot Password?
                 </a>
 
+                <div class="login-extra">
+
+                    <p class="terms-text">
+                        By Signing In, I agree to
+                        <a href="#">Terms of Service</a> and
+                        <a href="#">Privacy Policy</a>.
+                    </p>
+
+                    <div class="extra-links">
+                        <a href="#">About US</a>
+                        <a href="#">Refunds/Cancellations</a>
+                        <a href="#">Pricing</a>
+                        <a href="#">Contact Us</a>
+                    </div>
+
+                </div>
+
+
             </form>
 
         </div>
 
         <!-- RIGHT IMAGE -->
-        <div class="login-right">
-            <img src="/images/BG.JPEG" alt="Login Illustration" />
-        </div>
+        <div class="login-right"></div>
+
 
     </div>
 </div>

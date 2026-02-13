@@ -2,7 +2,7 @@
 body {
     margin: 0;
     font-family: "Segoe UI", sans-serif;
-    background: linear-gradient(to right, #007bff, #00c6ff);
+    background: #6EB6B0;
 }
 
 /* Wrapper */
@@ -24,58 +24,61 @@ body {
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
 }
+ 
 
-/* LEFT SIDE */
-.login-left {
-    width: 45%;
-    padding: 70px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-/* Title */
+    /* LEFT SIDE */
+    .login-left {
+        width: 45%;
+        padding: 70px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    /* Title */
 .brand-title {
-    font-size: 36px;
-    font-weight: bold;
-    color: #4c8df6;
+    text-align: center;
+    width: 100%;
+    font-size: 34px;
+    font-weight: 700;
+    color: #6EB6B0;
+    margin-top: 10px;
     margin-bottom: 40px;
+    
 }
 
-/* Inputs */
-.input-group {
-    margin-bottom: 25px;
-    display: flex;
-    flex-direction: column;
-}
-
-    .input-group label {
-        font-size: 14px;
-        margin-bottom: 8px;
-        font-weight: 600;
+    /* Inputs */
+    .input-group {
+        margin-bottom: 25px;
+        display: flex;
+        flex-direction: column;
     }
 
-    .input-group input {
-        padding: 14px;
-        border-radius: 6px;
-        border: 1px solid #ddd;
-        font-size: 14px;
-        outline: none;
-        transition: 0.3s;
-    }
-
-        .input-group input:focus {
-            border-color: #4c8df6;
-            box-shadow: 0 0 6px rgba(76, 141, 246, 0.4);
+        .input-group label {
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 600;
         }
 
-/* Button */
+        .input-group input {
+            padding: 14px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+            .input-group input:focus {
+                border-color: #4c8df6;
+                box-shadow: 0 0 6px rgba(76, 141, 246, 0.4);
+            }
+    /* Button */
 .btn-login {
     margin-top: 10px;
     padding: 14px;
     border-radius: 10px;
     border: none;
-    background: #4c8df6;
+    background: #6EB6B0;
     color: white;
     font-size: 15px;
     font-weight: 600;
@@ -85,37 +88,102 @@ body {
 }
 
     .btn-login:hover {
-        background: #3b78db;
+        background: #a9d1cf;
+    }
+    /* Forgot Link */
+    .forgot-link {
+        display: block;
+        margin-top: 18px;
+        font-size: 14px;
+        text-decoration: none;
+        color: #444;
     }
 
-/* Forgot Link */
-.forgot-link {
-    display: block;
-    margin-top: 18px;
-    font-size: 14px;
-    text-decoration: none;
-    color: #444;
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+ 
+    /* Validation Error */
+    .error-text {
+        color: red;
+        font-size: 12px;
+        margin-top: 4px;
+    }
+/* ===== Fix Big Logo ===== */
+/* ================= LOGO SIZE (BIGGER) ================= */
+.login-logo {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    margin-top: 25px;
 }
 
-    .forgot-link:hover {
-        text-decoration: underline;
+    .login-logo img {
+        width: 250px !important; /* 👈 logo size yaha control */
+        max-width: 250px !important;
+        height: auto !important;
+        object-fit: contain;
     }
 
-/* RIGHT SIDE IMAGE */
+
+/* ================= RIGHT IMAGE NOT CUT ================= */
+/* RIGHT SIDE FIXED CONTAINER */
 .login-right {
     width: 55%;
-    background: #f6f9ff;
+    height: 105%;
+    background: url('/images/pulse_digital.png') center center no-repeat;
+    background-size: cover; /* full touch fit */
+    border-radius: 0 18px 18px 0;
 }
 
+
+    /* IMAGE PERFECT FIT */
     .login-right img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
     }
 
-/* Validation Error */
-.error-text {
-    color: red;
-    font-size: 12px;
-    margin-top: 4px;
+/* CARD OVERFLOW REMOVE GAP */
+.login-card {
+    overflow: hidden;
 }
+
+.login-extra {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.terms-text {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 10px;
+}
+
+    .terms-text a {
+        color: #2f55d4;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+.extra-links {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    font-size: 14px;
+}
+
+    .extra-links a {
+        color: #2f55d4;
+        text-decoration: none;
+    }
+
+
+
+
+
