@@ -10,227 +10,145 @@
     body {
         margin: 0;
         font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #c7d2fe, #eef2ff);
+        background: #f9fafb;
     }
 
-    /* Layout */
     .dashboard-container {
         display: flex;
         width: 100%;
-        min-height: calc(100vh - 80px);
+        min-height: 100vh;
     }
 
     /* Sidebar */
-
-    /* ================= COLLAPSIBLE PREMIUM SIDEBAR ================= */
-
-
     .sidebar {
-        width: 70px; /* ✅ collapsed width */
+        width: 70px;
         padding: 35px 10px;
-        margin-top: 0px;
         background: linear-gradient(160deg, #4f46e5, #7c3aed);
-        border-radius: 2px;
-        border-top-right-radius: 30px;
-        border-bottom-right-radius: 30px;
-        box-shadow: 8px 0 40px rgba(0,0,0,0.25);
         position: fixed;
-        overflow: hidden;
-        z-index: 1;
         height: 100vh;
-        transition: width 0.4s ease;
+        overflow: hidden;
+        transition: 0.3s;
+        border-top-right-radius: 25px;
+        border-bottom-right-radius: 25px;
     }
 
-        /* Expand on hover */
         .sidebar:hover {
-            width: 250px; /* ✅ expand */
-            padding: 35px 25px;
+            width: 240px;
+            padding: 35px 20px;
         }
 
-        /* Animated glow */
-        .sidebar::before {
-            content: "";
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255,255,255,0.2), transparent);
-            top: -120px;
-            left: -120px;
-            animation: rotateGlow 18s linear infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-    @@keyframes rotateGlow {
-        from {
-            transform: rotate(0deg);
-        }
-
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    /* Sidebar Title */
     .sidebar-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 25px;
         white-space: nowrap;
-        transition: opacity 0.3s ease;
     }
 
-    /* Hide title when collapsed */
     .sidebar:not(:hover) .sidebar-title {
         opacity: 0;
     }
 
-    /* Remove bullets */
     .sidebar-menu {
         list-style: none;
         padding: 0;
         margin: 0;
     }
 
-        /* Menu Items */
         .sidebar-menu li {
-            margin-bottom: 18px;
+            margin-bottom: 15px;
         }
 
-    /* Hide text when collapsed */
+    .menu-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        text-decoration: none;
+        color: white;
+        transition: 0.2s;
+        white-space: nowrap;
+    }
+
     .sidebar:not(:hover) .text {
         display: none;
     }
 
-    /* Center icons when collapsed */
     .sidebar:not(:hover) .menu-link {
         justify-content: center;
     }
 
-    /* Menu Links */
-    .menu-link {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        padding: 12px 15px;
-        border-radius: 16px;
-        text-decoration: none;
-        color: white;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        position: relative;
-        z-index: 2;
-        white-space: nowrap;
-    }
-
-    .icon {
-        font-size: 20px;
-        min-width: 20px;
-    }
-
-    /* Hover */
     .menu-link:hover {
         background: rgba(255,255,255,0.2);
-        transform: translateX(5px);
     }
 
-    /* Active Item */
     .menu-link.active {
         background: white;
         color: #4f46e5;
         font-weight: 600;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     }
 
-    .menu-link.logout {
-        margin-top: 30px;
-        background: linear-gradient(135deg,#ef4444,#dc2626);
-        justify-content: center;
-    }
-
-    /* ================= MAIN SHIFT FIX ================= */
-
+    /* Main */
     .main-content {
-        margin-left: 80px; /* ✅ same as collapsed width */
-        flex: 1;
-        padding: 25px;
+        margin-left: 90px;
+        padding: 30px;
+        width: 100%;
     }
 
-    /* Header */
-    .card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-    }
-
-    .report-select {
-        padding: 10px;
-        border-radius: 10px;
-        border: 1px solid #ddd;
-    }
-
-    /* Summary Cards */
-    .sales-cards {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 35px;
-    }
-
-    .sales-box {
-        flex: 1;
-        padding: 25px;
-        border-radius: 18px;
-        color: white;
-    }
-
-    .green {
-        background: #22c55e;
-    }
-
-    .blue {
-        background: #3b82f6;
-    }
-
-    .red {
-        background: #ef4444;
-    }
-
-    .sales-box h3 {
-        margin-bottom: 10px;
-        font-weight: 500;
-    }
-
-    .sales-box p {
-        font-size: 22px;
+    h2 {
+        margin-top: 0;
+        font-size: 26px;
         font-weight: 600;
     }
+
+    /* Top Summary */
+    .summary-box {
+        background: white;
+        padding: 18px;
+        border-radius: 15px;
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+        .summary-box div {
+            font-weight: 600;
+            color: #111827;
+        }
 
     /* Table */
     .sales-table {
         width: 100%;
         border-collapse: collapse;
+        margin-top: 20px;
         background: white;
         border-radius: 15px;
         overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
         .sales-table th {
             background: #f3f4f6;
-            padding: 12px;
+            padding: 14px;
             text-align: center;
+            font-weight: 600;
         }
 
         .sales-table td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
+            padding: 14px;
             text-align: center;
+            border-bottom: 1px solid #eee;
         }
 
         .sales-table tr:hover {
             background: #f9fafb;
         }
 
-    .profit {
-        color: #16a34a;
+    .total {
         font-weight: bold;
+        color: #16a34a;
     }
 
 </style>
@@ -242,118 +160,76 @@
         <h2 class="sidebar-title">Pharma Pulse</h2>
 
         <ul class="sidebar-menu">
-
-            <li>
-                <a asp-page="/Dashboard" class="menu-link">
-                    <span class="icon">🏠</span>
-                    <span class="text">Dashboard</span>
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/SalesSummary" class="menu-link active">
-                    <span class="icon">📊</span>
-                    <span class="text">Sales Summary</span>
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/QuickBilling" class="menu-link">
-                    <span class="icon">💵</span>
-                    <span class="text">Quick Billing</span>
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/TotalMedicine" class="menu-link">
-                    <span class="icon">💊</span>
-                    <span class="text">Medicines</span>
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/LowStockAlerts" class="menu-link">
-                    <span class="icon">⚠</span>
-                    <span class="text">Low Stock Alerts</span>
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/ExpiryAlerts" class="menu-link">
-                    <span class="icon">⏳</span>
-                    <span class="text">Expiry Alerts</span>
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/Login" class="menu-link">
-                    <span class="icon">→</span>
-                    <span class="text">Logout</span>
-                </a>
-            </li>
-
+            <li><a asp-page="/Dashboard" class="menu-link">🏠 <span class="text">Dashboard</span></a></li>
+            <li><a asp-page="/SalesSummary" class="menu-link active">📊 <span class="text">Sales Summary</span></a></li>
+            <li><a asp-page="/QuickBilling" class="menu-link">💵 <span class="text">Quick Billing</span></a></li>
+            <li><a asp-page="/TotalMedicine" class="menu-link">💊 <span class="text">Medicines</span></a></li>
+            <li><a asp-page="/Login" class="menu-link">→ <span class="text">Logout</span></a></li>
         </ul>
     </aside>
 
-    <!-- Main Content -->
+    <!-- Main -->
     <div class="main-content">
 
-        <div class="card-header">
-            <h2>Sales Summary Report</h2>
+        <h2>Sales Summary Report (Bills)</h2>
 
-            <form method="get">
-                <select name="ReportType" onchange="this.form.submit()" class="report-select">
-                    <option value="Daily" selected="@(Model.ReportType == "Daily")">Daily</option>
-                    <option value="Monthly" selected="@(Model.ReportType == "Monthly")">Monthly</option>
-                    <option value="Yearly" selected="@(Model.ReportType == "Yearly")">Yearly</option>
-                </select>
-            </form>
+        <!-- Report Filter -->
+        <form method="get">
+            <select name="ReportType" onchange="this.form.submit()">
+                <option value="Daily" selected="@(Model.ReportType=="Daily")">Daily</option>
+                <option value="Monthly" selected="@(Model.ReportType=="Monthly")">Monthly</option>
+                <option value="Yearly" selected="@(Model.ReportType=="Yearly")">Yearly</option>
+            </select>
+        </form>
+
+        <!-- Totals -->
+        <div class="summary-box">
+            <div>Total Sales: ₹@Model.TotalSales.ToString("0.00")</div>
+            <div>Total GST: ₹@Model.TotalGST.ToString("0.00")</div>
+            <div>Total Profit: ₹@Model.TotalProfit.ToString("0.00")</div>
         </div>
 
-        <div class="sales-cards">
-            <div class="sales-box green">
-                <h3>Total Sales (@Model.ReportType)</h3>
-                <p>₹@Model.TotalSales.ToString("0.00")</p>
-            </div>
-
-            <div class="sales-box blue">
-                <h3>Total Profit (@Model.ReportType)</h3>
-                <p>₹@Model.TotalProfit.ToString("0.00")</p>
-            </div>
-
-            <div class="sales-box red">
-                <h3>Total Loss (@Model.ReportType)</h3>
-                <p>₹0.00</p>
-            </div>
-        </div>
-
-        <h3>Sales Breakdown</h3>
-
+        <!-- Table -->
         <table class="sales-table">
             <thead>
                 <tr>
-                    <th>Medicine</th>
-                    <th>Qty Sold</th>
-                    <th>Total Amount</th>
-                    <th>Profit</th>
+                    <th>Invoice</th>
+                    <th>Customer</th>
+                    <th>Mobile</th>
+                    <th>Payment</th>
+                    <th>Discount %</th>
+                    <th>Subtotal</th>
+                    <th>GST</th>
+                    <th>Grand Total</th>
                     <th>Date</th>
                 </tr>
             </thead>
 
             <tbody>
-                @foreach (var sale in Model.FilteredSales)
+                @foreach (var bill in Model.AllBills)
                 {
                     <tr>
-                        <td>@sale.MedicineName</td>
-                        <td>@sale.QuantitySold</td>
-                        <td>₹@sale.TotalAmount.ToString("0.00")</td>
-                        <td class="profit">₹@sale.Profit.ToString("0.00")</td>
-                        <td>@sale.SaleDate.ToShortDateString()</td>
+                        <td>@bill.InvoiceNumber</td>
+                        <td>@bill.CustomerName</td>
+                        <td>@bill.MobileNumber</td>
+                        <td>@bill.PaymentMode</td>
+                        <td>@bill.DiscountPercent %</td>
+
+                        <td>₹@bill.SubTotal.ToString("0.00")</td>
+
+                        <td>
+                            ₹@((bill.CGST + bill.SGST).ToString("0.00"))
+                        </td>
+
+                        <td class="total">
+                            ₹@bill.GrandTotal.ToString("0.00")
+                        </td>
+
+                        <td>@bill.BillDate.ToString("dd-MMM-yyyy")</td>
                     </tr>
                 }
             </tbody>
         </table>
 
     </div>
-
 </div>
