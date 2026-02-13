@@ -21,27 +21,26 @@
 
     /* Sidebar */
     .sidebar {
-        width: 70px;
-        padding: 35px 10px;
-        background: linear-gradient(160deg, #4f46e5, #7c3aed);
+        width: 80px;
+        padding: 30px 12px;
+        background: white;
+        border-right: 1px solid #e5e7eb;
         position: fixed;
         height: 100vh;
         overflow: hidden;
-        transition: 0.3s;
-        border-top-right-radius: 25px;
-        border-bottom-right-radius: 25px;
+        transition: width 0.3s ease;
+        z-index: 100;
     }
 
         .sidebar:hover {
             width: 240px;
-            padding: 35px 20px;
         }
 
+    /* Sidebar Title */
     .sidebar-title {
         font-size: 18px;
         font-weight: 600;
-        color: white;
-        margin-bottom: 25px;
+        margin-bottom: 30px;
         white-space: nowrap;
     }
 
@@ -49,6 +48,7 @@
         opacity: 0;
     }
 
+    /* Menu */
     .sidebar-menu {
         list-style: none;
         padding: 0;
@@ -64,11 +64,10 @@
         align-items: center;
         gap: 12px;
         padding: 10px 14px;
-        border-radius: 12px;
+        border-radius: 10px;
         text-decoration: none;
-        color: white;
+        color: #374151;
         transition: 0.2s;
-        white-space: nowrap;
     }
 
     .sidebar:not(:hover) .text {
@@ -80,12 +79,12 @@
     }
 
     .menu-link:hover {
-        background: rgba(255,255,255,0.2);
+        background: #f3f4f6;
     }
 
     .menu-link.active {
-        background: white;
-        color: #4f46e5;
+        background: rgba(146, 185, 184, 0.25);
+        border-left: 4px solid #92b9b8;
         font-weight: 600;
     }
 
@@ -164,6 +163,8 @@
             <li><a asp-page="/SalesSummary" class="menu-link active">📊 <span class="text">Sales Summary</span></a></li>
             <li><a asp-page="/QuickBilling" class="menu-link">💵 <span class="text">Quick Billing</span></a></li>
             <li><a asp-page="/TotalMedicine" class="menu-link">💊 <span class="text">Medicines</span></a></li>
+            <li><a asp-page="/LowStockAlerts" class="menu-link">⚠ <span class="text">Low Stock Alert</span></a></li>
+            <li><a asp-page="/ExpiryAlerts" class="menu-link">⏳ <span class="text">Expiry Alerts</span></a></li>
             <li><a asp-page="/Login" class="menu-link">→ <span class="text">Logout</span></a></li>
         </ul>
     </aside>
