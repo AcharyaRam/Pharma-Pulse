@@ -9,6 +9,7 @@
 
 <div class="dashboard-wrapper">
 
+    <!-- Sidebar -->
     <aside class="sidebar">
         <h2 class="sidebar-title">Pharma Pulse</h2>
 
@@ -43,20 +44,6 @@
             </li>
 
             <li>
-                <a asp-page="/LowStockAlerts" class="menu-link">
-                    <span class="icon">⚠</span>
-                    <span class="text">Low Stock Alerts</span>
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/ExpiryAlerts" class="menu-link">
-                    <span class="icon">⏳</span>
-                    <span class="text">Expiry Alerts</span>
-                </a>
-            </li>
-
-            <li>
                 <a asp-page="/Login" class="menu-link">
                     <span class="icon">→</span>
                     <span class="text">Logout</span>
@@ -70,113 +57,122 @@
     <!-- Main Content -->
     <div class="main-content">
 
+        <!-- Header -->
         <div class="dashboard-header">
-            <h2>Pharmacist Dashboard</h2>
-            <p>Welcome back, Pharmacist</p>
+            <h2>Dashboard</h2>
         </div>
 
         <!-- Top Cards -->
         <div class="stats-cards">
-            <div class="card green">
+
+            <div class="card">
                 <h3>Total Medicines</h3>
                 <p>@Model.TotalMedicineCount</p>
             </div>
 
-            <div class="card orange">
+            <div class="card">
                 <h3>Low Stock Alerts</h3>
                 <p>@Model.LowStockCount</p>
             </div>
 
-            <div class="card red">
+            <div class="card">
                 <h3>Expiry Alerts</h3>
-                <p>@Model.ExpiryCount Items</p>
+                <p>@Model.ExpiryCount</p>
             </div>
 
-            <div class="card blue">
+            <div class="card">
                 <h3>Sales Today</h3>
                 <p>₹@Model.SalesToday</p>
             </div>
+
         </div>
+
 
         <!-- Grid -->
         <div class="dashboard-grid">
 
-            <!-- Left -->
+            <!-- LEFT = Add Customer -->
             <div class="left-section">
 
                 <div class="box">
-                    <h3>Available Medicines</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Medicine</th>
-                                <th>Category</th>
-                                <th>Stock</th>
-                                <th>Expiry</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var med in Model.Medicines)
-                            {
-                                <tr>
-                                    <td>@med.MedicineName</td>
-                                    <td>@med.Category</td>
-                                    <td>@med.StockUnits</td>
-                                    <td>@med.ExpiryDate.ToShortDateString()</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                    <h3>Add Customer</h3>
+                    <p>Save customer details for billing and records</p>
+                    <form method="post" asp-page-handler="SaveCustomer" class="customer-form">
 
-                <div class="box">
-                    <h3>Today's Sales Summary</h3>
-                    <p><b>Total Sales:</b> ₹@Model.SalesToday</p>
-                    <p><b>Total Bills:</b> @Model.TotalBillsToday</p>
-                    <p><b>Top Seller:</b> @Model.TopSellerToday</p>
+                        <div class="form-row">
+                            <div>
+                                <label>Customer Name *</label>
+                                <input asp-for="Customer.CustomerName" required />
+                            </div>
+
+                            <div>
+                                <label>Mobile Number *</label>
+                                <input asp-for="Customer.MobileNumber" required />
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div>
+                                <label>Gender</label>
+                                <select asp-for="Customer.Gender">
+                                    <option value="">Select</option>
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label>Age *</label>
+                                <input asp-for="Customer.Age" type="number" required />
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div>
+                                <label>City / Address *</label>
+                                <input asp-for="Customer.City" required />
+                            </div>
+
+                            <div>
+                                <label>Customer Type</label>
+                                <select asp-for="Customer.CustomerType">
+                                    <option>Walk-in</option>
+                                    <option>Regular</option>
+                                    <option>Doctor Reference</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <label>Doctor Name</label>
+                        <input asp-for="Customer.DoctorReference" />
+
+                        <button type="submit" class="save-btn">
+                            Save Customer
+                        </button>
+
+                    </form>
+
                 </div>
 
             </div>
 
-            <!-- Right -->
+
+            <!-- RIGHT = Quick Billing Only -->
             <div class="right-section">
 
                 <div class="quick-box">
                     <h3>Quick Billing</h3>
                     <p>Create a new bill quickly</p>
+
                     <button onclick="window.location.href='/QuickBilling'">
                         Start Billing
                     </button>
-                </div>
-
-                <div class="box alert">
-                    <h3>Low Stock Alerts</h3>
-                    @if (Model.LowestStockMedicine != null)
-                    {
-                        <p><b>@Model.LowestStockMedicine.MedicineName</b> - Only @Model.LowestStockMedicine.StockUnits left!</p>
-                    }
-                    else
-                    {
-                        <p>No low stock medicines found.</p>
-                    }
-                </div>
-
-                <div class="box alert-red">
-                    <h3>Expiry Alerts (@Model.ExpiryCount)</h3>
-                    @if (Model.NearestExpiryMedicine != null)
-                    {
-                        <p><b>@Model.NearestExpiryMedicine.MedicineName</b> - Expiring Soon!</p>
-                    }
-                    else
-                    {
-                        <p>No expiry medicines found.</p>
-                    }
                 </div>
 
             </div>
 
         </div>
 
-    </main>
-
+    </div>
 </div>

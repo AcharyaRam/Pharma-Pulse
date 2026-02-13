@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Pharma_Pulse.Models;
 using Pharma_Pulse.Services;
+using Pharma_Pulse.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,28 +11,34 @@ namespace Pharma_Pulse.Pages
 {
     public class DashboardModel : PageModel
     {
-        // ✅ Medicine Service
         private readonly MedicineService _service;
-
-        // ✅ Sales Service (Database)
         private readonly SalesService _salesService;
+        private readonly AppDbContext _context;
 
-        public DashboardModel(MedicineService service, SalesService salesService)
+        public DashboardModel(
+            MedicineService service,
+            SalesService salesService,
+            AppDbContext context)
         {
             _service = service;
             _salesService = salesService;
+            _context = context;
         }
 
-        public List<Medicine> Medicines { get; set; }
+        // ============================
+        // ✅ Customer Form Binding
+        // ============================
+
+        [BindProperty]
+        public Customer Customer { get; set; }
+
+        // ============================
+        // Dashboard Stats
+        // ============================
 
         public int TotalMedicineCount { get; set; }
         public int LowStockCount { get; set; }
-
-        public Medicine? LowestStockMedicine { get; set; }
-
         public int ExpiryCount { get; set; }
-        public Medicine? NearestExpiryMedicine { get; set; }
-
         public decimal SalesToday { get; set; }
 
         public int TotalBillsToday { get; set; }
@@ -38,46 +46,58 @@ namespace Pharma_Pulse.Pages
 
         public void OnGet()
         {
-            // ✅ Load Medicines from Database
+            LoadDashboard();
+        }
+
+        // ============================
+        // ✅ Save Customer Handler
+        // ============================
+
+        public IActionResult OnPostSaveCustomer()
+        {
+            if (!ModelState.IsValid)
+                return Page();
+
+            // ✅ Default values so system never breaks
+            Customer.Email = Customer.Email ?? "";
+            Customer.MedicalNotes = Customer.MedicalNotes ?? "N/A";
+
+            // Save Customer in DB
+            _context.Customers.Add(Customer);
+            _context.SaveChanges();
+
+            TempData["Success"] = "Customer Saved Successfully!";
+
+            return RedirectToPage();
+        }
+
+        // ============================
+        // Dashboard Load Logic
+        // ============================
+
+        private void LoadDashboard()
+        {
             var allMedicines = _service.GetAllMedicines();
 
             TotalMedicineCount = allMedicines.Count;
-
-            Medicines = allMedicines.Take(10).ToList();
-
             LowStockCount = allMedicines.Count(m => m.StockUnits <= m.LowStockLimit);
-
-            LowestStockMedicine = allMedicines
-                .OrderBy(m => m.StockUnits)
-                .FirstOrDefault();
 
             ExpiryCount = allMedicines.Count(m =>
                 m.ExpiryDate <= DateTime.Now.AddDays(30)
             );
 
-            NearestExpiryMedicine = allMedicines
-                .OrderBy(m => m.ExpiryDate)
-                .FirstOrDefault();
-
-            // ============================
-            // ✅ Sales Section (Database)
-            // ============================
-
             var sales = _salesService.GetAllSales() ?? new List<Sale>();
 
-            // ✅ Total Sales Today
             SalesToday = sales
                 .Where(s => s.SaleDate.Date == DateTime.Today)
                 .Sum(s => s.TotalAmount);
 
-            // ✅ Total Bills Today
             TotalBillsToday = sales
                 .Where(s => s.SaleDate.Date == DateTime.Today)
                 .Select(s => s.InvoiceNumber)
                 .Distinct()
                 .Count();
 
-            // ✅ Top Seller Medicine Today
             TopSellerToday = sales
                 .Where(s => s.SaleDate.Date == DateTime.Today)
                 .GroupBy(s => s.MedicineName)

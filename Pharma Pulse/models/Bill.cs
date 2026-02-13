@@ -29,5 +29,9 @@ namespace Pharma_Pulse.Models
 
         // Navigation
         public List<BillDetail> BillDetails { get; set; }
+
+        public decimal DiscountPercent { get; set; }
+        public string PaymentMode { get; set; }
+
     }
 }
