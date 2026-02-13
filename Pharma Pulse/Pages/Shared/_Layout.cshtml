@@ -14,7 +14,7 @@
 <body>
 
     <!-- ✅ NAVBAR -->
-    <header>
+   @* <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow">
             <div class="container">
 
@@ -24,7 +24,7 @@
 
             </div>
         </nav>
-    </header>
+    </header> *@
 
 
     <!-- ✅ MAIN CONTENT (Flex Grow Area) -->
@@ -35,12 +35,15 @@
 
 
     <!-- ✅ FOOTER ALWAYS BOTTOM -->
-    <footer class="site-footer">
-        <div class="container">
-            &copy; 2026 - Pharma_Pulse -
-            <a asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
+    @if (!(ViewData["HideFooter"] as bool? ?? false))
+    {
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2026 - Pharma_Pulse - <a asp-page="/Privacy">Privacy</a>
+            </div>
+        </footer>
+    }
+
 
 
     <!-- Scripts -->
