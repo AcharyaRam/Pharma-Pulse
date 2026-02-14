@@ -1,199 +1,13 @@
 ﻿@page
 @model Pharma_Pulse.Pages.QuickBillingModel
 
+<!-- ✅ QuickBilling CSS File -->
+<link rel="stylesheet" href="~/css/quickbilling.css" />
+
+<!-- ✅ Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-    body {
-        font-family: 'Poppins', sans-serif;
-        background: #f9fafb;
-        margin: 0;
-        color: #111827;
-    }
-
-    /* ================= SIDEBAR ================= */
-    .sidebar {
-        width: 75px;
-        padding: 30px 12px;
-        background: white;
-        border-right: 1px solid #e5e7eb;
-        position: fixed;
-        height: 100vh;
-        overflow: hidden;
-        transition: 0.3s ease;
-        z-index: 10;
-    }
-
-        .sidebar:hover {
-            width: 240px;
-        }
-
-    .sidebar-title {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 30px;
-        white-space: nowrap;
-        opacity: 1;
-        transition: 0.3s;
-    }
-
-    .sidebar:not(:hover) .sidebar-title {
-        opacity: 0;
-    }
-
-    .sidebar-menu {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-        .sidebar-menu li {
-            margin-bottom: 15px;
-        }
-
-    .menu-link {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 10px 14px;
-        border-radius: 10px;
-        text-decoration: none;
-        color: #374151;
-        white-space: nowrap;
-        transition: 0.2s;
-    }
-
-    .sidebar:not(:hover) .text {
-        display: none;
-    }
-
-    .sidebar:not(:hover) .menu-link {
-        justify-content: center;
-    }
-
-    .menu-link:hover {
-        background: #f3f4f6;
-    }
-
-    .menu-link.active {
-        background: rgba(146,185,184,0.25);
-        border-left: 4px solid #92b9b8;
-        font-weight: 600;
-    }
-
-    /* ================= MAIN ================= */
-    .main-content {
-        margin-left: 95px;
-        padding: 30px;
-    }
-
-    .content-card {
-        background: white;
-        padding: 25px;
-        border-radius: 16px;
-        border: 1px solid #e5e7eb;
-    }
-
-    h2 {
-        margin: 0;
-    }
-
-    hr {
-        margin: 20px 0;
-        border: none;
-        border-top: 1px solid #e5e7eb;
-    }
-
-    /* ================= FORM ================= */
-    .billing-form {
-        display: flex;
-        gap: 12px;
-        margin-top: 12px;
-        align-items: center;
-    }
-
-    select, input {
-        padding: 10px;
-        border-radius: 10px;
-        border: 1px solid #ddd;
-        width: 100%;
-        font-size: 14px;
-    }
-
-    .qty-input {
-        width: 90px !important;
-        text-align: center;
-    }
-
-    /* ================= BUTTONS ================= */
-    .btn-add, .btn-alert {
-        background: #92b9b8;
-        color: white;
-        border: none;
-        padding: 10px 16px;
-        border-radius: 10px;
-        font-weight: 600;
-        cursor: pointer;
-    }
-
-    .btn-delete {
-        background: #ef4444;
-        color: white;
-        padding: 6px 14px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-    }
-
-    /* ================= TABLE ================= */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 18px;
-    }
-
-    th {
-        background: #f3f4f6;
-        padding: 10px;
-        text-align: left;
-    }
-
-    td {
-        padding: 10px;
-        border-bottom: 1px solid #eee;
-    }
-
-    .customer-big .line {
-        font-size: 16px;
-        margin: 10px 0;
-        color: #111827;
-        line-height: 1.6;
-    }
-
-    .customer-big b {
-        font-weight: 600;
-        color: #000;
-    }
-
-    .customer-big span {
-        font-weight: 500;
-        color: #374151;
-    }
-
-
-
-    /* ================= BOX ================= */
-    .box {
-        margin-top: 18px;
-        padding: 15px;
-        border-radius: 12px;
-        background: #fafafa;
-        border: 1px solid #e5e7eb;
-    }
-</style>
-
-<!-- ================= SIDEBAR ================= -->
-<!-- Sidebar -->
+<!-- LEFT SIDEBAR -->
 <aside class="sidebar">
     <h2 class="sidebar-title">Pharma Pulse</h2>
 
@@ -251,180 +65,252 @@
     </ul>
 </aside>
 
-<!-- ================= MAIN ================= -->
 <div class="main-content">
-    <div class="content-card">
 
-        <h2>Billing</h2>
-        <p>Invoice: @Model.InvoiceNumber</p>
 
-        <!-- CUSTOMER -->
-        <h3>Select Customer</h3>
+<h2>Billing</h2>
 
-        <form method="post" asp-page-handler="SelectCustomer">
-            <div class="billing-form">
+<p>Invoice: @Model.InvoiceNumber</p>
 
-                <select asp-for="SelectedCustomerId" required>
-                    <option value="">-- Select Customer --</option>
-                    @foreach (var cust in Model.AllCustomers)
-                    {
-                        <option value="@cust.CustomerId">
-                            @cust.CustomerName - @cust.MobileNumber
-                        </option>
-                    }
-                </select>
+@if (TempData["Error"] != null)
+{
+    <p style="color:red;">@TempData["Error"]</p>
+}
 
-                <button type="submit" class="btn-add">✔ Select</button>
+<hr />
 
-                <button type="button" class="btn-add"
-                        onclick="window.location.href='/AddCustomer'">
-                    ➕ Add Customer
-                </button>
+<!-- CUSTOMER -->
+<h3>Select Customer</h3>
 
-            </div>
-        </form>
-
-        <!-- CUSTOMER PREVIEW -->
-        @if (Model.SelectedCustomer != null)
+<form method="post" asp-page-handler="SelectCustomer">
+    <select asp-for="SelectedCustomerId" required>
+        <option value="">-- Select Customer --</option>
+        @foreach (var cust in Model.AllCustomers)
         {
-            <div class="box customer-big">
-                <h3>Customer Details</h3>
+            <option value="@cust.CustomerId">
+                @cust.CustomerName - @cust.MobileNumber
+            </option>
+        }
+    </select>
 
-                <!-- Line 1 -->
-                <p class="line">
-                    <b>@Model.SelectedCustomer.CustomerName</b>
-                    <span>(@Model.SelectedCustomer.Gender, @Model.SelectedCustomer.Age yrs)</span>
-                    | <b>Mob:</b> @Model.SelectedCustomer.MobileNumber
-                </p>
+    <button type="submit">✔ Select</button>
+</form>
 
-                <!-- Line 2 -->
-                <p class="line">
-                    <b>City:</b> @Model.SelectedCustomer.City
-                    | <b>Type:</b> @Model.SelectedCustomer.CustomerType
-                    | <b>Doctor:</b> @Model.SelectedCustomer.DoctorReference
-                </p>
+@if (Model.SelectedCustomer != null)
+{
+    <div style="margin-top:15px; padding:15px; border:1px solid #ddd; border-radius:10px; background:#f9fafb;">
 
-                <!-- Optional Line -->
-                @if (!string.IsNullOrEmpty(Model.SelectedCustomer.Email) ||
-               !string.IsNullOrEmpty(Model.SelectedCustomer.MedicalNotes))
-                {
-                    <p class="line">
-                        @if (!string.IsNullOrEmpty(Model.SelectedCustomer.Email))
-                        {
-                            <b>Email:</b> @Model.SelectedCustomer.Email
-                        }
+        <h3>Customer Details</h3>
 
-                        @if (!string.IsNullOrEmpty(Model.SelectedCustomer.MedicalNotes))
-                        {
-                            <span> | <b>Notes:</b> @Model.SelectedCustomer.MedicalNotes</span>
-                        }
-                    </p>
-                }
-            </div>
+        <p><b>Name:</b> @Model.SelectedCustomer.CustomerName</p>
 
+        <p><b>Mobile:</b> @Model.SelectedCustomer.MobileNumber</p>
 
+        <p><b>Gender:</b> @Model.SelectedCustomer.Gender</p>
+
+        <p><b>Age:</b> @Model.SelectedCustomer.Age</p>
+
+        <p><b>City:</b> @Model.SelectedCustomer.City</p>
+
+        <p><b>Customer Type:</b> @Model.SelectedCustomer.CustomerType</p>
+
+        <p><b>Doctor Reference:</b> @Model.SelectedCustomer.DoctorReference</p>
+
+        @if (!string.IsNullOrEmpty(Model.SelectedCustomer.Email))
+        {
+            <p><b>Email:</b> @Model.SelectedCustomer.Email</p>
         }
 
-        <hr />
-
-        <!-- ADD MEDICINES -->
-        <form method="post" asp-page-handler="AddItem">
-
-            <h3>Add Medicines</h3>
-
-            <div class="billing-form">
-
-                <select asp-for="SelectedMedicine" id="medicineDropdown">
-                    <option value="">-- Select Medicine --</option>
-                    @foreach (var med in Model.AllMedicines)
-                    {
-                        <option value="@med.MedicineName">@med.MedicineName</option>
-                    }
-                </select>
-
-                <!-- SellMode Only for Both -->
-                <select asp-for="SellMode" id="sellModeDropdown" style="display:none;">
-                    <option value="Tablet">Unit</option>
-                    <option value="Strip">Strip</option>
-                </select>
-
-                <input asp-for="Quantity" type="number" min="1" value="1" class="qty-input" />
-
-                <button type="submit" class="btn-add">➕ Add</button>
-
-            </div>
-        </form>
-
-        <!-- BILL ITEMS TABLE -->
-        <table>
-            <thead>
-                <tr>
-                    <th>Medicine</th>
-                    <th>Qty</th>
-                    <th>Mode</th>
-                    <th>Price</th>
-                    <th>Total</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach (var item in Model.BillItems)
-                {
-                    <tr>
-                        <td>@item.MedicineName</td>
-                        <td>@item.Quantity</td>
-                        <td>@item.SaleMode</td>
-                        <td>₹@item.Price</td>
-                        <td>₹@item.Total</td>
-                        <td>
-                            <form method="post" asp-page-handler="DeleteItem">
-                                <input type="hidden" name="medicineName" value="@item.MedicineName" />
-                                <button class="btn-delete">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-        <!-- SUMMARY -->
-        <div class="box">
-            <h3>Bill Summary</h3>
-
-            <p>Subtotal: ₹@Model.SubTotal</p>
-            <p>CGST: ₹@Model.CGST</p>
-            <p>SGST: ₹@Model.SGST</p>
-
-            <form method="post" asp-page-handler="ApplyDiscount">
-                <label>Discount (%)</label>
-                <input asp-for="DiscountPercent" min="0" />
-
-                <label>Payment Mode</label>
-                <select asp-for="PaymentMode">
-                    <option>Cash</option>
-                    <option>UPI</option>
-                    <option>Card</option>
-                    <option>Due</option>
-                </select>
-
-                <button type="submit" class="btn-add">Apply</button>
-            </form>
-
-            <h2>Grand Total: ₹@Model.GrandTotal</h2>
-        </div>
-
-        <!-- COMPLETE -->
-        <form method="post" asp-page-handler="CompleteSale">
-            <button class="btn-alert" style="margin-top:15px;">
-                ✅ Complete Sale
-            </button>
-        </form>
+        @if (!string.IsNullOrEmpty(Model.SelectedCustomer.MedicalNotes))
+        {
+            <p><b>Medical Notes:</b> @Model.SelectedCustomer.MedicalNotes</p>
+        }
 
     </div>
+}
+
+
+<hr />
+
+<!-- ADD MEDICINES -->
+<form method="post" asp-page-handler="AddItem">
+
+    <h3>Add Medicine</h3>
+
+    <select asp-for="SelectedMedicine" id="medicineDropdown" required>
+        <option value="">-- Select Medicine --</option>
+        @foreach (var med in Model.AllMedicines)
+        {
+            <option value="@med.MedicineName">@med.MedicineName</option>
+        }
+    </select>
+
+    <!-- SellMode Only for Both -->
+    <select asp-for="SellMode" id="sellModeDropdown" style="display:none;">
+        <option value="Tablet">Unit</option>
+        <option value="Strip">Strip</option>
+    </select>
+
+    <input asp-for="Quantity" type="number" min="1" value="1" />
+
+    <button type="submit">➕ Add</button>
+</form>
+
+<hr />
+
+<!-- BILL ITEMS TABLE -->
+<table border="1" cellpadding="8" width="100%">
+    <thead>
+        <tr>
+            <th>Medicine</th>
+            <th>Batch</th>
+            <th>Expiry</th>
+            <th>HSN</th>
+            <th>Qty</th>
+            <th>Mode</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model.BillItems)
+        {
+            <tr>
+                <td>@item.MedicineName</td>
+                <td>@item.BatchNo</td>
+                <td>@item.ExpiryDate.ToString("MM/yyyy")</td>
+                <td>@item.HsnSac</td>
+                <td>@item.Quantity</td>
+                <td>@item.SaleMode</td>
+                <td>₹@item.Price</td>
+                <td>₹@item.Total</td>
+
+                <td>
+                    <form method="post" asp-page-handler="DeleteItem">
+                        <input type="hidden" name="medicineName" value="@item.MedicineName" />
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<!-- SUMMARY -->
+<!-- ================= BILL SUMMARY ================= -->
+<div class="box">
+    <h3>Bill Summary</h3>
+
+    <!-- Basic Totals -->
+    <p>Subtotal (Taxable Value): ₹@Model.SubTotal</p>
+
+    <!-- GST Breakdown -->
+    <p>CGST: ₹@Model.CGST</p>
+    <p>SGST: ₹@Model.SGST</p>
+
+    @if (Model.IGST > 0)
+    {
+        <p>IGST: ₹@Model.IGST</p>
+    }
+
+    <!-- ================= GST TABLE LIKE INVOICE ================= -->
+    <hr />
+    <h3>GST Invoice Summary</h3>
+
+    <table border="1" cellpadding="8" width="100%" style="margin-top:10px; text-align:center;">
+        <thead style="background:#f3f4f6; font-weight:bold;">
+            <tr>
+                <th>Taxable Value</th>
+                <th>CGST %</th>
+                <th>CGST Amt</th>
+                <th>SGST %</th>
+                <th>SGST Amt</th>
+                <th>IGST %</th>
+                <th>IGST Amt</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>₹@Model.SubTotal</td>
+
+                <!-- CGST -->
+                <td>6%</td>
+                <td>₹@Model.CGST</td>
+
+                <!-- SGST -->
+                <td>6%</td>
+                <td>₹@Model.SGST</td>
+
+                <!-- IGST -->
+                <td>12%</td>
+                <td>₹@Model.IGST</td>
+
+                <!-- Final Total -->
+                <td>
+                    ₹@(Model.SubTotal + Model.CGST + Model.SGST + Model.IGST)
+                </td>
+            </tr>
+
+            <!-- TOTAL ROW -->
+            <tr style="font-weight:bold;">
+                <td>₹@Model.SubTotal</td>
+                <td>-</td>
+                <td>₹@Model.CGST</td>
+                <td>-</td>
+                <td>₹@Model.SGST</td>
+                <td>-</td>
+                <td>₹@Model.IGST</td>
+                <td>
+                    ₹@(Model.SubTotal + Model.CGST + Model.SGST + Model.IGST)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <!-- ================= DISCOUNT + PAYMENT ================= -->
+    <hr />
+
+    <form method="post" asp-page-handler="ApplyDiscount">
+
+        <label>Discount (%)</label>
+        <input asp-for="DiscountPercent" min="0" value="0" />
+
+        <label>Payment Mode</label>
+        <select asp-for="PaymentMode">
+            <option>Cash</option>
+            <option>UPI</option>
+            <option>Card</option>
+            <option>Due</option>
+        </select>
+
+        <button type="submit" class="btn-add">Apply</button>
+    </form>
+
+    <!-- FINAL GRAND TOTAL -->
+    <h2 style="margin-top:15px;">
+        Grand Total: ₹@Model.GrandTotal
+    </h2>
 </div>
 
-<!-- SELLTYPE SCRIPT -->
+<hr />
+
+
+<!-- COMPLETE -->
+<form method="post" asp-page-handler="CompleteSale">
+    <button type="submit">
+        ✅ Complete Sale
+    </button>
+</form>
+
+</div>
+
 <script>
     const medicineDropdown = document.getElementById("medicineDropdown");
     const sellModeDropdown = document.getElementById("sellModeDropdown");
@@ -439,11 +325,6 @@
     function toggleSellMode() {
         const selectedMed = medicineDropdown.value;
         const sellType = medicineSellTypes[selectedMed];
-
-        if (!sellType) {
-            sellModeDropdown.style.display = "none";
-            return;
-        }
 
         if (sellType === "Both") {
             sellModeDropdown.style.display = "block";

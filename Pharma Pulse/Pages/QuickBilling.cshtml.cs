@@ -13,13 +13,11 @@ namespace Pharma_Pulse.Pages
     public class QuickBillingModel : PageModel
     {
         private readonly MedicineService _service;
-        private readonly SalesService _salesService;
         private readonly AppDbContext _context;
 
-        public QuickBillingModel(MedicineService service, SalesService salesService, AppDbContext context)
+        public QuickBillingModel(MedicineService service, AppDbContext context)
         {
             _service = service;
-            _salesService = salesService;
             _context = context;
         }
 
@@ -42,7 +40,7 @@ namespace Pharma_Pulse.Pages
         public int Quantity { get; set; }
 
         [BindProperty]
-        public string SellMode { get; set; } // Tablet / Strip
+        public string SellMode { get; set; }
 
         public List<Medicine> AllMedicines { get; set; } = new();
         public List<BillItem> BillItems { get; set; } = new();
@@ -64,6 +62,8 @@ namespace Pharma_Pulse.Pages
         public decimal SubTotal { get; set; }
         public decimal CGST { get; set; }
         public decimal SGST { get; set; }
+        public decimal IGST { get; set; }
+
         public decimal GrandTotal { get; set; }
 
         // =======================
@@ -103,17 +103,32 @@ namespace Pharma_Pulse.Pages
         // =======================
         private void CalculateTotals()
         {
-            decimal gstPercent = _context.GstSettings.FirstOrDefault()?.GstPercent ?? 5;
+            decimal gstPercent = _context.GstSettings.FirstOrDefault()?.GstPercent ?? 12;
 
             SubTotal = BillItems.Sum(x => x.Total);
 
-            CGST = SubTotal * (gstPercent / 100) / 2;
-            SGST = SubTotal * (gstPercent / 100) / 2;
+            bool isInterStateSale = false; // future me customer state se check kar sakte
+
+            if (isInterStateSale)
+            {
+                // ✅ IGST Full
+                IGST = SubTotal * (gstPercent / 100);
+                CGST = 0;
+                SGST = 0;
+            }
+            else
+            {
+                // ✅ CGST + SGST Split
+                CGST = SubTotal * (gstPercent / 100) / 2;
+                SGST = SubTotal * (gstPercent / 100) / 2;
+                IGST = 0;
+            }
 
             decimal discountAmount = SubTotal * (DiscountPercent / 100);
 
-            GrandTotal = (SubTotal - discountAmount) + CGST + SGST;
+            GrandTotal = (SubTotal - discountAmount) + CGST + SGST + IGST;
         }
+
 
         // =======================
         // CUSTOMER SELECT
@@ -136,7 +151,7 @@ namespace Pharma_Pulse.Pages
         }
 
         // =======================
-        // ADD ITEM (UNIT + STRIP FIX)
+        // ADD ITEM (NO STOCK REDUCE HERE)
         // =======================
         public IActionResult OnPostAddItem()
         {
@@ -145,43 +160,36 @@ namespace Pharma_Pulse.Pages
             var med = AllMedicines.FirstOrDefault(m => m.MedicineName == SelectedMedicine);
             if (med == null) return RedirectToPage();
 
-            // ✅ SellMode Fix
-            if (med.SellType == "Unit")
-                SellMode = "Tablet";
-
-            else if (med.SellType == "Pack")
-                SellMode = "Strip";
-
-            else if (med.SellType == "Both" && string.IsNullOrEmpty(SellMode))
-                SellMode = "Tablet";
-
-            // ✅ Stock Units Calculation
-            int unitsToSell = Quantity;
-
-            if (SellMode == "Strip")
-                unitsToSell = Quantity * med.UnitsPerStrip;
-
-            // ✅ Stock Check
-            if (med.StockUnits < unitsToSell)
+            // ❌ Block Expired Medicine
+            if (med.ExpiryDate < DateTime.Today)
             {
-                TempData["Error"] = "Not enough stock!";
+                TempData["Error"] = "Medicine Expired!";
                 return RedirectToPage();
             }
 
-            // ✅ Reduce Stock
-            med.StockUnits -= unitsToSell;
-            _service.UpdateMedicine(med);
+            // SellMode Auto Fix
+            if (med.SellType == "Unit")
+                SellMode = "Tablet";
+            else if (med.SellType == "Pack")
+                SellMode = "Strip";
+            else if (med.SellType == "Both" && string.IsNullOrEmpty(SellMode))
+                SellMode = "Tablet";
 
-            // ✅ Price Fix Based on Mode
+            // Price Fix
             decimal finalPrice = med.SellingPrice;
 
             if (SellMode == "Strip")
                 finalPrice = med.SellingPrice * med.UnitsPerStrip;
 
-            // ✅ Add Bill Item
+            // Add Bill Item with Batch + Expiry + HSN
             BillItems.Add(new BillItem
             {
                 MedicineName = med.MedicineName,
+
+                BatchNo = med.BatchNo,
+                ExpiryDate = med.ExpiryDate,
+                HsnSac = med.HsnSac,
+
                 Quantity = Quantity,
                 SaleMode = SellMode,
                 Price = finalPrice
@@ -193,7 +201,7 @@ namespace Pharma_Pulse.Pages
         }
 
         // =======================
-        // DELETE ITEM + RESTORE STOCK
+        // DELETE ITEM (NO STOCK RESTORE)
         // =======================
         public IActionResult OnPostDeleteItem(string medicineName)
         {
@@ -203,20 +211,6 @@ namespace Pharma_Pulse.Pages
 
             if (item != null)
             {
-                var med = _service.GetAllMedicines()
-                    .FirstOrDefault(m => m.MedicineName == item.MedicineName);
-
-                if (med != null)
-                {
-                    int restoreUnits = item.Quantity;
-
-                    if (item.SaleMode == "Strip")
-                        restoreUnits = item.Quantity * med.UnitsPerStrip;
-
-                    med.StockUnits += restoreUnits;
-                    _service.UpdateMedicine(med);
-                }
-
                 BillItems.Remove(item);
                 HttpContext.Session.SetObject("BillItems", BillItems);
             }
@@ -225,7 +219,7 @@ namespace Pharma_Pulse.Pages
         }
 
         // =======================
-        // COMPLETE SALE
+        // COMPLETE SALE (STOCK REDUCE HERE)
         // =======================
         public IActionResult OnPostCompleteSale()
         {
@@ -237,6 +231,31 @@ namespace Pharma_Pulse.Pages
                 return RedirectToPage();
             }
 
+            // ✅ Reduce Stock Now
+            foreach (var item in BillItems)
+            {
+                var med = _service.GetAllMedicines()
+                    .FirstOrDefault(m => m.MedicineName == item.MedicineName);
+
+                if (med != null)
+                {
+                    int unitsToSell = item.Quantity;
+
+                    if (item.SaleMode == "Strip")
+                        unitsToSell *= med.UnitsPerStrip;
+
+                    if (med.StockUnits < unitsToSell)
+                    {
+                        TempData["Error"] = "Not enough stock!";
+                        return RedirectToPage();
+                    }
+
+                    med.StockUnits -= unitsToSell;
+                    _service.UpdateMedicine(med);
+                }
+            }
+
+            // ✅ Save Bill
             Bill bill = new Bill
             {
                 InvoiceNumber = InvoiceNumber,
@@ -248,18 +267,28 @@ namespace Pharma_Pulse.Pages
                 SGST = SGST,
                 GrandTotal = GrandTotal,
 
+                DiscountPercent = DiscountPercent,
+                PaymentMode = PaymentMode,
+
                 BillDate = DateTime.Now
             };
+
 
             _context.Bills.Add(bill);
             _context.SaveChanges();
 
+            // ✅ Save Bill Details with Batch + Expiry + HSN
             foreach (var item in BillItems)
             {
                 _context.BillDetails.Add(new BillDetail
                 {
                     BillId = bill.Id,
+
                     MedicineName = item.MedicineName,
+                    BatchNo = item.BatchNo,
+                    ExpiryDate = item.ExpiryDate,
+                    HsnSac = item.HsnSac,
+
                     Quantity = item.Quantity,
                     Price = item.Price,
                     Total = item.Total

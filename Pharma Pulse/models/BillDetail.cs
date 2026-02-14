@@ -10,6 +10,14 @@
 
         public string MedicineName { get; set; }
 
+        // ✅ NEW Fields (Save Invoice Data)
+        public string BatchNo { get; set; }
+
+        public DateTime ExpiryDate { get; set; }
+
+        public string HsnSac { get; set; }
+
+        // Existing
         public int Quantity { get; set; }
 
         public decimal Price { get; set; }

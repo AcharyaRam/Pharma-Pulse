@@ -1,0 +1,271 @@
+﻿body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f9fafb;
+    color: #111827;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+    width: 80px;
+    padding: 30px 12px;
+    background: white;
+    border-right: 1px solid #e5e7eb;
+    position: fixed;
+    height: 100vh;
+    overflow: hidden;
+    transition: width 0.3s ease;
+    z-index: 100;
+}
+
+    .sidebar:hover {
+        width: 240px;
+    }
+
+/* Sidebar Title */
+.sidebar-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    white-space: nowrap;
+}
+
+/* Hide title when collapsed */
+.sidebar:not(:hover) .sidebar-title {
+    opacity: 0;
+}
+
+/* Sidebar Menu */
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+    .sidebar-menu li {
+        margin-bottom: 15px;
+    }
+
+/* Links */
+.menu-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #374151;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+/* Hide text when collapsed */
+.sidebar:not(:hover) .text {
+    display: none;
+}
+
+.sidebar:not(:hover) .menu-link {
+    justify-content: center;
+}
+
+/* Hover */
+.menu-link:hover {
+    background: #f3f4f6;
+}
+
+/* Active Link */
+.menu-link.active {
+    background: rgba(146, 185, 184, 0.25);
+    border-left: 4px solid #92b9b8;
+    font-weight: 700;
+}
+
+/* ================= MAIN CONTENT FIX ================= */
+h2, h3, p, table, form, .box {
+    margin-left: 90px;
+    transition: margin-left 0.3s ease;
+}
+
+/* Sidebar hover shift */
+.sidebar:hover ~ h2,
+.sidebar:hover ~ h3,
+.sidebar:hover ~ p,
+.sidebar:hover ~ table,
+.sidebar:hover ~ form,
+.sidebar:hover ~ .box {
+    margin-left: 260px;
+}
+
+/* ================= HEADINGS ================= */
+h2 {
+    font-size: 28px;
+    margin-top: 25px;
+}
+
+h3 {
+    font-size: 18px;
+    margin-top: 25px;
+    font-weight: 600;
+}
+
+/* ================= DIVIDER ================= */
+hr {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    margin: 25px 0;
+}
+
+/* ================= FORMS ================= */
+form {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 10px;
+}
+
+select,
+input {
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    min-width: 220px;
+    outline: none;
+    transition: 0.2s;
+}
+
+    select:focus,
+    input:focus {
+        border-color: #92b9b8;
+        box-shadow: 0 0 0 3px rgba(146,185,184,0.25);
+    }
+
+    input[type="number"] {
+        min-width: 90px;
+    }
+
+/* Buttons */
+button {
+    background: #92b9b8;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    button:hover {
+        opacity: 0.9;
+    }
+
+/* ================= CUSTOMER DETAILS BOX FIX ================= */
+div[style*="border:1px solid"] {
+    background: white !important;
+    border-radius: 16px !important;
+    border: 1px solid #e5e7eb !important;
+    padding: 18px !important;
+    margin-top: 15px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* ================= TABLE ================= */
+table {
+    width: calc(100% - 120px);
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+}
+
+thead {
+    background: #f3f4f6;
+}
+
+th {
+    padding: 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+}
+
+td {
+    padding: 14px;
+    font-size: 13px;
+    border-bottom: 1px solid #eee;
+}
+
+tbody tr:hover {
+    background: #f9fafb;
+}
+
+/* Delete Button */
+table button {
+    background: #ef4444;
+    padding: 7px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+/* ================= BILL SUMMARY BOX ================= */
+.box {
+    margin-top: 25px;
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+    .box p {
+        font-size: 15px;
+        margin: 10px 0;
+    }
+
+    .box h2 {
+        margin-top: 20px;
+        font-size: 24px;
+        font-weight: 800;
+    }
+
+/* ================= COMPLETE SALE BUTTON ================= */
+form[asp-page-handler="CompleteSale"] button {
+    width: calc(100% - 120px);
+    background: #16a34a;
+    padding: 15px;
+    border-radius: 16px;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width: 900px) {
+
+    .sidebar {
+        display: none;
+    }
+
+    h2, h3, p, table, form, .box {
+        margin-left: 0;
+    }
+
+    table {
+        width: 100%;
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    select, input, button {
+        width: 100%;
+    }
+}
