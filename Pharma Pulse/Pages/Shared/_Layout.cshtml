@@ -51,6 +51,24 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
+    <script>
+        (function () {
+
+            // restore scroll after reload
+            const pos = sessionStorage.getItem("scrollPos");
+            if (pos !== null) {
+                window.scrollTo(0, parseInt(pos));
+                sessionStorage.removeItem("scrollPos");
+            }
+
+            // save scroll before any form submit
+            document.addEventListener("submit", function () {
+                sessionStorage.setItem("scrollPos", window.scrollY);
+            });
+
+        })();
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>
