@@ -15,7 +15,6 @@ namespace Pharma_Pulse.Models
 
         public string? DoctorName { get; set; }
 
-
         public decimal SubTotal { get; set; }
 
         public decimal GstPercent { get; set; }
@@ -28,11 +27,11 @@ namespace Pharma_Pulse.Models
 
         public DateTime BillDate { get; set; } = DateTime.Now;
 
-        // Navigation
-        public List<BillDetail> BillDetails { get; set; }
+        // ✅ FIXED Navigation (No Null Crash)
+        public List<BillDetail> BillDetails { get; set; } = new();
 
         public decimal DiscountPercent { get; set; }
-        public string? PaymentMode { get; set; }
 
+        public string? PaymentMode { get; set; }
     }
 }
