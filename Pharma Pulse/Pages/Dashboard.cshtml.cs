@@ -30,7 +30,8 @@ namespace Pharma_Pulse.Pages
         // ============================
 
         [BindProperty]
-        public Customer Customer { get; set; }
+        public Customer Customer { get; set; } = new Customer();
+
 
         // ============================
         // Dashboard Stats
@@ -54,6 +55,7 @@ namespace Pharma_Pulse.Pages
 
         public void OnGet()
         {
+            Customer = new Customer(); // ✅ Customer Form ke liye initialize
             LoadDashboard();
         }
 
@@ -64,11 +66,15 @@ namespace Pharma_Pulse.Pages
         public IActionResult OnPostSaveCustomer()
         {
             if (!ModelState.IsValid)
+            {
+                LoadDashboard(); // Page reload properly
                 return Page();
+            }
 
-            // ✅ Default values so system never breaks
-            Customer.Email = Customer.Email ?? "";
-            Customer.MedicalNotes = Customer.MedicalNotes ?? "N/A";
+            // Optional Defaults
+            Customer.Email ??= "";
+            Customer.MedicalNotes ??= "N/A";
+            Customer.GSTNumber ??= "";
 
             // Save Customer in DB
             _context.Customers.Add(Customer);
@@ -78,6 +84,7 @@ namespace Pharma_Pulse.Pages
 
             return RedirectToPage();
         }
+
 
         // ============================
         // Dashboard Load Logic

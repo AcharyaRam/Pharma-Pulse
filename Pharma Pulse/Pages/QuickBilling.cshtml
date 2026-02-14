@@ -95,7 +95,7 @@
             @foreach (var cust in Model.AllCustomers)
             {
                 <option value="@cust.CustomerId">
-                    @cust.CustomerName - @cust.MobileNumber
+                    @cust.FirstName - @cust.MobileNumber
                 </option>
             }
         </select>
@@ -109,7 +109,7 @@
 
             <h3>Customer Details</h3>
 
-            <p><b>Name:</b> @Model.SelectedCustomer.CustomerName</p>
+            <p><b>Name:</b> @Model.SelectedCustomer.FirstName</p>
 
             <p><b>Mobile:</b> @Model.SelectedCustomer.MobileNumber</p>
 

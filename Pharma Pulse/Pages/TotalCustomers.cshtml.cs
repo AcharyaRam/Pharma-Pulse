@@ -26,7 +26,7 @@ namespace Pharma_Pulse.Pages
             Customers = _context.Customers
                 .Where(c =>
                     string.IsNullOrEmpty(search) ||
-                    c.CustomerName.Contains(search) ||
+                    c.FirstName.Contains(search) ||
                     c.MobileNumber.Contains(search)
                 )
                 .ToList();

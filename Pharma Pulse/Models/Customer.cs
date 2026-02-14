@@ -1,25 +1,26 @@
-﻿namespace Pharma_Pulse.Models
+﻿using System;
+
+namespace Pharma_Pulse.Models
 {
     public class Customer
     {
         public int CustomerId { get; set; }
 
-        public string CustomerName { get; set; } = "";
-
+        // ✅ Required Fields
+        public string FirstName { get; set; } = "";
+        public string Surname { get; set; } = "";
         public string MobileNumber { get; set; } = "";
-
-        public string Gender { get; set; } = "";
-
         public int Age { get; set; }
 
-        public string City { get; set; } = "";
-
-        public string CustomerType { get; set; } = "Walk-in";
-
-        public string Email { get; set; } = "";
-
-        public string DoctorReference { get; set; } = "";
-
-        public string MedicalNotes { get; set; } =  "N/A";
+        // ✅ Optional Fields (Nullable)
+        public string? MiddleName { get; set; }
+        public string? GSTNumber { get; set; }
+        public string? Gender { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+        public string? City { get; set; }
+        public string? CustomerType { get; set; }
+        public string? Email { get; set; }
+        public string? DoctorReference { get; set; }
+        public string? MedicalNotes { get; set; }
     }
 }
