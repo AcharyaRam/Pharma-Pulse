@@ -377,3 +377,10 @@ tbody tr:hover {
         background: #1f4fa8;
     }
 
+/* Only Red Font Highlight */
+.text-danger {
+    color: #dc2626; /* strong red */
+    font-weight: 900;
+    font-size: 15px;
+}
+

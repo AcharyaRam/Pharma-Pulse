@@ -149,6 +149,56 @@
         font-weight: bold;
         color: #16a34a;
     }
+    /* ============================= */
+    /* PAGE HEADER + FILTER */
+    /* ============================= */
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        padding: 20px 25px;
+        border-radius: 18px;
+        margin-bottom: 20px;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+    }
+
+        .page-header h2 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .page-header p {
+            margin: 4px 0 0;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+    /* Filter Box */
+    .filter-box select {
+        padding: 10px 16px;
+        border-radius: 12px;
+        border: 1px solid #ddd;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        outline: none;
+        background: #f9fafb;
+        transition: 0.25s;
+    }
+
+        .filter-box select:hover {
+            border-color: #2d6cdf;
+        }
+
+        .filter-box select:focus {
+            border-color: #2d6cdf;
+            box-shadow: 0 0 0 3px rgba(45,108,223,0.25);
+        }
+
 
 </style>
 
@@ -163,6 +213,12 @@
             <li><a asp-page="/SalesSummary" class="menu-link active">📊 <span class="text">Sales Summary</span></a></li>
             <li><a asp-page="/QuickBilling" class="menu-link">💵 <span class="text">Quick Billing</span></a></li>
             <li><a asp-page="/TotalMedicine" class="menu-link">💊 <span class="text">Medicines</span></a></li>
+            <li>
+                <a asp-page="/TotalCustomers" class="menu-link">
+                    <span class="icon">👤</span>
+                    <span class="text">Customers</span>
+                </a>
+            </li>
             <li><a asp-page="/LowStockAlerts" class="menu-link">⚠ <span class="text">Low Stock Alert</span></a></li>
             <li><a asp-page="/ExpiryAlerts" class="menu-link">⏳ <span class="text">Expiry Alerts</span></a></li>
             <li><a asp-page="/Login" class="menu-link">→ <span class="text">Logout</span></a></li>
@@ -171,17 +227,25 @@
 
     <!-- Main -->
     <div class="main-content">
-
-        <h2>Sales Summary Report (Bills)</h2>
-
         <!-- Report Filter -->
-        <form method="get">
-            <select name="ReportType" onchange="this.form.submit()">
-                <option value="Daily" selected="@(Model.ReportType=="Daily")">Daily</option>
-                <option value="Monthly" selected="@(Model.ReportType=="Monthly")">Monthly</option>
-                <option value="Yearly" selected="@(Model.ReportType=="Yearly")">Yearly</option>
-            </select>
-        </form>
+        <div class="page-header">
+
+            <div>
+                <h2>Sales Summary Report</h2>
+            </div>
+
+            <form method="get" class="filter-box">
+                <select name="ReportType" onchange="this.form.submit()">
+                    <option value="Daily" selected="@(Model.ReportType=="Daily")">Daily</option>
+                    <option value="Monthly" selected="@(Model.ReportType=="Monthly")">Monthly</option>
+                    <option value="Yearly" selected="@(Model.ReportType=="Yearly")">Yearly</option>
+                </select>
+            </form>
+
+        </div>
+
+
+        
 
         <!-- Totals -->
         <div class="summary-box">

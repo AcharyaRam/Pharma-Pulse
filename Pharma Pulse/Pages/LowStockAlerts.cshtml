@@ -44,6 +44,13 @@
             </li>
 
             <li>
+                <a asp-page="/TotalCustomers" class="menu-link">
+                    <span class="icon">👤</span>
+                    <span class="text">Customers</span>
+                </a>
+            </li>
+
+            <li>
                 <a asp-page="/LowStockAlerts" class="menu-link active">
                     <span class="icon">⚠</span>
                     <span class="text">Low Stock Alerts</span>
@@ -72,9 +79,12 @@
 
         <div class="content-card">
 
+            <!-- Header -->
             <div class="card-header">
                 <h2>Low Stock Medicines</h2>
             </div>
+
+            <!-- Table -->
             <table class="sales-table">
                 <thead>
                     <tr>
@@ -90,20 +100,40 @@
                     @foreach (var med in Model.LowStockMedicines)
                     {
                         <tr class="fade-row">
+
                             <td>@med.MedicineName</td>
                             <td>@med.Category</td>
-                            <td class="stock-low">@med.StockUnits</td>
-                            <td>@med.ExpiryDate.ToShortDateString()</td>
-                            <td>
-                                <span class="badge low-badge">
-                                    ⚠ Low Stock
-                                </span>
+
+                            <!-- Stock Value -->
+                            <td class="@(med.StockUnits == 0 ? "stock-zero" : "stock-low")">
+                                @med.StockUnits
                             </td>
+
+                            <!-- Expiry Date -->
+                            <td>
+                                @med.ExpiryDate.ToShortDateString()
+                            </td>
+
+                            <!-- Status Badge -->
+                            <td>
+                                @if (med.StockUnits == 0)
+                                {
+                                    <span class="badge out-badge">
+                                        ❌ Exhausted
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge low-badge">
+                                        ⚠ Low Stock
+                                    </span>
+                                }
+                            </td>
+
                         </tr>
                     }
                 </tbody>
             </table>
-
 
         </div>
 

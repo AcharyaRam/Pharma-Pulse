@@ -1,28 +1,29 @@
 ﻿@page
-@model Pharma_Pulse.Pages.ExpiryAlertsModel
+@model Pharma_Pulse.Pages.TotalCustomersModel
 @{
-    ViewData["Title"] = "Expiry Alerts";
+    ViewData["Title"] = "Total Customers";
 }
 
-<link rel="stylesheet" href="~/css/Expirealert.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="~/css/customer.css" />
 
 <div class="dashboard-container">
 
-    <!-- LEFT SIDEBAR -->
+    <!-- SIDEBAR -->
     <aside class="sidebar">
         <h2 class="sidebar-title">Pharma Pulse</h2>
 
         <ul class="sidebar-menu">
 
             <li>
-                <a asp-page="/Dashboard" class="menu-link">
+                <a asp-page="/Dashboard" class="menu-link active">
                     <span class="icon">🏠</span>
                     <span class="text">Dashboard</span>
                 </a>
             </li>
 
             <li>
-                <a asp-page="/SalesSummary" class="menu-link ">
+                <a asp-page="/SalesSummary" class="menu-link">
                     <span class="icon">📊</span>
                     <span class="text">Sales Summary</span>
                 </a>
@@ -43,7 +44,7 @@
             </li>
 
             <li>
-                <a asp-page="/TotalCustomers" class="menu-link">
+                <a asp-page="/TotalCustomers" class="menu-link active">
                     <span class="icon">👤</span>
                     <span class="text">Customers</span>
                 </a>
@@ -57,7 +58,7 @@
             </li>
 
             <li>
-                <a asp-page="/ExpiryAlerts" class="menu-link active">
+                <a asp-page="/ExpiryAlerts" class="menu-link">
                     <span class="icon">⏳</span>
                     <span class="text">Expiry Alerts</span>
                 </a>
@@ -76,44 +77,64 @@
     <!-- MAIN CONTENT -->
     <div class="main-content">
 
-
         <div class="content-card">
 
+            <!-- Header -->
             <div class="card-header">
-                <h2>Expiry Alert Medicines</h2>
+                <h2>Total Customers</h2>
+
+                <button onclick="location.href='@Url.Page("/AddCustomer")'"
+                        class="btn-add">
+                    + Add Customer
+                </button>
             </div>
 
-            <table>
+            <!-- Search -->
+            <form method="get" class="search-bar">
+                <input type="text"
+                       name="search"
+                       value="@Model.SearchTerm"
+                       placeholder="🔍 Search customer name or mobile..." />
+
+                <button type="submit" class="btn-search">
+                    Search
+                </button>
+            </form>
+
+            <!-- Table -->
+            <table class="sales-table">
                 <thead>
                     <tr>
-                        <th>Medicine Name</th>
-                        <th>Category</th>
-                        <th>Stock</th>
-                        <th>Expiry Date</th>
-                        <th>Status</th>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Gender</th>
+                        <th>Age</th>
+                        <th>City</th>
+                        <th>Type</th>
+                        <th>Email</th>
+                        <th>Doctor Ref</th>
+                        <th>Notes</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach (var med in Model.ExpiryMedicines)
+                    @foreach (var cust in Model.Customers)
                     {
-                        <tr class ="fade-row">
-                            <td>@med.MedicineName</td>
-                            <td>@med.Category</td>
-                            <td>@med.StockUnits</td>
-                            <td>@med.ExpiryDate.ToShortDateString()</td>
-
-                            <td>
-                                <span class="badge expiry-badge">
-                                    Expiring Soon
-                                </span>
-                            </td>
+                        <tr>
+                            <td>@cust.CustomerName</td>
+                            <td>@cust.MobileNumber</td>
+                            <td>@cust.Gender</td>
+                            <td>@cust.Age</td>
+                            <td>@cust.City</td>
+                            <td>@cust.CustomerType</td>
+                            <td>@cust.Email</td>
+                            <td>@cust.DoctorReference</td>
+                            <td>@cust.MedicalNotes</td>
                         </tr>
                     }
                 </tbody>
             </table>
 
         </div>
-
     </div>
 </div>
