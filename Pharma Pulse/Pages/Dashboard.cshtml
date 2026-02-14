@@ -99,6 +99,11 @@
                 <p>₹@Model.SalesToday</p>
             </div>
 
+            <div class="card">
+                <h3>Profit Today</h3>
+                <p>0</p>
+            </div>
+
         </div>
 
 
@@ -144,7 +149,7 @@
 
                         <div class="form-row">
                             <div>
-                                <label>City / Address *</label>
+                                <label>City / Address </label>
                                 <input asp-for="Customer.City" required />
                             </div>
 
@@ -184,78 +189,46 @@
                     </button>
                 </div>
 
-                <!-- SALES ANALYTICS (NO JS) -->
-                <div class="sales-card">
+                <div class="sales-bottom">
 
-                    <div class="sales-header">
-                        <h3>Sales Analytics</h3>
-                        <div class="toggle">
-                            <span class="active">Weekly</span>
-                            <span>Monthly</span>
-                        </div>
-                    </div>
+                    <!-- Top Selling Medicines -->
+                    
 
-                    <!-- GRAPH (CSS BARS) -->
-                    <div class="graph">
+    <!-- RIGHT : Top Selling Medicines -->
+    <!-- RIGHT SIDE -->
+    <div class="right-section">
 
-                        <div class="bar">
-                            <div class="fill" style="height:40%"></div>
-                            <span>Mon</span>
-                        </div>
+        <!-- TOP SELLING MEDICINES -->
+        <div class="card">
+            <h2>Top Selling Medicines</h2>
 
-                        <div class="bar">
-                            <div class="fill" style="height:70%"></div>
-                            <span>Tue</span>
-                        </div>
+            <div class="medicine">
+                <span class="rank">1</span>
+                <span class="name">Paracetamol</span>
+                <span class="price">₹1,020</span>
+            </div>
 
-                        <div class="bar">
-                            <div class="fill" style="height:50%"></div>
-                            <span>Wed</span>
-                        </div>
+            <div class="medicine">
+                <span class="rank">2</span>
+                <span class="name">Azithromycin</span>
+                <span class="price">₹920</span>
+            </div>
 
-                        <div class="bar">
-                            <div class="fill" style="height:80%"></div>
-                            <span>Thu</span>
-                        </div>
+            <div class="medicine">
+                <span class="rank">3</span>
+                <span class="name">Neurobion Plus</span>
+                <span class="price">₹870</span>
+            </div>
 
-                        <div class="bar">
-                            <div class="fill" style="height:60%"></div>
-                            <span>Fri</span>
-                        </div>
+        </div>
 
-                        <div class="bar">
-                            <div class="fill" style="height:90%"></div>
-                            <span>Sat</span>
-                        </div>
+    </div>
 
-                        <div class="bar">
-                            <div class="fill" style="height:75%"></div>
-                            <span>Sun</span>
-                        </div>
+</div>
 
-                    </div>
-
-                    <!-- TOP MEDICINES -->
-                    <div class="top-medicines">
-                        <h4>Top Selling Medicines</h4>
-
-                        <div class="medicine">
-                            <span>Paracetamol</span>
-                            <b>₹1,020</b>
-                        </div>
-
-                        <div class="medicine">
-                            <span>Azithromycin</span>
-                            <b>₹920</b>
-                        </div>
-
-                        <div class="medicine">
-                            <span>Neurobion Plus</span>
-                            <b>₹870</b>
-                        </div>
-                    </div>
 
                 </div>
+
 
 
             </div>
@@ -263,4 +236,51 @@
         </div>
 
     </div>
+
+    <!-- 15 Days Revenue Chart -->
+<div class="revenue-section">
+
+    <div class="revenue-header">
+        <h2>Last 15 Days Revenue</h2>
+        <span class="sub">Daily income overview</span>
+    </div>
+
+    <canvas id="revenueChart"></canvas>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const revenueLabels = @Html.Raw(Json.Serialize(Model.Days));
+    const revenueData = @Html.Raw(Json.Serialize(Model.Revenue));
+
+    const ctx = document.getElementById('revenueChart');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: revenueLabels,
+            datasets: [{
+                data: revenueData,
+                borderColor: '#92b9b8',
+                backgroundColor: 'rgba(146,185,184,0.15)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: value => '₹' + value
+                    }
+                }
+            }
+        }
+    });
+</script>
+
 </div>

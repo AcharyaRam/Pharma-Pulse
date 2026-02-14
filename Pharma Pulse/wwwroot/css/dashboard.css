@@ -249,49 +249,109 @@
         color: white;
     }
 
-/* GRAPH */
-.graph {
+/* Bottom Section Layout */
+.sales-bottom {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    height: 180px;
-    margin: 20px 0;
+    gap: 30px;
+    margin-top: 30px;
 }
 
-.bar {
-    width: 30px;
-    height: 100%;
-    background: #f1f1f1;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
+/* Card Common */
+.card {
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 25px;
+    flex: 1;
+    box-shadow: 0 10px 25px rgba(0,0,0,.05);
 }
 
-.fill {
-    width: 100%;
-    background: #6EB6B0;
-    border-radius: 8px;
-}
+    .card h2 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        font-weight: 600;
+        color: #0f172a;
+    }
 
-.bar span {
-    margin-top: 8px;
-    font-size: 12px;
-}
-
-/* MEDICINES */
-.top-medicines h4 {
-    margin-bottom: 10px;
-}
+/* ========================= */
+/* Top Selling Medicines */
+/* ========================= */
 
 .medicine {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
+    padding: 14px 16px;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    background: white;
+    transition: .25s;
 }
 
-    .medicine:last-child {
-        border: none;
+    .medicine:hover {
+        transform: translateX(6px);
+        box-shadow: 0 6px 14px rgba(0,0,0,.08);
     }
+
+.rank {
+    background: #5daaa8;
+    color: white;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.name {
+    flex: 1;
+    margin-left: 15px;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.price {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+/* ===== Revenue Full Width ===== */
+
+.revenue-section {
+    margin-left: 90px;
+    margin-top: 40px;
+    padding: 30px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.sidebar:hover ~ .revenue-section {
+    margin-left: 260px;
+}
+
+.revenue-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+    .revenue-header h2 {
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .revenue-header .sub {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+#revenueChart {
+    width: 100% !important;
+    height: 340px !important;
+}
+
+
+
+
+

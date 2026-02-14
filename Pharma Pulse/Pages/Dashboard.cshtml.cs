@@ -44,6 +44,14 @@ namespace Pharma_Pulse.Pages
         public int TotalBillsToday { get; set; }
         public string TopSellerToday { get; set; }
 
+        // ============================
+        // Revenue Chart (15 Days)
+        // ============================
+
+        public List<string> Days { get; set; } = new();
+        public List<int> Revenue { get; set; } = new();
+
+
         public void OnGet()
         {
             LoadDashboard();
@@ -104,6 +112,33 @@ namespace Pharma_Pulse.Pages
                 .OrderByDescending(g => g.Sum(x => x.QuantitySold))
                 .Select(g => g.Key)
                 .FirstOrDefault() ?? "No Sales Yet";
+
+            TopSellerToday = sales
+    .Where(s => s.SaleDate.Date == DateTime.Today)
+    .GroupBy(s => s.MedicineName)
+    .OrderByDescending(g => g.Sum(x => x.QuantitySold))
+    .Select(g => g.Key)
+    .FirstOrDefault() ?? "No Sales Yet";
+
+            // ============================
+            // 15 Days Revenue Chart Data
+            // ============================
+
+            var random = new Random();
+
+            Days.Clear();
+            Revenue.Clear();
+
+            for (int i = 14; i >= 0; i--)
+            {
+                var date = DateTime.Today.AddDays(-i);
+                Days.Add(date.ToString("dd MMM"));
+
+                // abhi dummy (later DB se replace karenge)
+                Revenue.Add(random.Next(800, 4500));
+            }
+
+
         }
     }
 }
