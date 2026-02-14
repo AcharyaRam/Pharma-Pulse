@@ -204,11 +204,38 @@ body {
 }
 
 .low-badge {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
+    background: linear-gradient(135deg, #f59e0b, #d97706);
     color: white;
-    box-shadow: 0 6px 20px rgba(220,38,38,0.35);
+    box-shadow: 0 6px 20px rgba(245,158,11,0.35);
     animation: pulseBadge 1.8s infinite alternate;
 }
+
+/* ========================================= */
+/* STOCK = 0 SHOULD BE BLACK */
+/* ========================================= */
+
+.stock-zero {
+    color: #111827; /* Black */
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.stock-low {
+    color: #dc2626;
+    font-weight: 700;
+}
+
+/* ========================================= */
+/* EXHAUSTED BADGE (OUT OF STOCK) */
+/* ========================================= */
+
+.out-badge {
+    background: linear-gradient(135deg, #991b1b, #dc2626);
+    color: white;
+    box-shadow: 0 6px 20px rgba(220,38,38,0.35);
+    font-weight: 700;
+}
+
 
 @keyframes pulseBadge {
     from {

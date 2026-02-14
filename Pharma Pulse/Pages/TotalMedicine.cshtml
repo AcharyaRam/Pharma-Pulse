@@ -44,6 +44,13 @@
             </li>
 
             <li>
+                <a asp-page="/TotalCustomers" class="menu-link">
+                    <span class="icon">👤</span>
+                    <span class="text">Customers</span>
+                </a>
+            </li>
+
+            <li>
                 <a asp-page="/LowStockAlerts" class="menu-link">
                     <span class="icon">⚠</span>
                     <span class="text">Low Stock Alerts</span>
@@ -74,7 +81,7 @@
 
             <!-- Header -->
             <div class="card-header">
-                <h2>Available Medicines</h2>
+                <h2>Total Medicines</h2>
 
                 <button onclick="location.href='@Url.Page("/AddMedicine")'"
                         class="btn-add">
@@ -98,11 +105,17 @@
             <table class="sales-table">
                 <thead>
                     <tr>
-                        <th>Medicine Name</th>
+                        <th>Name</th>
                         <th>Category</th>
+                        <th>Batch No</th>
+                        <th>Expiry</th>
                         <th>Stock</th>
-                        <th>Expiry Date</th>
-                        <th>Actions</th>
+                        <th>Low Limit</th>
+                        <th>Buy ₹</th>
+                        <th>Sell ₹</th>
+                        <th>HSN</th>
+                        <th>Mode</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
 
@@ -110,21 +123,47 @@
                     @foreach (var med in Model.Medicines)
                     {
                         <tr>
+
                             <td>@med.MedicineName</td>
+
                             <td>@med.Category</td>
-                            <td>@med.StockUnits</td>
-                            <td>@med.ExpiryDate.ToShortDateString()</td>
+
+                            <td>@med.BatchNo</td>
+
+                            <td class="@(med.ExpiryDate <= DateTime.Now.AddMonths(2) ? "text-danger" : "")">
+                                @med.ExpiryDate.ToString("MM/yyyy")
+                            </td>
+
+
+                            <td class="@(med.StockUnits <= med.LowStockLimit ? "text-danger" : "")">
+                                @med.StockUnits
+                            </td>
+
+
                             <td>
-                                <!-- ✅ ONLY UPDATE BUTTON -->
+                                @med.LowStockLimit
+                            </td>
+
+                            <td>₹@med.BuyingPrice</td>
+
+                            <td>₹@med.SellingPrice</td>
+
+                            <td>@med.HsnSac</td>
+
+                            <td>@med.SellType</td>
+
+                            <td>
                                 <a href="@Url.Page("/UpdateMedicine", new { name = med.MedicineName })"
                                    class="btn-update">
                                     Update
                                 </a>
                             </td>
+
                         </tr>
                     }
                 </tbody>
             </table>
+
 
             <!-- Pagination -->
             <div class="pagination">
