@@ -22,7 +22,7 @@
             </li>
 
             <li>
-                <a asp-page="/SalesSummary" class="menu-link ">
+                <a asp-page="/SalesSummary" class="menu-link">
                     <span class="icon">📊</span>
                     <span class="text">Sales Summary</span>
                 </a>
@@ -76,7 +76,6 @@
     <!-- MAIN CONTENT -->
     <div class="main-content">
 
-
         <div class="content-card">
 
             <div class="card-header">
@@ -97,17 +96,43 @@
                 <tbody>
                     @foreach (var med in Model.ExpiryMedicines)
                     {
-                        <tr class ="fade-row">
+                        <tr class="fade-row">
+
                             <td>@med.MedicineName</td>
                             <td>@med.Category</td>
                             <td>@med.StockUnits</td>
-                            <td>@med.ExpiryDate.ToShortDateString()</td>
 
-                            <td>
-                                <span class="badge expiry-badge">
-                                    Expiring Soon
-                                </span>
+                            <!-- Expiry Date -->
+                            <td class="@(med.ExpiryDate < DateTime.Now
+                                        ? "date-expired"
+                                        : med.ExpiryDate <= DateTime.Now.AddMonths(2)
+                                            ? "date-soon"
+                                            : "")">
+                                @med.ExpiryDate.ToShortDateString()
                             </td>
+
+                            <!-- Status Badge -->
+                            <td>
+                                @if (med.ExpiryDate < DateTime.Now)
+                                {
+                                    <span class="badge expired-badge">
+                                        ❌ Expired
+                                    </span>
+                                }
+                                else if (med.ExpiryDate <= DateTime.Now.AddMonths(2))
+                                {
+                                    <span class="badge soon-badge">
+                                        ⏳ Expiring Soon
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge normal-badge">
+                                        ✅ Safe
+                                    </span>
+                                }
+                            </td>
+
                         </tr>
                     }
                 </tbody>

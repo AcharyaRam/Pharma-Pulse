@@ -259,7 +259,7 @@ namespace Pharma_Pulse.Pages
             Bill bill = new Bill
             {
                 InvoiceNumber = InvoiceNumber,
-                CustomerName = SelectedCustomer.CustomerName,
+                CustomerName = SelectedCustomer.FirstName,
                 MobileNumber = SelectedCustomer.MobileNumber,
 
                 SubTotal = SubTotal,

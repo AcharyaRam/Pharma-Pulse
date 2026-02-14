@@ -21,18 +21,17 @@
                     <span class="text">Dashboard</span>
                 </a>
             </li>
+            <li>
+                <a asp-page="/QuickBilling" class="menu-link">
+                    <span class="icon">💵</span>
+                    <span class="text">Quick Billing</span>
+                </a>
+            </li>
 
             <li>
                 <a asp-page="/SalesSummary" class="menu-link">
                     <span class="icon">📊</span>
                     <span class="text">Sales Summary</span>
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/QuickBilling" class="menu-link">
-                    <span class="icon">💵</span>
-                    <span class="text">Quick Billing</span>
                 </a>
             </li>
 
@@ -58,7 +57,7 @@
             </li>
 
             <li>
-                <a asp-page="/ExpiryAlerts" class="menu-link">
+                <a asp-page="/ExpiryAlerts" class="menu-link active">
                     <span class="icon">⏳</span>
                     <span class="text">Expiry Alerts</span>
                 </a>
@@ -121,22 +120,45 @@
             <div class="left-section">
 
                 <div class="box">
-                    <h3>Add Customer</h3>
-                    <p>Save customer details for billing and records</p>
-                    <form method="post" asp-page-handler="SaveCustomer" class="customer-form">
 
+                    <h3>Add Customer</h3>
+
+
+                    <form method="post" asp-page-handler="SaveCustomer" class="customer-form">
+                        @Html.AntiForgeryToken()
+                     
+                        <!-- Name Row -->
                         <div class="form-row">
                             <div>
-                                <label>Customer Name *</label>
-                                <input asp-for="Customer.CustomerName" required />
+                                <label>First Name *</label>
+                                <input asp-for="Customer.FirstName" required />
                             </div>
 
+                            <div>
+                                <label>Middle Name</label>
+                                <input asp-for="Customer.MiddleName" />
+                            </div>
+
+                            <div>
+                                <label>Surname *</label>
+                                <input asp-for="Customer.Surname" required />
+                            </div>
+                        </div>
+
+                        <!-- Mobile + GST -->
+                        <div class="form-row">
                             <div>
                                 <label>Mobile Number *</label>
                                 <input asp-for="Customer.MobileNumber" required />
                             </div>
+
+                            <div>
+                                <label>GST Number</label>
+                                <input asp-for="Customer.GSTNumber" placeholder="Optional" />
+                            </div>
                         </div>
 
+                        <!-- Gender + Age + DOB -->
                         <div class="form-row">
                             <div>
                                 <label>Gender</label>
@@ -149,15 +171,27 @@
                             </div>
 
                             <div>
+                                <label>Date of Birth</label>
+                                <input asp-for="Customer.DateOfBirth"
+                                       type="date"
+                                       id="dobField"
+                                       onchange="calculateAge()" />
+                            </div>
+
+                            <div>
                                 <label>Age *</label>
-                                <input asp-for="Customer.Age" type="number" required />
+                                <input asp-for="Customer.Age"
+                                       type="number"
+                                       id="ageField"
+                                       required />
                             </div>
                         </div>
 
+                        <!-- Address + Type -->
                         <div class="form-row">
                             <div>
-                                <label>City / Address </label>
-                                <input asp-for="Customer.City" required />
+                                <label>City / Address</label>
+                                <input asp-for="Customer.City" />
                             </div>
 
                             <div>
@@ -170,6 +204,7 @@
                             </div>
                         </div>
 
+                        <!-- Doctor -->
                         <label>Doctor Name</label>
                         <input asp-for="Customer.DoctorReference" />
 
@@ -177,8 +212,14 @@
                             Save Customer
                         </button>
 
-                    </form>
+                        @if (TempData["Success"] != null)
+                        {
+                            <p style="color:green; font-weight:600; margin-top:15px;">
+                                @TempData["Success"]
+                            </p>
+                        }
 
+                    </form>
                 </div>
 
             </div>
@@ -288,6 +329,23 @@
             }
         }
     });
+    function calculateAge() {
+        let dob = document.getElementById("dobField").value;
+        if (!dob) return;
+
+        let birthDate = new Date(dob);
+        let today = new Date();
+
+        let age = today.getFullYear() - birthDate.getFullYear();
+        let monthDiff = today.getMonth() - birthDate.getMonth();
+
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        document.getElementById("ageField").value = age;
+    }
+
 </script>
 
 </div>
