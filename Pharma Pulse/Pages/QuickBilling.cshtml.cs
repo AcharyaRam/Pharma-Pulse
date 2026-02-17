@@ -270,7 +270,14 @@ namespace Pharma_Pulse.Pages
             Bill bill = new Bill
             {
                 InvoiceNumber = InvoiceNumber,
-                CustomerName = SelectedCustomer.FirstName,
+
+                // ✅ Full Name Save (Important Fix)
+                CustomerName = SelectedCustomer.FirstName + " " +
+                               (SelectedCustomer.MiddleName ?? "") + " " +
+                               SelectedCustomer.Surname,
+
+
+
                 MobileNumber = SelectedCustomer.MobileNumber,
 
                 SubTotal = SubTotal,
@@ -284,9 +291,9 @@ namespace Pharma_Pulse.Pages
                 BillDate = DateTime.Now
             };
 
-
             _context.Bills.Add(bill);
             _context.SaveChanges();
+
 
             // ✅ Save Bill Details with Batch + Expiry + HSN
             foreach (var item in BillItems)
