@@ -18,7 +18,12 @@ namespace Pharma_Pulse.Pages
             _service = service;
         }
 
+        // ✅ Medicine List
         public List<Medicine> Medicines { get; set; } = new();
+
+        // ✅ Bind Property for Popup Form
+        [BindProperty]
+        public Medicine Medicine { get; set; }
 
         // ✅ Pagination Variables
         public int CurrentPage { get; set; } = 1;
@@ -33,13 +38,11 @@ namespace Pharma_Pulse.Pages
         // ================================
         public void OnGet(int pageNumber = 1, string search = "")
         {
-            // ✅ Load medicines from Database
             var allMedicines = _service.GetAllMedicines();
 
-            // ✅ Store search term
             SearchTerm = search;
 
-            // ✅ Apply Search Filter (StartsWith)
+            // ✅ Apply Search Filter
             if (!string.IsNullOrWhiteSpace(search))
             {
                 search = search.Trim();
@@ -66,24 +69,43 @@ namespace Pharma_Pulse.Pages
         }
 
         // ================================
+        // ✅ POST : SAVE MEDICINE (Popup)
+        // ================================
+        public IActionResult OnPostSaveMedicine()
+        {
+            if (!ModelState.IsValid)
+            {
+                // Reload medicines list if validation fails
+                Medicines = _service.GetAllMedicines();
+                return Page();
+            }
+
+            // ✅ Default Active
+            Medicine.IsActive = true;
+
+            // ✅ Save into Database using Service
+            _service.AddMedicine(Medicine);
+
+            TempData["Success"] = "Medicine Added Successfully!";
+
+            return RedirectToPage();
+        }
+
+        // ================================
         // ✅ POST : Toggle Active/Deactive
         // ================================
         public IActionResult OnPostToggleStatus(int id)
         {
-            // ✅ Get Medicine by Id
             var medicine = _service.GetAllMedicines()
                 .FirstOrDefault(m => m.Id == id);
 
             if (medicine != null)
             {
-                // ✅ Toggle Status
                 medicine.IsActive = !medicine.IsActive;
 
-                // ✅ Update Medicine in DB
                 _service.UpdateMedicine(medicine);
             }
 
-            // ✅ Redirect Back to Same Page
             return RedirectToPage();
         }
     }

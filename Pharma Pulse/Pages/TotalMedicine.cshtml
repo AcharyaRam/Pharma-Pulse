@@ -9,7 +9,7 @@
 
 <div class="dashboard-container">
 
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR (NO CHANGE) -->
     <aside class="sidebar">
         <h2 class="sidebar-title">Pharma Pulse</h2>
 
@@ -21,6 +21,7 @@
                     <span class="text">Dashboard</span>
                 </a>
             </li>
+
             <li>
                 <a asp-page="/QuickBilling" class="menu-link">
                     <span class="icon">💵</span>
@@ -82,30 +83,27 @@
             <div class="card-header">
                 <h2>Total Medicines</h2>
 
-                <button onclick="location.href='@Url.Page("/AddMedicine")'"
-                        class="btn-add">
+                <!-- ✅ POPUP BUTTON -->
+                <button type="button" class="btn-add" id="openAddMedicine">
                     + Add Medicine
                 </button>
             </div>
 
             <!-- Search -->
             <form method="get" class="search-bar">
-
                 <div class="search-input">
                     <span class="search-icon">🔍</span>
 
                     <input type="text"
                            name="search"
                            value="@Model.SearchTerm"
-                           placeholder="Search medicine name " />
+                           placeholder="Search medicine name" />
 
                     <button type="submit" class="btn-search">
                         Search
                     </button>
                 </div>
-
             </form>
-
 
             <!-- Table -->
             <table class="sales-table">
@@ -123,7 +121,6 @@
                         <th>Mode</th>
                         <th>Action</th>
                         <th>Status</th>
-
                     </tr>
                 </thead>
 
@@ -131,33 +128,24 @@
                     @foreach (var med in Model.Medicines)
                     {
                         <tr>
-
                             <td>@med.MedicineName</td>
-
                             <td>@med.Category</td>
-
                             <td>@med.BatchNo</td>
 
                             <td class="@(med.ExpiryDate <= DateTime.Now.AddMonths(2) ? "text-danger" : "")">
                                 @med.ExpiryDate.ToString("MM/yyyy")
                             </td>
 
-
                             <td class="@(med.StockUnits <= med.LowStockLimit ? "text-danger" : "")">
                                 @med.StockUnits
                             </td>
 
-
-                            <td>
-                                @med.LowStockLimit
-                            </td>
+                            <td>@med.LowStockLimit</td>
 
                             <td>₹@med.BuyingPrice</td>
-
                             <td>₹@med.SellingPrice</td>
 
                             <td>@med.HsnSac</td>
-
                             <td>@med.SellType</td>
 
                             <td>
@@ -166,6 +154,7 @@
                                     Update
                                 </a>
                             </td>
+
                             <td>
                                 <form method="post" asp-page-handler="ToggleStatus">
                                     <input type="hidden" name="id" value="@med.Id" />
@@ -184,43 +173,159 @@
                                     }
                                 </form>
                             </td>
-
-
                         </tr>
                     }
                 </tbody>
             </table>
 
-
-            <!-- Pagination -->
-            <div class="pagination">
-
-                @if (Model.CurrentPage > 1)
-                {
-                    <a class="page-btn"
-                       asp-page="/TotalMedicine"
-                       asp-route-pageNumber="@(Model.CurrentPage - 1)"
-                       asp-route-search="@Model.SearchTerm">
-                        ⬅ Previous
-                    </a>
-                }
-
-                <span class="page-info">
-                    Page @Model.CurrentPage of @Model.TotalPages
-                </span>
-
-                @if (Model.CurrentPage < Model.TotalPages)
-                {
-                    <a class="page-btn"
-                       asp-page="/TotalMedicine"
-                       asp-route-pageNumber="@(Model.CurrentPage + 1)"
-                       asp-route-search="@Model.SearchTerm">
-                        Next ➡
-                    </a>
-                }
-
-            </div>
-
         </div>
     </div>
 </div>
+
+
+<!-- ================================================= -->
+<!-- ✅ ADD MEDICINE POPUP MODAL -->
+<!-- ================================================= -->
+
+<div class="modal-overlay" id="medicineModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+            <h2>Add New Medicine</h2>
+            <span class="close-btn" id="closeMedicineModal">&times;</span>
+        </div>
+
+        <form method="post" asp-page-handler="SaveMedicine" class="medicine-form">
+
+            <div class="form-grid">
+
+                <div>
+                    <label>Medicine Name</label>
+                    <input asp-for="Medicine.MedicineName" required />
+                </div>
+
+                <div>
+                    <label>Category</label>
+                    <input asp-for="Medicine.Category" required />
+                </div>
+
+                <div>
+                    <label>Batch No</label>
+                    <input asp-for="Medicine.BatchNo" required />
+                </div>
+
+                <div>
+                    <label>MFG Date</label>
+                    <input asp-for="Medicine.MfgDate" type="date" required />
+                </div>
+
+                <div>
+                    <label>HSN / SAC</label>
+                    <input asp-for="Medicine.HsnSac" required />
+                </div>
+
+                <div>
+                    <label>Total Stock Units</label>
+                    <input asp-for="Medicine.StockUnits" type="number" required />
+                </div>
+
+                <!-- ✅ Units Per Pack Field -->
+                <div id="unitsPackField">
+                    <label>Units Per Pack</label>
+                    <input asp-for="Medicine.UnitsPerStrip" type="number" id="unitsPackInput" />
+                </div>
+
+                <!-- ✅ Selling Mode -->
+                <div>
+                    <label>Selling Mode</label>
+                    <select asp-for="Medicine.SellType" id="sellTypeSelect">
+                        <option value="Unit">Unit</option>
+                        <option value="Pack">Pack</option>
+                        <option value="Both">Both</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Low Stock Limit</label>
+                    <input asp-for="Medicine.LowStockLimit" type="number" required />
+                </div>
+
+                <div>
+                    <label>Buying Price</label>
+                    <input asp-for="Medicine.BuyingPrice" type="number" step="0.01" required />
+                </div>
+
+                <div>
+                    <label>Selling Price</label>
+                    <input asp-for="Medicine.SellingPrice" type="number" step="0.01" required />
+                </div>
+
+                <div class="full-width">
+                    <label>Expiry Date</label>
+                    <input asp-for="Medicine.ExpiryDate" type="date" required />
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn-save">
+                Save Medicine
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+
+<!-- ================================================= -->
+<!-- ✅ MODAL + UNITS PER PACK SCRIPT -->
+<!-- ================================================= -->
+
+<script>
+    const medicineModal = document.getElementById("medicineModal");
+    const openBtn = document.getElementById("openAddMedicine");
+    const closeBtn = document.getElementById("closeMedicineModal");
+
+    const sellTypeSelect = document.getElementById("sellTypeSelect");
+    const unitsPackField = document.getElementById("unitsPackField");
+    const unitsPackInput = document.getElementById("unitsPackInput");
+
+    // ✅ Default Hide Modal
+    medicineModal.style.display = "none";
+
+    // ✅ Toggle Units Pack Field
+    function toggleUnitsPack() {
+        if (sellTypeSelect.value === "Unit") {
+            unitsPackField.style.display = "none";
+            unitsPackInput.value = 1;
+        }
+        else {
+            unitsPackField.style.display = "block";
+        }
+    }
+
+    // ✅ Open Modal
+    openBtn.onclick = () => {
+        medicineModal.style.display = "flex";
+        toggleUnitsPack();
+    };
+
+    // ✅ Close Modal
+    closeBtn.onclick = () => {
+        medicineModal.style.display = "none";
+    };
+
+    // ✅ Close Outside Click
+    window.onclick = (e) => {
+        if (e.target === medicineModal) {
+            medicineModal.style.display = "none";
+        }
+    };
+
+    // ✅ On Dropdown Change
+    sellTypeSelect.addEventListener("change", toggleUnitsPack);
+
+    // ✅ Run Once On Load
+    toggleUnitsPack();
+</script>
