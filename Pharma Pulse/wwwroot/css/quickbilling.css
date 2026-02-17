@@ -70,7 +70,7 @@ body {
 }
 
 .menu-link.active {
-    background: rgba(146, 185, 184, 0.25);
+    background: rgba(146,185,184,0.25);
     border-left: 4px solid #92b9b8;
     font-weight: 700;
 }
@@ -87,44 +87,9 @@ body {
     margin-left: 260px;
 }
 
-/* ================= HEADINGS ================= */
+/* ================= FORM BOX (IMPORTANT FIX) ================= */
 
-h2 {
-    font-size: 26px;
-    margin-bottom: 10px;
-}
-
-h3 {
-    margin-top: 10px;
-    font-size: 18px;
-}
-
-/*custumer details list*/
-
-.customer-box {
-    margin-top: 15px;
-    padding: 18px;
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-}
-
-    .customer-box h3 {
-        margin-bottom: 10px;
-        font-size: 18px;
-        font-weight: 600;
-    }
-
-    .customer-box p {
-        margin: 6px 0;
-        font-size: 14px;
-    }
-
-
-/* ================= FORM BOX ================= */
-
-form {
+.form-top {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
@@ -135,6 +100,13 @@ form {
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
+
+/* normal form reset */
+form {
+    margin: 0;
+}
+
+/* ================= INPUTS ================= */
 
 select, input {
     padding: 10px 14px;
@@ -158,11 +130,10 @@ button {
     color: white;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.2s;
 }
 
     button:hover {
-        opacity: 0.9;
+        opacity: .9;
     }
 
 /* ================= BILL TABLE ================= */
@@ -175,6 +146,7 @@ button {
     overflow: hidden;
     box-shadow: 0 4px 14px rgba(0,0,0,0.06);
     margin-top: 15px;
+    table-layout: fixed; /* ⭐ MAIN FIX */
 }
 
     .bill-table th {
@@ -190,9 +162,32 @@ button {
         font-size: 14px;
         text-align: center;
         border-bottom: 1px solid #eee;
+        vertical-align: middle;
     }
 
-/* ================= SUMMARY ROWS ================= */
+        /* ACTION COLUMN FIX */
+        .bill-table th:last-child,
+        .bill-table td:last-child {
+            width: 120px;
+            text-align: center;
+        }
+
+        /* ================= DELETE BUTTON FIX ================= */
+
+        .bill-table td form {
+            display: block;
+        }
+
+.btn-delete {
+    background: #ef4444;
+    padding: 7px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    display: inline-block;
+    margin: auto;
+}
+
+/* ================= SUMMARY ================= */
 
 .summary-row td {
     background: #fafafa;
@@ -205,24 +200,6 @@ button {
     padding: 6px;
     font-size: 13px;
     border-radius: 10px;
-}
-
-/* ================= APPLY BUTTON ================= */
-
-.btn-apply {
-    background: #2563eb;
-    padding: 7px 14px;
-    border-radius: 10px;
-    font-size: 13px;
-}
-
-/* ================= DELETE BUTTON ================= */
-
-.btn-delete {
-    background: #ef4444;
-    padding: 7px 14px;
-    border-radius: 10px;
-    font-size: 13px;
 }
 
 /* ================= GRAND TOTAL ================= */
@@ -238,16 +215,14 @@ button {
     color: #059669;
 }
 
-/* ================= COMPLETE SALE BUTTON ================= */
+/* ================= COMPLETE SALE ================= */
 
-form[asp-page-handler="CompleteSale"] {
-    background: none;
-    box-shadow: none;
-    padding: 0;
+.complete-sale-form {
     margin-top: 20px;
+    text-align: center;
 }
 
-    form[asp-page-handler="CompleteSale"] button {
+    .complete-sale-form button {
         width: 260px;
         background: #16a34a;
         padding: 14px;
@@ -255,22 +230,9 @@ form[asp-page-handler="CompleteSale"] {
         font-size: 16px;
     }
 
-        form[asp-page-handler="CompleteSale"] button:hover {
-            opacity: 0.9;
-        }
-
-/* ================= HR CLEAN ================= */
-
-hr {
-    border: none;
-    height: 1px;
-    background: #e5e7eb;
-    margin: 15px 0;
-}
-
 /* ================= RESPONSIVE ================= */
 
-@media(max-width: 1000px) {
+@media(max-width:1000px) {
     .sidebar {
         display: none;
     }
@@ -279,17 +241,310 @@ hr {
         margin-left: 0;
         padding: 15px;
     }
+}
+/* CUSTOMER CARD */
 
-    form {
+.customer-card {
+    margin-top: 15px;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 20px 22px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    border: 1px solid #eef1f4;
+}
+
+.customer-card-header {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #1f2937;
+    border-bottom: 1px solid #f1f1f1;
+    padding-bottom: 8px;
+}
+
+/* GRID LAYOUT */
+
+.customer-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 14px 30px;
+}
+
+    .customer-grid .item {
+        display: flex;
         flex-direction: column;
-        align-items: stretch;
+        background: #f9fafb;
+        padding: 10px 14px;
+        border-radius: 12px;
     }
 
-        form button {
-            width: 100%;
-        }
+    .customer-grid label {
+        font-size: 12px;
+        color: #6b7280;
+        margin-bottom: 3px;
+        font-weight: 500;
+    }
 
-        form[asp-page-handler="CompleteSale"] button {
-            width: 100%;
-        }
+    .customer-grid span {
+        font-size: 15px;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    /* Full width for notes */
+    .customer-grid .full {
+        grid-column: 1 / -1;
+    }
+
+/* MOBILE */
+@media(max-width:700px) {
+    .customer-grid {
+        grid-template-columns: 1fr;
+    }
 }
+/* BILLING SUMMARY CARD */
+
+.billing-summary{
+    margin-top:25px;
+    background:#ffffff;
+    border-radius:18px;
+    padding:22px 25px;
+    box-shadow:0 8px 22px rgba(0,0,0,0.06);
+    border:1px solid #eef1f4;
+}
+
+/* TOP FIELDS */
+
+.summary-top{
+    display:flex;
+    gap:25px;
+    flex-wrap:wrap;
+    margin-bottom:18px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.field label{
+    font-size:13px;
+    font-weight:600;
+    color:#6b7280;
+}
+
+.field input,
+.field select{
+    padding:10px 14px;
+    border-radius:12px;
+    border:1px solid #d1d5db;
+    min-width:140px;
+}
+
+/* GRAND TOTAL */
+
+.total-box{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#f0fdf4;
+    padding:18px 20px;
+    border-radius:14px;
+    border:1px solid #bbf7d0;
+}
+
+.total-box span{
+    font-size:16px;
+    font-weight:600;
+    color:#065f46;
+}
+
+.total-box h2{
+    font-size:30px;
+    font-weight:700;
+    color:#16a34a;
+    margin:0;
+}
+
+/* COMPLETE SALE BUTTON SPACE */
+
+.complete-sale-form{
+    margin-top:25px;
+    text-align:left;
+}
+
+/* SUMMARY CARD */
+
+.billing-summary {
+    margin-top: 25px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+}
+
+/* GRID */
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.input-box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+    .input-box.full {
+        grid-column: 1/-1;
+    }
+
+    .input-box label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #6b7280;
+    }
+
+    .input-box input,
+    .input-box select {
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid #d1d5db;
+        font-size: 14px;
+    }
+
+/* GRAND TOTAL */
+
+.total-card {
+    background: #ecfdf5;
+    border: 1px solid #bbf7d0;
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.total-label {
+    font-weight: 600;
+    color: #065f46;
+}
+
+.total-amount {
+    font-size: 28px;
+    font-weight: 700;
+    color: #16a34a;
+}
+
+/* BUTTONS */
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.complete-btn {
+    background: #6b9f9c;
+    color: white;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.print-btn {
+    background: white;
+    border: 2px solid #6b9f9c;
+    color: #6b9f9c;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .print-btn:hover {
+        background: #f0fdfa;
+    }
+.print-bill {
+    display: none;
+    font-family: monospace;
+    width: 300px;
+    margin: auto;
+}
+
+.bill-header {
+    text-align: center;
+}
+
+    .bill-header h2 {
+        margin: 0;
+        font-size: 20px;
+    }
+
+.bill-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 13px;
+}
+
+    .invoice-table th,
+    .invoice-table td {
+        border-bottom: 1px dashed #000;
+        padding: 5px;
+        text-align: left;
+    }
+
+.totals {
+    margin-top: 10px;
+    text-align: right;
+}
+
+    .totals h2 {
+        border-top: 1px dashed #000;
+        padding-top: 5px;
+    }
+
+.sign {
+    margin-top: 25px;
+    text-align: right;
+}
+
+.thanks {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* PRINT ONLY BILL */
+
+@media print {
+
+    body * {
+        visibility: hidden;
+    }
+
+    #printBill, #printBill * {
+        visibility: visible;
+    }
+
+    #printBill {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+}
+

@@ -63,6 +63,7 @@ namespace Pharma_Pulse.Pages
         // TOTALS
         // =======================
         public decimal SubTotal { get; set; }
+        public decimal GstAmount { get; set; }   // ⭐ NEW PROPERTY
         public decimal GrandTotal { get; set; }
 
         // =======================
@@ -89,23 +90,13 @@ namespace Pharma_Pulse.Pages
             SelectedCustomerId = HttpContext.Session.GetInt32("SelectedCustomerId") ?? 0;
             SelectedCustomer = AllCustomers.FirstOrDefault(c => c.CustomerId == SelectedCustomerId);
 
-            // ✅ Discount Session
             DiscountPercent = Convert.ToDecimal(HttpContext.Session.GetString("Discount") ?? "0");
-
-            // ✅ Payment Session
             PaymentMode = HttpContext.Session.GetString("PaymentMode") ?? "Cash";
 
-            // ✅ GST Session Fix (0% also works)
             var gstSession = HttpContext.Session.GetString("GST");
+            SelectedGstPercent = gstSession == null ? 12 : Convert.ToDecimal(gstSession);
 
-            if (gstSession == null)
-                SelectedGstPercent = 12;
-            else
-                SelectedGstPercent = Convert.ToDecimal(gstSession);
-
-            // ✅ Invoice Number
             InvoiceNumber = HttpContext.Session.GetString("InvoiceNumber");
-
             if (string.IsNullOrEmpty(InvoiceNumber))
             {
                 InvoiceNumber = "INV-" + DateTime.Now.Ticks.ToString().Substring(10);
@@ -120,18 +111,15 @@ namespace Pharma_Pulse.Pages
         // =======================
         private void CalculateTotals()
         {
-            // Subtotal
             SubTotal = BillItems.Sum(x => x.Total);
 
-            // Discount Cut
             decimal discountAmount = SubTotal * (DiscountPercent / 100);
             decimal afterDiscount = SubTotal - discountAmount;
 
-            // GST Add (0% works)
-            decimal gstAmount = afterDiscount * (SelectedGstPercent / 100);
+            // ⭐ GST CALCULATION STORED
+            GstAmount = afterDiscount * (SelectedGstPercent / 100);
 
-            // Final Grand Total
-            GrandTotal = afterDiscount + gstAmount;
+            GrandTotal = afterDiscount + GstAmount;
         }
 
         // =======================
@@ -153,35 +141,25 @@ namespace Pharma_Pulse.Pages
             var med = AllMedicines.FirstOrDefault(m => m.MedicineName == SelectedMedicine);
             if (med == null) return RedirectToPage();
 
-            // ❌ Block Deactive Medicine
             if (!med.IsActive)
             {
                 TempData["Error"] = "Medicine is Deactivated!";
                 return RedirectToPage();
             }
 
-            // ❌ Block Expired Medicine
             if (med.ExpiryDate < DateTime.Today)
             {
                 TempData["Error"] = "Medicine Expired!";
                 return RedirectToPage();
             }
 
-            // SellMode Auto Fix
-            if (med.SellType == "Unit")
-                SellMode = "Tablet";
-            else if (med.SellType == "Pack")
-                SellMode = "Strip";
-            else if (med.SellType == "Both" && string.IsNullOrEmpty(SellMode))
-                SellMode = "Tablet";
+            if (med.SellType == "Unit") SellMode = "Tablet";
+            else if (med.SellType == "Pack") SellMode = "Strip";
+            else if (med.SellType == "Both" && string.IsNullOrEmpty(SellMode)) SellMode = "Tablet";
 
-            // Price Fix
             decimal finalPrice = med.SellingPrice;
+            if (SellMode == "Strip") finalPrice *= med.UnitsPerStrip;
 
-            if (SellMode == "Strip")
-                finalPrice *= med.UnitsPerStrip;
-
-            // Add Bill Item
             BillItems.Add(new BillItem
             {
                 MedicineName = med.MedicineName,
@@ -194,7 +172,6 @@ namespace Pharma_Pulse.Pages
             });
 
             HttpContext.Session.SetObject("BillItems", BillItems);
-
             return RedirectToPage();
         }
 
@@ -206,7 +183,6 @@ namespace Pharma_Pulse.Pages
             BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems") ?? new();
 
             var item = BillItems.FirstOrDefault(x => x.MedicineName == medicineName);
-
             if (item != null)
             {
                 BillItems.Remove(item);
@@ -217,7 +193,7 @@ namespace Pharma_Pulse.Pages
         }
 
         // =======================
-        // UPDATE BILL (AUTO DISCOUNT/GST/PAYMENT)
+        // UPDATE BILL
         // =======================
         public IActionResult OnPostUpdateBill()
         {
@@ -225,7 +201,6 @@ namespace Pharma_Pulse.Pages
             HttpContext.Session.SetString("GST", SelectedGstPercent.ToString());
             HttpContext.Session.SetString("PaymentMode", PaymentMode);
 
-            // ✅ No Redirect Jump
             LoadData();
             return Page();
         }
@@ -243,7 +218,6 @@ namespace Pharma_Pulse.Pages
                 return RedirectToPage();
             }
 
-            // Reduce Stock
             foreach (var item in BillItems)
             {
                 var med = _service.GetAllMedicines()
@@ -252,9 +226,7 @@ namespace Pharma_Pulse.Pages
                 if (med != null)
                 {
                     int unitsToSell = item.Quantity;
-
-                    if (item.SaleMode == "Strip")
-                        unitsToSell *= med.UnitsPerStrip;
+                    if (item.SaleMode == "Strip") unitsToSell *= med.UnitsPerStrip;
 
                     if (med.StockUnits < unitsToSell)
                     {
@@ -267,18 +239,13 @@ namespace Pharma_Pulse.Pages
                 }
             }
 
-            // Save Bill
             Bill bill = new Bill
             {
                 InvoiceNumber = InvoiceNumber,
-                CustomerName = SelectedCustomer.FirstName + " " +
-                               (SelectedCustomer.MiddleName ?? "") + " " +
-                               SelectedCustomer.Surname,
-
+                CustomerName = SelectedCustomer.FirstName + " " + (SelectedCustomer.MiddleName ?? "") + " " + SelectedCustomer.Surname,
                 MobileNumber = SelectedCustomer.MobileNumber,
                 SubTotal = SubTotal,
                 GrandTotal = GrandTotal,
-
                 DiscountPercent = DiscountPercent,
                 PaymentMode = PaymentMode,
                 BillDate = DateTime.Now
@@ -287,7 +254,6 @@ namespace Pharma_Pulse.Pages
             _context.Bills.Add(bill);
             _context.SaveChanges();
 
-            // Save Bill Details
             foreach (var item in BillItems)
             {
                 _context.BillDetails.Add(new BillDetail
@@ -304,7 +270,6 @@ namespace Pharma_Pulse.Pages
             }
 
             _context.SaveChanges();
-
             HttpContext.Session.Clear();
 
             return RedirectToPage("/SalesSummary");
