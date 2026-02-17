@@ -234,13 +234,47 @@
                 <h2>Sales Summary Report</h2>
             </div>
 
-            <form method="get" class="filter-box">
+            <form method="get" class="filter-box"
+                  style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+
+                <!-- Report Type Dropdown -->
                 <select name="ReportType" onchange="this.form.submit()">
                     <option value="Daily" selected="@(Model.ReportType=="Daily")">Daily</option>
                     <option value="Monthly" selected="@(Model.ReportType=="Monthly")">Monthly</option>
                     <option value="Yearly" selected="@(Model.ReportType=="Yearly")">Yearly</option>
+                    <option value="Custom" selected="@(Model.ReportType=="Custom")">Custom</option>
                 </select>
+
+                <!-- ✅ Search Input FIX -->
+                <input type="text"
+                       name="SearchTerm"
+                       value="@Model.SearchTerm"
+                       placeholder="Search Name or Mobile..."
+                       style="padding:10px 14px; border-radius:12px; border:1px solid #ddd; font-size:14px;" />
+
+                <!-- ✅ Custom Date Range FIX -->
+                @if (Model.ReportType == "Custom")
+                {
+                    <input type="date"
+                           name="StartDate"
+                           value="@Model.StartDate?.ToString("yyyy-MM-dd")"
+                           style="padding:10px; border-radius:12px; border:1px solid #ddd;" />
+
+                    <input type="date"
+                           name="EndDate"
+                           value="@Model.EndDate?.ToString("yyyy-MM-dd")"
+                           style="padding:10px; border-radius:12px; border:1px solid #ddd;" />
+                }
+
+                <!-- Apply Button -->
+                <button type="submit"
+                        style="padding:10px 16px; border:none; border-radius:12px;
+                   background:#92b9b8; color:white; cursor:pointer;">
+                    Apply
+                </button>
             </form>
+
+
 
         </div>
 
