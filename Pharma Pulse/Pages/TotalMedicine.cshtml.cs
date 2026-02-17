@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Pharma_Pulse.Models;
 using Pharma_Pulse.Services;
 using System;
@@ -19,7 +20,7 @@ namespace Pharma_Pulse.Pages
 
         public List<Medicine> Medicines { get; set; } = new();
 
-        // Pagination Variables
+        // ✅ Pagination Variables
         public int CurrentPage { get; set; } = 1;
         public int PageSize { get; set; } = 10;
         public int TotalPages { get; set; }
@@ -27,6 +28,9 @@ namespace Pharma_Pulse.Pages
         // ✅ Search Term
         public string SearchTerm { get; set; }
 
+        // ================================
+        // ✅ GET : Load Medicines List
+        // ================================
         public void OnGet(int pageNumber = 1, string search = "")
         {
             // ✅ Load medicines from Database
@@ -35,27 +39,52 @@ namespace Pharma_Pulse.Pages
             // ✅ Store search term
             SearchTerm = search;
 
-            // ✅ Apply Search Filter
-            if (!string.IsNullOrEmpty(search))
+            // ✅ Apply Search Filter (StartsWith)
+            if (!string.IsNullOrWhiteSpace(search))
             {
+                search = search.Trim();
+
                 allMedicines = allMedicines
                     .Where(m =>
+                        !string.IsNullOrEmpty(m.MedicineName) &&
                         m.MedicineName.StartsWith(search, StringComparison.OrdinalIgnoreCase)
                     )
                     .ToList();
             }
 
-            // Total Pages Calculation
+            // ✅ Total Pages Calculation
             TotalPages = (int)Math.Ceiling(allMedicines.Count / (double)PageSize);
 
-            // Current Page Set
+            // ✅ Current Page Set
             CurrentPage = pageNumber;
 
-            // Pagination Apply
+            // ✅ Pagination Apply
             Medicines = allMedicines
                 .Skip((CurrentPage - 1) * PageSize)
                 .Take(PageSize)
                 .ToList();
+        }
+
+        // ================================
+        // ✅ POST : Toggle Active/Deactive
+        // ================================
+        public IActionResult OnPostToggleStatus(int id)
+        {
+            // ✅ Get Medicine by Id
+            var medicine = _service.GetAllMedicines()
+                .FirstOrDefault(m => m.Id == id);
+
+            if (medicine != null)
+            {
+                // ✅ Toggle Status
+                medicine.IsActive = !medicine.IsActive;
+
+                // ✅ Update Medicine in DB
+                _service.UpdateMedicine(medicine);
+            }
+
+            // ✅ Redirect Back to Same Page
+            return RedirectToPage();
         }
     }
 }

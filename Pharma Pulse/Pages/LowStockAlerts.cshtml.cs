@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Pharma_Pulse.Models;
 using Pharma_Pulse.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,14 +18,54 @@ namespace Pharma_Pulse.Pages
 
         public List<Medicine> LowStockMedicines { get; set; }
 
-        public void OnGet()
+        // ✅ Search Term
+        public string SearchTerm { get; set; }
+
+        // ✅ Pagination
+        public int CurrentPage { get; set; } = 1;
+        public int TotalPages { get; set; }
+
+        public void OnGet(string search, int pageNumber = 1)
         {
-            // ✅ Load medicines from Database
+            SearchTerm = search;
+            CurrentPage = pageNumber;
+
+            // ✅ Load Medicines
             var allMedicines = _service.GetAllMedicines();
 
-            // ✅ Filter only Low Stock Medicines
-            LowStockMedicines = allMedicines
+            // ✅ Step 1: Filter Low Stock Medicines
+            var lowStockList = allMedicines
                 .Where(m => m.StockUnits <= m.LowStockLimit)
+                .ToList();
+
+            // ✅ Step 2: Search Filter (StartsWith Fix)
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim().ToLower();
+
+                lowStockList = lowStockList
+                    .Where(m =>
+                        (
+                            !string.IsNullOrEmpty(m.MedicineName) &&
+                            m.MedicineName.ToLower().StartsWith(search)
+                        )
+                        ||
+                        (
+                            !string.IsNullOrEmpty(m.Category) &&
+                            m.Category.ToLower().StartsWith(search)
+                        )
+                    )
+                    .ToList();
+            }
+
+            // ✅ Step 3: Pagination
+            int pageSize = 8;
+
+            TotalPages = (int)Math.Ceiling(lowStockList.Count / (double)pageSize);
+
+            LowStockMedicines = lowStockList
+                .Skip((CurrentPage - 1) * pageSize)
+                .Take(pageSize)
                 .ToList();
         }
     }

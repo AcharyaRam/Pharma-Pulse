@@ -1,14 +1,17 @@
 ﻿@page
 @model Pharma_Pulse.Pages.ExpiryAlertsModel
+
 @{
     ViewData["Title"] = "Expiry Alerts";
 }
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="~/css/medicine.css" />
 <link rel="stylesheet" href="~/css/Expirealert.css" />
 
 <div class="dashboard-container">
 
-    <!-- LEFT SIDEBAR -->
+    <!-- SIDEBAR -->
     <aside class="sidebar">
         <h2 class="sidebar-title">Pharma Pulse</h2>
 
@@ -78,17 +81,46 @@
 
         <div class="content-card">
 
+            <!-- Header -->
             <div class="card-header">
                 <h2>Expiry Alert Medicines</h2>
             </div>
 
-            <table>
+            <!-- ✅ Search Bar -->
+            <form method="get" class="search-bar">
+
+                <input type="hidden" name="pageNumber" value="1" />
+
+                <div class="search-input">
+                    <span class="search-icon">🔍</span>
+
+                    <input type="text"
+                           name="search"
+                           value="@Model.SearchTerm"
+                           placeholder="Search medicine name or category..." />
+
+                    <button type="submit" class="btn-search">
+                        Search
+                    </button>
+                </div>
+            </form>
+
+            <!-- ✅ Table -->
+            <table class="sales-table">
                 <thead>
                     <tr>
-                        <th>Medicine Name</th>
+                        <th>Name</th>
                         <th>Category</th>
+                        <th>Batch No</th>
+                        <th>Expiry</th>
                         <th>Stock</th>
-                        <th>Expiry Date</th>
+                        <th>Low Limit</th>
+                        <th>Buy Cost₹</th>
+                        <th>Sell Cost₹</th>
+                        <th>HSN</th>
+                        <th>Mode</th>
+
+                        <!-- Status -->
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -100,18 +132,25 @@
 
                             <td>@med.MedicineName</td>
                             <td>@med.Category</td>
-                            <td>@med.StockUnits</td>
+                            <td>@med.BatchNo</td>
 
-                            <!-- Expiry Date -->
+                            <!-- Expiry Highlight -->
                             <td class="@(med.ExpiryDate < DateTime.Now
                                         ? "date-expired"
-                                        : med.ExpiryDate <= DateTime.Now.AddMonths(2)
-                                            ? "date-soon"
-                                            : "")">
-                                @med.ExpiryDate.ToShortDateString()
+                                        : "date-soon")">
+                                @med.ExpiryDate.ToString("MM/yyyy")
                             </td>
 
-                            <!-- Status Badge -->
+                            <td>@med.StockUnits</td>
+                            <td>@med.LowStockLimit</td>
+
+                            <td>₹@med.BuyingPrice</td>
+                            <td>₹@med.SellingPrice</td>
+
+                            <td>@med.HsnSac</td>
+                            <td>@med.SellType</td>
+
+                            <!-- ✅ Status Badge (Only 2 Cases) -->
                             <td>
                                 @if (med.ExpiryDate < DateTime.Now)
                                 {
@@ -119,16 +158,10 @@
                                         ❌ Expired
                                     </span>
                                 }
-                                else if (med.ExpiryDate <= DateTime.Now.AddMonths(2))
+                                else
                                 {
                                     <span class="badge soon-badge">
                                         ⏳ Expiring Soon
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span class="badge normal-badge">
-                                        ✅ Safe
                                     </span>
                                 }
                             </td>
@@ -138,7 +171,37 @@
                 </tbody>
             </table>
 
+            <!-- ✅ Pagination -->
+            <div class="pagination">
+
+                @if (Model.CurrentPage > 1)
+                {
+                    <a class="page-btn"
+                       asp-page="/ExpiryAlerts"
+                       asp-route-pageNumber="@(Model.CurrentPage - 1)"
+                       asp-route-search="@Model.SearchTerm">
+                        ⬅ Previous
+                    </a>
+                }
+
+                <span class="page-info">
+                    Page @Model.CurrentPage of @Model.TotalPages
+                </span>
+
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <a class="page-btn"
+                       asp-page="/ExpiryAlerts"
+                       asp-route-pageNumber="@(Model.CurrentPage + 1)"
+                       asp-route-search="@Model.SearchTerm">
+                        Next ➡
+                    </a>
+                }
+
+            </div>
+
         </div>
 
     </div>
+
 </div>

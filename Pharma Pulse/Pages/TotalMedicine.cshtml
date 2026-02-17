@@ -118,11 +118,13 @@
                         <th>Expiry</th>
                         <th>Stock</th>
                         <th>Low Limit</th>
-                        <th>Buy ₹</th>
-                        <th>Sell ₹</th>
+                        <th>Buy Cost₹</th>
+                        <th>Sell Cost₹</th>
                         <th>HSN</th>
                         <th>Mode</th>
                         <th>Action</th>
+                        <th>Status</th>
+
                     </tr>
                 </thead>
 
@@ -165,6 +167,25 @@
                                     Update
                                 </a>
                             </td>
+                            <td>
+                                <form method="post" asp-page-handler="ToggleStatus">
+                                    <input type="hidden" name="id" value="@med.Id" />
+
+                                    @if (med.IsActive)
+                                    {
+                                        <button class="btn-status active-btn" type="submit">
+                                            Active
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn-status deactive-btn" type="submit">
+                                            Deactive
+                                        </button>
+                                    }
+                                </form>
+                            </td>
+
 
                         </tr>
                     }
