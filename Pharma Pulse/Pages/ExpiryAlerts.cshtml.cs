@@ -18,14 +18,54 @@ namespace Pharma_Pulse.Pages
 
         public List<Medicine> ExpiryMedicines { get; set; }
 
-        public void OnGet()
+        // ✅ Search Term
+        public string SearchTerm { get; set; }
+
+        // ✅ Pagination
+        public int CurrentPage { get; set; } = 1;
+        public int TotalPages { get; set; }
+
+        public void OnGet(string search, int pageNumber = 1)
         {
-            // ✅ Load medicines from Database
+            SearchTerm = search;
+            CurrentPage = pageNumber;
+
+            // ✅ Load All Medicines
             var allMedicines = _service.GetAllMedicines();
 
-            // Expiry within next 30 days
-            ExpiryMedicines = allMedicines
-                .Where(m => m.ExpiryDate <= DateTime.Now.AddDays(30))
+            // ✅ Step 1: Filter Only Expired + Expiring Soon (Next 2 Months)
+            var expiryList = allMedicines
+                .Where(m => m.ExpiryDate <= DateTime.Now.AddMonths(2))
+                .ToList();
+
+            // ✅ Step 2: Search Filter (StartsWith like LowStock)
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim().ToLower();
+
+                expiryList = expiryList
+                    .Where(m =>
+                        (
+                            !string.IsNullOrEmpty(m.MedicineName) &&
+                            m.MedicineName.ToLower().StartsWith(search)
+                        )
+                        ||
+                        (
+                            !string.IsNullOrEmpty(m.Category) &&
+                            m.Category.ToLower().StartsWith(search)
+                        )
+                    )
+                    .ToList();
+            }
+
+            // ✅ Step 3: Pagination
+            int pageSize = 8;
+
+            TotalPages = (int)Math.Ceiling(expiryList.Count / (double)pageSize);
+
+            ExpiryMedicines = expiryList
+                .Skip((CurrentPage - 1) * pageSize)
+                .Take(pageSize)
                 .ToList();
         }
     }

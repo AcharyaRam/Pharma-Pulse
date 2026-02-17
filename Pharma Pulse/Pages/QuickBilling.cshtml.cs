@@ -76,7 +76,10 @@ namespace Pharma_Pulse.Pages
 
         private void LoadData()
         {
-            AllMedicines = _service.GetAllMedicines();
+            AllMedicines = _service.GetAllMedicines()
+                 .Where(m => m.IsActive)
+                 .ToList();
+
             AllCustomers = _context.Customers.ToList();
 
             BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems") ?? new();
@@ -159,6 +162,14 @@ namespace Pharma_Pulse.Pages
 
             var med = AllMedicines.FirstOrDefault(m => m.MedicineName == SelectedMedicine);
             if (med == null) return RedirectToPage();
+
+            //block medicine if deactived
+            // ❌ Block Deactive Medicine
+            if (!med.IsActive)
+            {
+                TempData["Error"] = "Medicine is Deactivated! Cannot Sell.";
+                return RedirectToPage();
+            }
 
             // ❌ Block Expired Medicine
             if (med.ExpiryDate < DateTime.Today)

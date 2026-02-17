@@ -464,3 +464,26 @@ tbody tr:hover {
     font-size: 15px;
 }
 
+.btn-status {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.active-btn {
+    background: #2f7d4f;
+    color: white;
+}
+
+.deactive-btn {
+    background: #8b2f2f;
+    color: white;
+}
+
+.btn-status:hover {
+    opacity: 0.85;
+}
