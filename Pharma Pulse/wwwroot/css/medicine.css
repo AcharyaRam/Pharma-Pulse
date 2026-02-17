@@ -487,3 +487,135 @@ tbody tr:hover {
 .btn-status:hover {
     opacity: 0.85;
 }
+
+/* ===================================== */
+/* ✅ ADD MEDICINE POPUP MODAL ONLY */
+/* ===================================== */
+
+.modal-overlay {
+    display: none; /* ✅ Default Hidden */
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.60);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Modal Box */
+.modal-box {
+    background: #ffffff;
+    width: 900px;
+    max-width: 95%;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 20px 55px rgba(0, 0, 0, 0.35);
+    animation: popupFade 0.25s ease;
+}
+
+/* Smooth Animation */
+@keyframes popupFade {
+    from {
+        transform: scale(0.90);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Modal Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+    .modal-header h2 {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+/* Close Button */
+.close-btn {
+    font-size: 28px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #333;
+}
+
+    .close-btn:hover {
+        color: red;
+    }
+
+/* ===================================== */
+/* ✅ MODAL FORM GRID STRUCTURE */
+/* ===================================== */
+
+.medicine-form {
+    width: 100%;
+}
+
+/* Grid Layout */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+/* Full Width Field */
+.full-width {
+    grid-column: span 2;
+}
+
+/* Labels */
+.medicine-form label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    display: block;
+    color: #374151;
+}
+
+/* Inputs + Select */
+.medicine-form input,
+.medicine-form select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1.6px solid #d1d5db;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: 0.2s;
+}
+
+    /* Focus Effect */
+    .medicine-form input:focus,
+    .medicine-form select:focus {
+        border-color: #22c55e;
+        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+    }
+
+/* Save Button */
+.btn-save {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 22px rgba(34, 197, 94, 0.25);
+    }

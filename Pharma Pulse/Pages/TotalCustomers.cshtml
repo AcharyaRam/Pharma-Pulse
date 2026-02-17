@@ -12,63 +12,15 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <h2 class="sidebar-title">Pharma Pulse</h2>
-
         <ul class="sidebar-menu">
-            <li>
-                <a asp-page="/Dashboard" class="menu-link">
-                    <span class="icon">🏠</span>
-                    <span class="text">Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a asp-page="/QuickBilling" class="menu-link">
-                    <span class="icon">💵</span>
-                    <span class="text">Quick Billing</span>
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/SalesSummary" class="menu-link">
-                    <span class="icon">📊</span>
-                    <span class="text">Sales Summary</span>
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/TotalMedicine" class="menu-link">
-                    <span class="icon">💊</span>
-                    <span class="text">Medicines</span>
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/TotalCustomers" class="menu-link active">
-                    <span class="icon">👤</span>
-                    <span class="text">Customers</span>
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/LowStockAlerts" class="menu-link">
-                    <span class="icon">⚠</span>
-                    <span class="text">Low Stock Alerts</span>
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/ExpiryAlerts" class="menu-link">
-                    <span class="icon">⏳</span>
-                    <span class="text">Expiry Alerts</span>
-                </a>
-            </li>
-
-            <li>
-                <a asp-page="/Login" class="menu-link">
-                    <span class="icon">→</span>
-                    <span class="text">Logout</span>
-                </a>
-            </li>
-
+            <li><a asp-page="/Dashboard" class="menu-link"><span>🏠</span><span class="text">Dashboard</span></a></li>
+            <li><a asp-page="/QuickBilling" class="menu-link"><span>💵</span><span class="text">Quick Billing</span></a></li>
+            <li><a asp-page="/SalesSummary" class="menu-link"><span>📊</span><span class="text">Sales Summary</span></a></li>
+            <li><a asp-page="/TotalMedicine" class="menu-link"><span>💊</span><span class="text">Medicines</span></a></li>
+            <li><a asp-page="/TotalCustomers" class="menu-link active"><span>👤</span><span class="text">Customers</span></a></li>
+            <li><a asp-page="/LowStockAlerts" class="menu-link"><span>⚠</span><span class="text">Low Stock Alerts</span></a></li>
+            <li><a asp-page="/ExpiryAlerts" class="menu-link"><span>⏳</span><span class="text">Expiry Alerts</span></a></li>
+            <li><a asp-page="/Login" class="menu-link"><span>→</span><span class="text">Logout</span></a></li>
         </ul>
     </aside>
 
@@ -84,26 +36,22 @@
                 <button type="button" class="btn-add" id="openAddCustomer">
                     + Add Customer
                 </button>
-
-
             </div>
 
             <!-- Search -->
             <form method="get" class="search-bar">
-
                 <div class="search-input">
                     <span class="search-icon">🔍</span>
 
                     <input type="text"
                            name="search"
                            value="@Model.SearchTerm"
-                           placeholder="Search Customer name & Mobile Number " />
+                           placeholder="Search Customer name & Mobile Number" />
 
                     <button type="submit" class="btn-search">
                         Search
                     </button>
                 </div>
-
             </form>
 
             <!-- Table -->
@@ -140,12 +88,148 @@
                 </tbody>
             </table>
 
-
-
         </div>
     </div>
 </div>
 
 
+<!-- ✅ MODAL OUTSIDE PAGE (CENTER FIXED) -->
+<div class="modal-overlay" id="customerModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+            <h2>Add Customer</h2>
+            <span class="close-btn" id="closeModal">&times;</span>
+        </div>
+
+        <!-- FORM -->
+        <form method="post" asp-page-handler="SaveCustomer" class="customer-form">
+            @Html.AntiForgeryToken()
+
+            <div class="form-row">
+                <div>
+                    <label>First Name *</label>
+                    <input asp-for="Customer.FirstName" required />
+                </div>
+
+                <div>
+                    <label>Middle Name</label>
+                    <input asp-for="Customer.MiddleName" />
+                </div>
+
+                <div>
+                    <label>Surname *</label>
+                    <input asp-for="Customer.Surname" required />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label>Mobile *</label>
+                    <input asp-for="Customer.MobileNumber" required />
+                </div>
+
+                <div>
+                    <label>GST</label>
+                    <input asp-for="Customer.GSTNumber" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label>Gender</label>
+                    <select asp-for="Customer.Gender">
+                        <option value="">Select</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>DOB</label>
+                    <input asp-for="Customer.DateOfBirth"
+                           type="date"
+                           id="dobField"
+                           onchange="calculateAge()" />
+                </div>
+
+                <div>
+                    <label>Age *</label>
+                    <input asp-for="Customer.Age"
+                           type="number"
+                           id="ageField"
+                           required />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label>City</label>
+                    <input asp-for="Customer.City" />
+                </div>
+
+                <div>
+                    <label>Customer Type</label>
+                    <select asp-for="Customer.CustomerType">
+                        <option>Walk-in</option>
+                        <option>Regular</option>
+                        <option>Doctor Reference</option>
+                    </select>
+                </div>
+            </div>
+
+            <label>Doctor Name</label>
+            <input asp-for="Customer.DoctorReference" />
+
+            <button type="submit" class="save-btn">
+                Save Customer
+            </button>
+
+        </form>
+
+    </div>
+</div>
 
 
+<!-- ✅ MODAL SCRIPT -->
+<script>
+    const modal = document.getElementById("customerModal");
+    const openBtn = document.getElementById("openAddCustomer");
+    const closeBtn = document.getElementById("closeModal");
+
+    // ✅ Start Hidden
+    modal.style.display = "none";
+
+    openBtn.onclick = () => {
+        modal.style.display = "flex";
+    };
+
+    closeBtn.onclick = () => {
+        modal.style.display = "none";
+    };
+
+    window.onclick = (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+
+    function calculateAge() {
+        let dob = document.getElementById("dobField").value;
+        if (!dob) return;
+
+        let birthDate = new Date(dob);
+        let today = new Date();
+
+        let age = today.getFullYear() - birthDate.getFullYear();
+        let monthDiff = today.getMonth() - birthDate.getMonth();
+
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        document.getElementById("ageField").value = age;
+    }
+</script>
