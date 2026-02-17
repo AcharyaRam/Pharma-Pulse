@@ -9,6 +9,7 @@
 
         public DateTime ExpiryDate { get; set; }
 
+        public DateTime MfgDate { get; set; }
         public string HsnSac { get; set; }
 
         // Existing
