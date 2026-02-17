@@ -1,42 +1,21 @@
-﻿/* ============================= */
-/* PAGE BASE */
-/* ============================= */
-
-:root {
-    --sidebar-collapsed: 80px;
-    --sidebar-expanded: 240px;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+﻿/* PAGE BACKGROUND */
 body {
-    font-family: "Segoe UI", sans-serif;
-    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+    background: #f1f5f9;
+    font-family: 'Poppins',sans-serif;
 }
 
-/* ============================= */
 /* DASHBOARD LAYOUT */
-/* ============================= */
-
 .dashboard-container {
     display: flex;
-    min-height: 100vh;
 }
 
-/* ================= SIDEBAR ================= */
-
+/* SIDEBAR (same rakha but fixed height) */
 .sidebar {
-    width: var(--sidebar-collapsed);
+    width: 80px;
     padding: 30px 12px;
     background: white;
     border-right: 1px solid #e5e7eb;
     position: fixed;
-    top: 0;
-    left: 0;
     height: 100vh;
     overflow: hidden;
     transition: width 0.3s ease;
@@ -44,7 +23,7 @@ body {
 }
 
     .sidebar:hover {
-        width: var(--sidebar-expanded);
+        width: 240px;
     }
 
 /* Sidebar Title */
@@ -62,6 +41,8 @@ body {
 /* Menu */
 .sidebar-menu {
     list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
     .sidebar-menu li {
@@ -97,125 +78,155 @@ body {
     font-weight: 600;
 }
 
-/* ================= MAIN CONTENT (FIXED) ================= */
-
+/* MAIN CONTENT CENTERED */
 .main-content {
-    margin-left: var(--sidebar-collapsed);
-    width: calc(100% - var(--sidebar-collapsed));
-    padding: 25px;
-    transition: margin-left 0.3s ease, width 0.3s ease;
+    margin-left: 230px;
+    width: calc(100% - 230px);
+    padding: 28px 30px;
 }
 
-/* Hover pe content move hoga */
-.sidebar:hover ~ .main-content {
-    margin-left: var(--sidebar-expanded);
-    width: calc(100% - var(--sidebar-expanded));
-}
-
-/* ================= CONTENT CARD ================= */
-
+/* CARD FIT FULL AVAILABLE AREA */
 .content-card {
+    width: 100%;
+    max-width: 1200px; /* bada screen pe limit */
+    margin: auto;
     background: white;
-    padding: 40px;
-    border-radius: 25px;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.06);
-    animation: slideUp 0.6s ease;
+    border-radius: 18px;
+    padding: 24px 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
+/* HEADER */
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e5e7eb;
 }
 
     .card-header h2 {
-        font-size: 32px;
-        font-weight: 700;
+        margin: 0;
+        font-size: 24px;
     }
 
     .card-header p {
         color: #64748b;
+        font-size: 14px;
     }
 
-/* ================= FORM ================= */
-
+/* GRID (LESS HEIGHT) */
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px 40px;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 22px;
+    row-gap: 12px; /* 🔥 reduced spacing */
 }
 
+/* FULL WIDTH FIELD */
 .full-width {
-    grid-column: span 2;
+    grid-column: 1 / -1;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
+/* LABEL */
+.form-group label {
+    font-size: 13.5px;
+    font-weight: 600;
+    margin-bottom: 3px;
+    display: block;
+    color: #334155;
 }
 
-    .form-group label {
-        font-weight: 600;
-        margin-bottom: 8px;
-        color: #1e293b;
-    }
-
+/* INPUT */
 .form-input {
     width: 100%;
-    padding: 16px 18px;
-    border-radius: 16px;
-    border: 1px solid #e2e8f0;
+    padding: 9px 11px;
+    border-radius: 10px;
+    border: 1.6px solid #d1d5db;
     background: #f8fafc;
-    transition: .3s;
+    font-size: 14px;
+    transition: .2s;
 }
 
+    /* FOCUS EFFECT */
     .form-input:focus {
-        border-color: #6366f1;
-        background: white;
-        box-shadow: 0 0 0 4px rgba(99,102,241,0.15);
-        transform: translateY(-2px);
+        outline: none;
+        border-color: #22c55e;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(34,197,94,.15);
     }
 
-/* Button */
+/* DATE ICON ALIGN */
+input[type="date"] {
+    cursor: pointer;
+}
+
+/* SAVE BUTTON */
 .btn-save {
-    margin-top: 40px;
+    margin-top: 18px;
     width: 100%;
-    background: linear-gradient(135deg,#22c55e,#16a34a);
-    color: white;
-    padding: 18px;
-    border-radius: 20px;
+    padding: 12px;
     border: none;
-    font-size: 17px;
+    border-radius: 14px;
+    background: #22c55e;
+    color: white;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    transition: .3s;
+    transition: .2s;
 }
 
     .btn-save:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 18px 35px rgba(34,197,94,0.35);
+        background: #16a34a;
     }
 
-/* Responsive */
-@media(max-width:768px) {
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
+/* SUCCESS MSG */
+.success-msg {
+    margin-top: 12px;
+    color: #16a34a;
+    font-weight: 500;
+}
 
-    .full-width {
-        grid-column: span 1;
-    }
+.page-header {
+    background: white;
+    padding: 18px 22px;
+    border-bottom: 1px solid #e5e8ec;
+    margin-bottom: 15px;
+}
+
+/* form full width */
+.medicine-form {
+    background: white;
+    padding: 20px 22px;
+    border-radius: 6px;
+    border: 1px solid #e3e6ea;
+}
+
+/* GRID tighter */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 20px;
+}
+/* ===== CENTER THE FORM AREA ===== */
+
+.main-content {
+    display: flex;
+    justify-content: center; /* horizontal center */
+    align-items: flex-start; /* top align */
+}
+
+/* control actual form width */
+.content-card {
+    width: 100%;
+    max-width: 980px; /* perfect pharmacy width */
+    margin: 0 auto; /* center */
+}
+
+/* header align with card */
+.page-header {
+    max-width: 980px;
+    margin: 0 auto 15px auto;
 }

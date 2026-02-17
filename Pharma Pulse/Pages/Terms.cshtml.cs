@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Pharma_Pulse.Pages
 {
-    public class PrivacyPolcyModel : PageModel
+    public class TermsModel : PageModel
     {
         public void OnGet()
         {

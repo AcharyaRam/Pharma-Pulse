@@ -91,15 +91,22 @@
 
             <!-- Search -->
             <form method="get" class="search-bar">
-                <input type="text"
-                       name="search"
-                       value="@Model.SearchTerm"
-                       placeholder="🔍 Search medicine name or category..." />
 
-                <button type="submit" class="btn-search">
-                    Search
-                </button>
+                <div class="search-input">
+                    <span class="search-icon">🔍</span>
+
+                    <input type="text"
+                           name="search"
+                           value="@Model.SearchTerm"
+                           placeholder="Search medicine name " />
+
+                    <button type="submit" class="btn-search">
+                        Search
+                    </button>
+                </div>
+
             </form>
+
 
             <!-- Table -->
             <table class="sales-table">

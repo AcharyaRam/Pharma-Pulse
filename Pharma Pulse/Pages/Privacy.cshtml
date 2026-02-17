@@ -1,8 +1,112 @@
 ﻿@page
-@model PrivacyModel
 @{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<link rel="stylesheet" href="~/css/privacy.css" />
+
+
+<div class="policy-container">
+
+    ```
+    <h1>Privacy Policy</h1>
+    <p class="last-updated">Last Updated: @DateTime.Now.ToString("dd MMM yyyy")</p>
+
+    <p>
+        Pharma Pulse ("we", "our", "us") respects your privacy and is committed to protecting
+        medical store, customer, and transaction data. This Privacy Policy explains how data is
+        collected, stored, and used when using our pharmacy management software.
+    </p>
+
+    <h2>1. Information We Collect</h2>
+    <ul>
+        <li>Customer name, age, gender and contact details</li>
+        <li>Prescription and medicine purchase history</li>
+        <li>Billing and payment records</li>
+        <li>Doctor reference details (if entered)</li>
+        <li>Inventory and stock management data</li>
+        <li>User login and activity logs</li>
+    </ul>
+
+    <h2>2. Purpose of Data Usage</h2>
+    <p>The collected information is used strictly for:</p>
+    <ul>
+        <li>Generating invoices and maintaining billing history</li>
+        <li>Managing medical records and prescriptions</li>
+        <li>Stock tracking and expiry monitoring</li>
+        <li>Legal compliance with pharmacy regulations</li>
+        <li>Improving software performance and security</li>
+    </ul>
+
+    <h2>3. Data Storage & Security</h2>
+    <p>
+        All data is securely stored in protected databases. We implement security measures including
+        authentication controls and restricted access to prevent unauthorized usage or disclosure.
+    </p>
+
+    <h2>4. Data Sharing</h2>
+    <p>We do NOT sell, rent, or share your data with third parties except:</p>
+    <ul>
+        <li>When required by government authorities or law</li>
+        <li>For medical compliance or audit purposes</li>
+        <li>When requested by the pharmacy owner</li>
+    </ul>
+
+    <h2>5. User Responsibility</h2>
+    <p>
+        The pharmacy owner is responsible for maintaining confidentiality of login credentials and
+        ensuring lawful usage of patient and prescription data.
+    </p>
+
+    <h2>6. Data Retention</h2>
+    <p>
+        Billing and medical records may be retained as required under local pharmacy and taxation laws.
+    </p>
+
+    <h2>7. Changes to Policy</h2>
+    <p>
+        We may update this Privacy Policy periodically. Continued use of the software indicates acceptance
+        of the updated policy.
+    </p>
+
+    <h2>8. Contact</h2>
+    <p>
+        For privacy concerns or support, contact the system administrator or software provider.
+    </p>
+    ```
+
+</div>
+
+<style>
+    .policy-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 40px;
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        font-family: 'Poppins',sans-serif;
+        line-height: 1.7;
+    }
+
+        .policy-container h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .policy-container h2 {
+            margin-top: 28px;
+            font-size: 20px;
+            color: #111827;
+        }
+
+        .policy-container ul {
+            margin-left: 18px;
+        }
+
+    .last-updated {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+</style>

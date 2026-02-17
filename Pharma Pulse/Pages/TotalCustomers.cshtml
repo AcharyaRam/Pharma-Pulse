@@ -16,7 +16,7 @@
         <ul class="sidebar-menu">
 
             <li>
-                <a asp-page="/Dashboard" class="menu-link active">
+                <a asp-page="/Dashboard" class="menu-link">
                     <span class="icon">🏠</span>
                     <span class="text">Dashboard</span>
                 </a>
@@ -91,14 +91,20 @@
 
             <!-- Search -->
             <form method="get" class="search-bar">
-                <input type="text"
-                       name="search"
-                       value="@Model.SearchTerm"
-                       placeholder="🔍 Search customer name or mobile..." />
 
-                <button type="submit" class="btn-search">
-                    Search
-                </button>
+                <div class="search-input">
+                    <span class="search-icon">🔍</span>
+
+                    <input type="text"
+                           name="search"
+                           value="@Model.SearchTerm"
+                           placeholder="Search medicine name " />
+
+                    <button type="submit" class="btn-search">
+                        Search
+                    </button>
+                </div>
+
             </form>
 
             <!-- Table -->
