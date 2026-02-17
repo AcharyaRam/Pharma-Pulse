@@ -153,9 +153,9 @@ namespace Pharma_Pulse.Pages
                 return RedirectToPage();
             }
 
-            if (med.SellType == "Unit") SellMode = "Tablet";
+            if (med.SellType == "Unit") SellMode = "Unit";
             else if (med.SellType == "Pack") SellMode = "Strip";
-            else if (med.SellType == "Both" && string.IsNullOrEmpty(SellMode)) SellMode = "Tablet";
+            else if (med.SellType == "Both" && string.IsNullOrEmpty(SellMode)) SellMode = "Unit";
 
             decimal finalPrice = med.SellingPrice;
             if (SellMode == "Strip") finalPrice *= med.UnitsPerStrip;
@@ -165,6 +165,7 @@ namespace Pharma_Pulse.Pages
                 MedicineName = med.MedicineName,
                 BatchNo = med.BatchNo,
                 ExpiryDate = med.ExpiryDate,
+                MfgDate = med.MfgDate,
                 HsnSac = med.HsnSac,
                 Quantity = Quantity,
                 SaleMode = SellMode,
@@ -262,6 +263,7 @@ namespace Pharma_Pulse.Pages
                     MedicineName = item.MedicineName,
                     BatchNo = item.BatchNo,
                     ExpiryDate = item.ExpiryDate,
+
                     HsnSac = item.HsnSac,
                     Quantity = item.Quantity,
                     Price = item.Price,

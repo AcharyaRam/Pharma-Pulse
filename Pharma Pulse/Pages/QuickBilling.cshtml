@@ -84,13 +84,14 @@
     <table class="bill-table">
         <thead>
             <tr>
-                <th>Medicine</th>
-                <th>Batch</th>
-                <th>Expiry</th>
-                <th>HSN</th>
                 <th>Qty</th>
+                <th>Product Name</th>
+                <th>MFG</th>
+                <th>HSN</th>
+                <th>BATCH</th>
                 <th>Mode</th>
-                <th>Price</th>
+                <th>EXP</th>
+                <th>MRP</th>
                 <th>Total</th>
                 <th>Action</th>
             </tr>
@@ -100,12 +101,13 @@
             @foreach (var item in Model.BillItems)
             {
                 <tr>
-                    <td>@item.MedicineName</td>
-                    <td>@item.BatchNo</td>
-                    <td>@item.ExpiryDate.ToString("MM/yyyy")</td>
-                    <td>@item.HsnSac</td>
                     <td>@item.Quantity</td>
+                    <td>@item.MedicineName</td>
+                    <td>@item.MfgDate.ToString("MM/yyyy")</td>
+                    <td>@item.HsnSac</td>
+                    <td>@item.BatchNo</td>
                     <td>@item.SaleMode</td>
+                    <td>@item.ExpiryDate.ToString("MM/yyyy")</td>
                     <td>₹@item.Price</td>
                     <td>₹@item.Total</td>
                     <td>
@@ -118,7 +120,7 @@
             }
 
             <tr class="summary-row">
-                <td colspan="6"></td>
+                <td colspan="7"></td>
                 <td><b>Subtotal</b></td>
                 <td><b>₹@Model.SubTotal</b></td>
                 <td></td>
