@@ -14,13 +14,13 @@
         <h2 class="sidebar-title">Pharma Pulse</h2>
 
         <ul class="sidebar-menu">
-
             <li>
                 <a asp-page="/Dashboard" class="menu-link active">
                     <span class="icon">🏠</span>
                     <span class="text">Dashboard</span>
                 </a>
             </li>
+
             <li>
                 <a asp-page="/QuickBilling" class="menu-link">
                     <span class="icon">💵</span>
@@ -69,7 +69,6 @@
                     <span class="text">Logout</span>
                 </a>
             </li>
-
         </ul>
     </aside>
 
@@ -113,21 +112,17 @@
         </div>
 
 
-        <!-- Grid -->
+        <!-- Grid Layout -->
         <div class="dashboard-grid">
 
             <!-- LEFT = Add Customer -->
             <div class="left-section">
 
                 <div class="box">
-
                     <h3>Add Customer</h3>
-
-
                     <form method="post" asp-page-handler="SaveCustomer" class="customer-form">
-                        @Html.AntiForgeryToken()
-                     
-                        <!-- Name Row -->
+
+                        <!-- Row 1 -->
                         <div class="form-row">
                             <div>
                                 <label>First Name *</label>
@@ -135,17 +130,12 @@
                             </div>
 
                             <div>
-                                <label>Middle Name</label>
-                                <input asp-for="Customer.MiddleName" />
-                            </div>
-
-                            <div>
-                                <label>Surname *</label>
+                                <label>Last Name *</label>
                                 <input asp-for="Customer.Surname" required />
                             </div>
                         </div>
 
-                        <!-- Mobile + GST -->
+                        <!-- Row 2 -->
                         <div class="form-row">
                             <div>
                                 <label>Mobile Number *</label>
@@ -158,20 +148,11 @@
                             </div>
                         </div>
 
-                        <!-- Gender + Age + DOB -->
-                        <div class="form-row">
-                            <div>
-                                <label>Gender</label>
-                                <select asp-for="Customer.Gender">
-                                    <option value="">Select</option>
-                                    <option>Male</option>
-                                    <option>Female</option>
-                                    <option>Other</option>
-                                </select>
-                            </div>
+                        <!-- Row 3 (4 Fields) -->
+                        <div class="form-row four-fields">
 
                             <div>
-                                <label>Date of Birth</label>
+                                <label>DOB</label>
                                 <input asp-for="Customer.DateOfBirth"
                                        type="date"
                                        id="dobField"
@@ -185,13 +166,15 @@
                                        id="ageField"
                                        required />
                             </div>
-                        </div>
 
-                        <!-- Address + Type -->
-                        <div class="form-row">
                             <div>
-                                <label>City / Address</label>
-                                <input asp-for="Customer.City" />
+                                <label>Gender</label>
+                                <select asp-for="Customer.Gender">
+                                    <option value="">Select</option>
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                    <option>Other</option>
+                                </select>
                             </div>
 
                             <div>
@@ -202,32 +185,38 @@
                                     <option>Doctor Reference</option>
                                 </select>
                             </div>
+
                         </div>
 
-                        <!-- Doctor -->
-                        <label>Doctor Name</label>
-                        <input asp-for="Customer.DoctorReference" />
+                        <!-- Row 4 -->
+                        <div class="form-row">
+                            <div>
+                                <label>City / Address</label>
+                                <input asp-for="Customer.City" />
+                            </div>
 
-                        <button type="submit" class="save-btn">
+                            <div>
+                                <label>Doctor Name</label>
+                                <input asp-for="Customer.DoctorReference" />
+                            </div>
+                        </div>
+
+                        <!-- Save Button -->
+                        <button type="submit" class="save-btn small-btn">
                             Save Customer
                         </button>
 
-                        @if (TempData["Success"] != null)
-                        {
-                            <p style="color:green; font-weight:600; margin-top:15px;">
-                                @TempData["Success"]
-                            </p>
-                        }
-
                     </form>
-                </div>
 
+                   
+                </div>
             </div>
 
 
-            <!-- RIGHT = Quick Billing Only -->
+            <!-- RIGHT SECTION -->
             <div class="right-section">
 
+                <!-- Quick Billing -->
                 <div class="quick-box">
                     <h3>Quick Billing</h3>
                     <p>Create a new bill quickly</p>
@@ -237,65 +226,50 @@
                     </button>
                 </div>
 
-                <div class="sales-bottom">
+                <!-- Top Selling Medicines -->
+                <div class="card">
+                    <h2>Top Selling Medicines</h2>
 
-                    <!-- Top Selling Medicines -->
-                    
+                    <div class="medicine">
+                        <span class="rank">1</span>
+                        <span class="name">Paracetamol</span>
+                        <span class="price">₹1,020</span>
+                    </div>
 
-    <!-- RIGHT : Top Selling Medicines -->
-    <!-- RIGHT SIDE -->
-    <div class="right-section">
+                    <div class="medicine">
+                        <span class="rank">2</span>
+                        <span class="name">Azithromycin</span>
+                        <span class="price">₹920</span>
+                    </div>
 
-        <!-- TOP SELLING MEDICINES -->
-        <div class="card">
-            <h2>Top Selling Medicines</h2>
-
-            <div class="medicine">
-                <span class="rank">1</span>
-                <span class="name">Paracetamol</span>
-                <span class="price">₹1,020</span>
-            </div>
-
-            <div class="medicine">
-                <span class="rank">2</span>
-                <span class="name">Azithromycin</span>
-                <span class="price">₹920</span>
-            </div>
-
-            <div class="medicine">
-                <span class="rank">3</span>
-                <span class="name">Neurobion Plus</span>
-                <span class="price">₹870</span>
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
+                    <div class="medicine">
+                        <span class="rank">3</span>
+                        <span class="name">Neurobion Plus</span>
+                        <span class="price">₹870</span>
+                    </div>
 
                 </div>
 
-
-
             </div>
 
         </div>
 
+
+        <!-- Revenue Chart -->
+        <div class="revenue-section">
+
+            <div class="revenue-header">
+                <h2>Last 15 Days Revenue</h2>
+                <span class="sub">Daily income overview</span>
+            </div>
+
+            <canvas id="revenueChart"></canvas>
+
+        </div>
+
     </div>
-
-    <!-- 15 Days Revenue Chart -->
-<div class="revenue-section">
-
-    <div class="revenue-header">
-        <h2>Last 15 Days Revenue</h2>
-        <span class="sub">Daily income overview</span>
-    </div>
-
-    <canvas id="revenueChart"></canvas>
-
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -311,8 +285,6 @@
             labels: revenueLabels,
             datasets: [{
                 data: revenueData,
-                borderColor: '#92b9b8',
-                backgroundColor: 'rgba(146,185,184,0.15)',
                 fill: true,
                 tension: 0.4
             }]
@@ -329,6 +301,7 @@
             }
         }
     });
+
     function calculateAge() {
         let dob = document.getElementById("dobField").value;
         if (!dob) return;
@@ -345,7 +318,4 @@
 
         document.getElementById("ageField").value = age;
     }
-
 </script>
-
-</div>
