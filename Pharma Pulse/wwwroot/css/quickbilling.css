@@ -2,12 +2,12 @@
 
 body {
     margin: 0;
-    font-family: 'Poppins',sans-serif;
+    font-family: 'Poppins', sans-serif;
     background: #f9fafb;
     color: #111827;
 }
 
-/* ================= SIDEBAR (UNCHANGED) ================= */
+/* ================= SIDEBAR ================= */
 
 .sidebar {
     width: 80px;
@@ -17,7 +17,7 @@ body {
     position: fixed;
     height: 100vh;
     overflow: hidden;
-    transition: width .3s ease;
+    transition: width 0.3s ease;
     z-index: 100;
 }
 
@@ -70,7 +70,7 @@ body {
 }
 
 .menu-link.active {
-    background: rgba(146,185,184,.25);
+    background: rgba(146, 185, 184, 0.25);
     border-left: 4px solid #92b9b8;
     font-weight: 700;
 }
@@ -79,7 +79,7 @@ body {
 
 .main-content {
     margin-left: 90px;
-    padding: 25px 30px 10px;
+    padding: 25px 30px;
     max-width: 1400px;
 }
 
@@ -87,26 +87,53 @@ body {
     margin-left: 260px;
 }
 
-/* ================= CARDS ================= */
+/* ================= HEADINGS ================= */
 
-.main-content > form:first-of-type,
-.main-content > form:nth-of-type(2),
-div[style*="border:1px solid"],
-table,
-.box {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 4px 14px rgba(0,0,0,.05);
-    padding: 18px;
+h2 {
+    font-size: 26px;
+    margin-bottom: 10px;
 }
 
-/* ================= FORM ================= */
+h3 {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+/*custumer details list*/
+
+.customer-box {
+    margin-top: 15px;
+    padding: 18px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+    .customer-box h3 {
+        margin-bottom: 10px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .customer-box p {
+        margin: 6px 0;
+        font-size: 14px;
+    }
+
+
+/* ================= FORM BOX ================= */
 
 form {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
     align-items: center;
+    margin-bottom: 15px;
+    background: white;
+    padding: 15px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 select, input {
@@ -114,7 +141,14 @@ select, input {
     border-radius: 12px;
     border: 1px solid #d1d5db;
     font-size: 14px;
+    outline: none;
 }
+
+    select:focus, input:focus {
+        border-color: #92b9b8;
+    }
+
+/* ================= BUTTONS ================= */
 
 button {
     background: #92b9b8;
@@ -123,45 +157,94 @@ button {
     border-radius: 12px;
     color: white;
     font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
-/* ================= TABLE ================= */
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th, td {
-    padding: 14px;
-    text-align: center;
-    border-bottom: 1px solid #eee;
-}
-
-thead {
-    background: #f3f4f6;
-}
-
-table button {
-    background: #ef4444;
-    padding: 7px 14px;
-}
-
-/* ================= SUMMARY ================= */
-
-.box {
-    margin-bottom: 10px;
-}
-
-    .box h2 {
-        color: #059669;
-        font-size: 26px;
+    button:hover {
+        opacity: 0.9;
     }
 
-/* ================= COMPLETE BUTTON ================= */
+/* ================= BILL TABLE ================= */
+
+.bill-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    margin-top: 15px;
+}
+
+    .bill-table th {
+        background: #f3f4f6;
+        padding: 14px;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .bill-table td {
+        padding: 13px;
+        font-size: 14px;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+    }
+
+/* ================= SUMMARY ROWS ================= */
+
+.summary-row td {
+    background: #fafafa;
+    font-weight: 500;
+}
+
+.summary-row input,
+.summary-row select {
+    width: 90px;
+    padding: 6px;
+    font-size: 13px;
+    border-radius: 10px;
+}
+
+/* ================= APPLY BUTTON ================= */
+
+.btn-apply {
+    background: #2563eb;
+    padding: 7px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+/* ================= DELETE BUTTON ================= */
+
+.btn-delete {
+    background: #ef4444;
+    padding: 7px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+/* ================= GRAND TOTAL ================= */
+
+.grand-row td {
+    background: #e8fff0;
+    font-size: 17px;
+    font-weight: 700;
+    border-bottom: none;
+}
+
+.grand-row b {
+    color: #059669;
+}
+
+/* ================= COMPLETE SALE BUTTON ================= */
 
 form[asp-page-handler="CompleteSale"] {
-    margin: 0 0 15px 0;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    margin-top: 20px;
 }
 
     form[asp-page-handler="CompleteSale"] button {
@@ -172,15 +255,9 @@ form[asp-page-handler="CompleteSale"] {
         font-size: 16px;
     }
 
-/* ================= REMOVE EXTRA SELECT CUSTOMER BELOW ================= */
-
-/* summary ke baad jo bhi extra sections aa rahe hide */
-.box ~ h3,
-.box ~ h2,
-.box ~ div:not(:has(form[asp-page-handler="CompleteSale"])),
-.box ~ hr {
-    display: none !important;
-}
+        form[asp-page-handler="CompleteSale"] button:hover {
+            opacity: 0.9;
+        }
 
 /* ================= HR CLEAN ================= */
 
@@ -188,21 +265,31 @@ hr {
     border: none;
     height: 1px;
     background: #e5e7eb;
-    margin: 12px 0;
+    margin: 15px 0;
 }
 
 /* ================= RESPONSIVE ================= */
 
-@media(max-width:1000px) {
+@media(max-width: 1000px) {
     .sidebar {
         display: none;
     }
 
     .main-content {
-        margin-left: 0
+        margin-left: 0;
+        padding: 15px;
     }
 
-    form[asp-page-handler="CompleteSale"] button {
-        width: 100%;
+    form {
+        flex-direction: column;
+        align-items: stretch;
     }
+
+        form button {
+            width: 100%;
+        }
+
+        form[asp-page-handler="CompleteSale"] button {
+            width: 100%;
+        }
 }

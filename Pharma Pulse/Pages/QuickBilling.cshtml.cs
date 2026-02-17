@@ -52,6 +52,9 @@ namespace Pharma_Pulse.Pages
         public decimal DiscountPercent { get; set; }
 
         [BindProperty]
+        public decimal SelectedGstPercent { get; set; } = 12;
+
+        [BindProperty]
         public string PaymentMode { get; set; } = "Cash";
 
         public string InvoiceNumber { get; set; }
@@ -60,10 +63,6 @@ namespace Pharma_Pulse.Pages
         // TOTALS
         // =======================
         public decimal SubTotal { get; set; }
-        public decimal CGST { get; set; }
-        public decimal SGST { get; set; }
-        public decimal IGST { get; set; }
-
         public decimal GrandTotal { get; set; }
 
         // =======================
@@ -74,11 +73,14 @@ namespace Pharma_Pulse.Pages
             LoadData();
         }
 
+        // =======================
+        // LOAD DATA
+        // =======================
         private void LoadData()
         {
             AllMedicines = _service.GetAllMedicines()
-                 .Where(m => m.IsActive)
-                 .ToList();
+                .Where(m => m.IsActive)
+                .ToList();
 
             AllCustomers = _context.Customers.ToList();
 
@@ -87,9 +89,21 @@ namespace Pharma_Pulse.Pages
             SelectedCustomerId = HttpContext.Session.GetInt32("SelectedCustomerId") ?? 0;
             SelectedCustomer = AllCustomers.FirstOrDefault(c => c.CustomerId == SelectedCustomerId);
 
+            // ✅ Discount Session
             DiscountPercent = Convert.ToDecimal(HttpContext.Session.GetString("Discount") ?? "0");
+
+            // ✅ Payment Session
             PaymentMode = HttpContext.Session.GetString("PaymentMode") ?? "Cash";
 
+            // ✅ GST Session Fix (0% also works)
+            var gstSession = HttpContext.Session.GetString("GST");
+
+            if (gstSession == null)
+                SelectedGstPercent = 12;
+            else
+                SelectedGstPercent = Convert.ToDecimal(gstSession);
+
+            // ✅ Invoice Number
             InvoiceNumber = HttpContext.Session.GetString("InvoiceNumber");
 
             if (string.IsNullOrEmpty(InvoiceNumber))
@@ -106,32 +120,19 @@ namespace Pharma_Pulse.Pages
         // =======================
         private void CalculateTotals()
         {
-            decimal gstPercent = _context.GstSettings.FirstOrDefault()?.GstPercent ?? 12;
-
+            // Subtotal
             SubTotal = BillItems.Sum(x => x.Total);
 
-            bool isInterStateSale = false; // future me customer state se check kar sakte
-
-            if (isInterStateSale)
-            {
-                // ✅ IGST Full
-                IGST = SubTotal * (gstPercent / 100);
-                CGST = 0;
-                SGST = 0;
-            }
-            else
-            {
-                // ✅ CGST + SGST Split
-                CGST = SubTotal * (gstPercent / 100) / 2;
-                SGST = SubTotal * (gstPercent / 100) / 2;
-                IGST = 0;
-            }
-
+            // Discount Cut
             decimal discountAmount = SubTotal * (DiscountPercent / 100);
+            decimal afterDiscount = SubTotal - discountAmount;
 
-            GrandTotal = (SubTotal - discountAmount) + CGST + SGST + IGST;
+            // GST Add (0% works)
+            decimal gstAmount = afterDiscount * (SelectedGstPercent / 100);
+
+            // Final Grand Total
+            GrandTotal = afterDiscount + gstAmount;
         }
-
 
         // =======================
         // CUSTOMER SELECT
@@ -143,18 +144,7 @@ namespace Pharma_Pulse.Pages
         }
 
         // =======================
-        // APPLY DISCOUNT + PAYMENT
-        // =======================
-        public IActionResult OnPostApplyDiscount()
-        {
-            HttpContext.Session.SetString("Discount", DiscountPercent.ToString());
-            HttpContext.Session.SetString("PaymentMode", PaymentMode);
-
-            return RedirectToPage();
-        }
-
-        // =======================
-        // ADD ITEM (NO STOCK REDUCE HERE)
+        // ADD ITEM
         // =======================
         public IActionResult OnPostAddItem()
         {
@@ -163,11 +153,10 @@ namespace Pharma_Pulse.Pages
             var med = AllMedicines.FirstOrDefault(m => m.MedicineName == SelectedMedicine);
             if (med == null) return RedirectToPage();
 
-            //block medicine if deactived
             // ❌ Block Deactive Medicine
             if (!med.IsActive)
             {
-                TempData["Error"] = "Medicine is Deactivated! Cannot Sell.";
+                TempData["Error"] = "Medicine is Deactivated!";
                 return RedirectToPage();
             }
 
@@ -190,17 +179,15 @@ namespace Pharma_Pulse.Pages
             decimal finalPrice = med.SellingPrice;
 
             if (SellMode == "Strip")
-                finalPrice = med.SellingPrice * med.UnitsPerStrip;
+                finalPrice *= med.UnitsPerStrip;
 
-            // Add Bill Item with Batch + Expiry + HSN
+            // Add Bill Item
             BillItems.Add(new BillItem
             {
                 MedicineName = med.MedicineName,
-
                 BatchNo = med.BatchNo,
                 ExpiryDate = med.ExpiryDate,
                 HsnSac = med.HsnSac,
-
                 Quantity = Quantity,
                 SaleMode = SellMode,
                 Price = finalPrice
@@ -212,7 +199,7 @@ namespace Pharma_Pulse.Pages
         }
 
         // =======================
-        // DELETE ITEM (NO STOCK RESTORE)
+        // DELETE ITEM
         // =======================
         public IActionResult OnPostDeleteItem(string medicineName)
         {
@@ -230,7 +217,21 @@ namespace Pharma_Pulse.Pages
         }
 
         // =======================
-        // COMPLETE SALE (STOCK REDUCE HERE)
+        // UPDATE BILL (AUTO DISCOUNT/GST/PAYMENT)
+        // =======================
+        public IActionResult OnPostUpdateBill()
+        {
+            HttpContext.Session.SetString("Discount", DiscountPercent.ToString());
+            HttpContext.Session.SetString("GST", SelectedGstPercent.ToString());
+            HttpContext.Session.SetString("PaymentMode", PaymentMode);
+
+            // ✅ No Redirect Jump
+            LoadData();
+            return Page();
+        }
+
+        // =======================
+        // COMPLETE SALE
         // =======================
         public IActionResult OnPostCompleteSale()
         {
@@ -242,7 +243,7 @@ namespace Pharma_Pulse.Pages
                 return RedirectToPage();
             }
 
-            // ✅ Reduce Stock Now
+            // Reduce Stock
             foreach (var item in BillItems)
             {
                 var med = _service.GetAllMedicines()
@@ -266,47 +267,36 @@ namespace Pharma_Pulse.Pages
                 }
             }
 
-            // ✅ Save Bill
+            // Save Bill
             Bill bill = new Bill
             {
                 InvoiceNumber = InvoiceNumber,
-
-                // ✅ Full Name Save (Important Fix)
                 CustomerName = SelectedCustomer.FirstName + " " +
                                (SelectedCustomer.MiddleName ?? "") + " " +
                                SelectedCustomer.Surname,
 
-
-
                 MobileNumber = SelectedCustomer.MobileNumber,
-
                 SubTotal = SubTotal,
-                CGST = CGST,
-                SGST = SGST,
                 GrandTotal = GrandTotal,
 
                 DiscountPercent = DiscountPercent,
                 PaymentMode = PaymentMode,
-
                 BillDate = DateTime.Now
             };
 
             _context.Bills.Add(bill);
             _context.SaveChanges();
 
-
-            // ✅ Save Bill Details with Batch + Expiry + HSN
+            // Save Bill Details
             foreach (var item in BillItems)
             {
                 _context.BillDetails.Add(new BillDetail
                 {
                     BillId = bill.Id,
-
                     MedicineName = item.MedicineName,
                     BatchNo = item.BatchNo,
                     ExpiryDate = item.ExpiryDate,
                     HsnSac = item.HsnSac,
-
                     Quantity = item.Quantity,
                     Price = item.Price,
                     Total = item.Total
