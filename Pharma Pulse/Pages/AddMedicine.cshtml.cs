@@ -17,6 +17,7 @@ namespace Pharma_Pulse.Pages
         [BindProperty]
         public Medicine Medicine { get; set; }
 
+        [TempData]   // ⭐ IMPORTANT
         public string SuccessMessage { get; set; }
 
         public void OnGet()
@@ -32,9 +33,9 @@ namespace Pharma_Pulse.Pages
 
             _service.AddMedicine(Medicine);
 
-            SuccessMessage = "Medicine Added Successfully!";
+            SuccessMessage = "Medicine Added Successfully ✔";
 
-            return RedirectToPage();
+            return RedirectToPage(); // PRG Pattern
         }
     }
 }

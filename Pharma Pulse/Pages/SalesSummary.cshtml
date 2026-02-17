@@ -209,19 +209,60 @@
         <h2 class="sidebar-title">Pharma Pulse</h2>
 
         <ul class="sidebar-menu">
-            <li><a asp-page="/Dashboard" class="menu-link">🏠 <span class="text">Dashboard</span></a></li>
-            <li><a asp-page="/SalesSummary" class="menu-link active">📊 <span class="text">Sales Summary</span></a></li>
-            <li><a asp-page="/QuickBilling" class="menu-link">💵 <span class="text">Quick Billing</span></a></li>
-            <li><a asp-page="/TotalMedicine" class="menu-link">💊 <span class="text">Medicines</span></a></li>
+            <li>
+                <a asp-page="/Dashboard" class="menu-link">
+                    <span class="icon">🏠</span>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a asp-page="/QuickBilling" class="menu-link">
+                    <span class="icon">💵</span>
+                    <span class="text">Quick Billing</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/SalesSummary" class="menu-link active">
+                    <span class="icon">📊</span>
+                    <span class="text">Sales Summary</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/TotalMedicine" class="menu-link">
+                    <span class="icon">💊</span>
+                    <span class="text">Medicines</span>
+                </a>
+            </li>
+
             <li>
                 <a asp-page="/TotalCustomers" class="menu-link">
                     <span class="icon">👤</span>
                     <span class="text">Customers</span>
                 </a>
             </li>
-            <li><a asp-page="/LowStockAlerts" class="menu-link">⚠ <span class="text">Low Stock Alert</span></a></li>
-            <li><a asp-page="/ExpiryAlerts" class="menu-link">⏳ <span class="text">Expiry Alerts</span></a></li>
-            <li><a asp-page="/Login" class="menu-link">→ <span class="text">Logout</span></a></li>
+
+            <li>
+                <a asp-page="/LowStockAlerts" class="menu-link">
+                    <span class="icon">⚠</span>
+                    <span class="text">Low Stock Alerts</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/ExpiryAlerts" class="menu-link">
+                    <span class="icon">⏳</span>
+                    <span class="text">Expiry Alerts</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/Login" class="menu-link">
+                    <span class="icon">→</span>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
         </ul>
     </aside>
 

@@ -1,6 +1,11 @@
 ﻿@page
 
+
 @model Pharma_Pulse.Pages.AddMedicineModel
+
+@{
+    ViewData["HideFooter"] = true;
+}
 
 <link rel="stylesheet" href="~/css/addmedicine.css" />
 
@@ -41,8 +46,15 @@
 
             <div class="card-header">
                 <h2>Add New Medicine</h2>
-                <p>Fill all medicine details carefully</p>
             </div>
+
+            @if (Model.SuccessMessage != null)
+            {
+                <div class="alert success">
+                    @Model.SuccessMessage
+                </div>
+            }
+
 
             <form method="post" class="medicine-form">
 
@@ -131,13 +143,6 @@
                 </button>
 
             </form>
-
-            @if (Model.SuccessMessage != null)
-            {
-                <p style="color:green; margin-top:15px;">
-                    @Model.SuccessMessage
-                </p>
-            }
 
         </div>
     </div>
