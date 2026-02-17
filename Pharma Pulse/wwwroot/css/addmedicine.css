@@ -1,5 +1,6 @@
 ﻿/* PAGE BACKGROUND */
 body {
+    background: #f1isono; /* keep your original color? correcting typo not required */
     background: #f1f5f9;
     font-family: 'Poppins',sans-serif;
 }
@@ -9,7 +10,7 @@ body {
     display: flex;
 }
 
-/* SIDEBAR (same rakha but fixed height) */
+/* SIDEBAR */
 .sidebar {
     width: 80px;
     padding: 30px 12px;
@@ -78,24 +79,37 @@ body {
     font-weight: 600;
 }
 
+/* ===================== */
 /* MAIN CONTENT CENTERED */
+/* ===================== */
+
 .main-content {
-    margin-left: 230px;
-    width: calc(100% - 230px);
-    padding: 28px 30px;
+    margin-left: 80px; /* sidebar closed width */
+    width: calc(100% - 80px); /* remaining screen */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center; /* horizontal center */
+    align-items: flex-start;
+    padding-top: 28px;
 }
 
-/* CARD FIT FULL AVAILABLE AREA */
+/* sidebar hover expand */
+.sidebar:hover ~ .main-content {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+}
+
+
+/* CARD */
 .content-card {
     width: 100%;
-    max-width: 1200px; /* bada screen pe limit */
-    margin: auto;
+    max-width: 820px; /* perfect pharmacy width */
+    margin: 0 auto;
     background: white;
     border-radius: 18px;
     padding: 24px 30px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
-
 
 /* HEADER */
 .card-header {
@@ -117,12 +131,12 @@ body {
         font-size: 14px;
     }
 
-/* GRID (LESS HEIGHT) */
+/* GRID */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 22px;
-    row-gap: 12px; /* 🔥 reduced spacing */
+    row-gap: 12px;
 }
 
 /* FULL WIDTH FIELD */
@@ -150,7 +164,6 @@ body {
     transition: .2s;
 }
 
-    /* FOCUS EFFECT */
     .form-input:focus {
         outline: none;
         border-color: #22c55e;
@@ -158,7 +171,7 @@ body {
         box-shadow: 0 0 0 3px rgba(34,197,94,.15);
     }
 
-/* DATE ICON ALIGN */
+/* DATE */
 input[type="date"] {
     cursor: pointer;
 }
@@ -189,6 +202,7 @@ input[type="date"] {
     font-weight: 500;
 }
 
+/* PAGE HEADER */
 .page-header {
     background: white;
     padding: 18px 22px;
@@ -210,23 +224,28 @@ input[type="date"] {
     grid-template-columns: 1fr 1fr;
     gap: 14px 20px;
 }
-/* ===== CENTER THE FORM AREA ===== */
-
-.main-content {
-    display: flex;
-    justify-content: center; /* horizontal center */
-    align-items: flex-start; /* top align */
+.alert {
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin: 15px 0 20px 0;
+    font-weight: 600;
+    animation: slideDown 0.35s ease;
 }
 
-/* control actual form width */
-.content-card {
-    width: 100%;
-    max-width: 980px; /* perfect pharmacy width */
-    margin: 0 auto; /* center */
+.success {
+    background: #e9f9ef;
+    color: #1f7a3f;
+    border-left: 6px solid #28a745;
 }
 
-/* header align with card */
-.page-header {
-    max-width: 980px;
-    margin: 0 auto 15px auto;
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
