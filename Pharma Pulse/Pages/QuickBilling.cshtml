@@ -24,63 +24,35 @@
 
     <h2>Billing</h2>
     <p>Invoice: @Model.InvoiceNumber</p>
-
-    @if (TempData["Error"] != null)
-    {
-        <p style="color:red;">@TempData["Error"]</p>
-    }
-
     <hr />
 
     <!-- CUSTOMER -->
     <h3>Select Customer</h3>
-
     <form method="post" asp-page-handler="SelectCustomer">
         <select asp-for="SelectedCustomerId" required>
             <option value="">-- Select Customer --</option>
             @foreach (var cust in Model.AllCustomers)
             {
-                <option value="@cust.CustomerId">
-                    @cust.FirstName - @cust.MobileNumber
-                </option>
+                <option value="@cust.CustomerId">@cust.FirstName - @cust.MobileNumber</option>
             }
         </select>
         <button type="submit">Select</button>
     </form>
+
     @if (Model.SelectedCustomer != null)
     {
-        <div class="customer-box">
-
-            <h3>Customer Details</h3>
-
-            <p>
-                <b>Name:</b> @Model.SelectedCustomer.FirstName
-                @Model.SelectedCustomer.MiddleName
-                @Model.SelectedCustomer.Surname
-            </p>
-
-            <p><b>Mobile:</b> @Model.SelectedCustomer.MobileNumber</p>
-
-            <p><b>Gender:</b> @Model.SelectedCustomer.Gender</p>
-
-            <p><b>Age:</b> @Model.SelectedCustomer.Age</p>
-
-            <p><b>City:</b> @Model.SelectedCustomer.City</p>
-
-            <p><b>Customer Type:</b> @Model.SelectedCustomer.CustomerType</p>
-
-            <p><b>Doctor Reference:</b> @Model.SelectedCustomer.DoctorReference</p>
-
-            @if (!string.IsNullOrEmpty(Model.SelectedCustomer.Email))
-            {
-                <p><b>Email:</b> @Model.SelectedCustomer.Email</p>
-            }
-
-            @if (!string.IsNullOrEmpty(Model.SelectedCustomer.MedicalNotes))
-            {
-                <p><b>Medical Notes:</b> @Model.SelectedCustomer.MedicalNotes</p>
-            }
-
+        <div class="customer-card">
+            <div class="customer-card-header">Customer Details</div>
+            <div class="customer-grid">
+                <div class="item"><label>Name</label><span>@Model.SelectedCustomer.FirstName @Model.SelectedCustomer.Surname</span></div>
+                <div class="item"><label>Mobile</label><span>@Model.SelectedCustomer.MobileNumber</span></div>
+                <div class="item"><label>Gender</label><span>@Model.SelectedCustomer.Gender</span></div>
+                <div class="item"><label>Age</label><span>@Model.SelectedCustomer.Age</span></div>
+                <div class="item"><label>City</label><span>@Model.SelectedCustomer.City</span></div>
+                <div class="item"><label>Type</label><span>@Model.SelectedCustomer.CustomerType</span></div>
+                <div class="item"><label>Doctor</label><span>@Model.SelectedCustomer.DoctorReference</span></div>
+                <div class="item full"><label>Notes</label><span>@Model.SelectedCustomer.MedicalNotes</span></div>
+            </div>
         </div>
     }
 
@@ -88,9 +60,7 @@
 
     <!-- ADD MEDICINE -->
     <h3>Add Medicine</h3>
-
     <form method="post" asp-page-handler="AddItem">
-
         <select asp-for="SelectedMedicine" id="medicineDropdown" required>
             <option value="">-- Select Medicine --</option>
             @foreach (var med in Model.AllMedicines)
@@ -105,7 +75,6 @@
         </select>
 
         <input asp-for="Quantity" type="number" min="1" value="1" />
-
         <button type="submit">Add</button>
     </form>
 
@@ -113,7 +82,6 @@
 
     <!-- BILL TABLE -->
     <table class="bill-table">
-
         <thead>
             <tr>
                 <th>Medicine</th>
@@ -140,7 +108,6 @@
                     <td>@item.SaleMode</td>
                     <td>₹@item.Price</td>
                     <td>₹@item.Total</td>
-
                     <td>
                         <form method="post" asp-page-handler="DeleteItem">
                             <input type="hidden" name="medicineName" value="@item.MedicineName" />
@@ -150,57 +117,65 @@
                 </tr>
             }
 
-            <!-- SUBTOTAL -->
             <tr class="summary-row">
                 <td colspan="6"></td>
                 <td><b>Subtotal</b></td>
                 <td><b>₹@Model.SubTotal</b></td>
                 <td></td>
             </tr>
-
         </tbody>
     </table>
 
-    <!-- ✅ DISCOUNT + GST + PAYMENT AUTO FORM -->
-    <form method="post" asp-page-handler="UpdateBill" class="bill-controls">
+    <!-- BILLING SUMMARY CARD -->
+    <div class="billing-summary">
 
-        <label>Discount (%)</label>
-        <input asp-for="DiscountPercent"
-               onchange="this.form.submit()"
-               class="small-input" />
+        <form method="post" asp-page-handler="UpdateBill">
+            <div class="summary-grid">
 
-        <label>GST %</label>
-        <select asp-for="SelectedGstPercent"
-                onchange="this.form.submit()"
-                class="small-input">
-            <option value="0">0%</option>
-            <option value="5">5%</option>
-            <option value="12">12%</option>
-            <option value="18">18%</option>
-        </select>
+                <div class="input-box">
+                    <label>Discount (%)</label>
+                    <input asp-for="DiscountPercent" onchange="this.form.submit()" />
+                </div>
 
-        <label>Payment</label>
-        <select asp-for="PaymentMode"
-                onchange="this.form.submit()"
-                class="small-input">
-            <option>Cash</option>
-            <option>UPI</option>
-            <option>Card</option>
-            <option>Due</option>
-        </select>
+                <div class="input-box">
+                    <label>GST %</label>
+                    <select asp-for="SelectedGstPercent" onchange="this.form.submit()">
+                        <option value="0">0%</option>
+                        <option value="5">5%</option>
+                        <option value="12">12%</option>
+                        <option value="18">18%</option>
+                    </select>
+                </div>
 
-        <h2 class="grand-total">
-            Grand Total: ₹@Model.GrandTotal
-        </h2>
+                <div class="input-box full">
+                    <label>Payment Mode</label>
+                    <select asp-for="PaymentMode" onchange="this.form.submit()">
+                        <option>Cash</option>
+                        <option>UPI</option>
+                        <option>Card</option>
+                        <option>Due</option>
+                    </select>
+                </div>
 
-    </form>
+            </div>
+        </form>
 
-    <hr />
+        <div class="total-card">
+            <div class="total-label">Grand Total</div>
+            <div class="total-amount">₹@Model.GrandTotal.ToString("0.00")</div>
 
-    <!-- COMPLETE SALE -->
-    <form method="post" asp-page-handler="CompleteSale">
-        <button type="submit">Complete Sale</button>
-    </form>
+        </div>
+
+        <div class="action-buttons">
+            <form method="post" asp-page-handler="CompleteSale">
+                <button class="complete-btn">Complete Sale</button>
+            </form>
+
+            <button type="button" class="print-btn" onclick="printInvoice()">🖨 Print Bill</button>
+
+        </div>
+
+    </div>
 
 </div>
 
@@ -211,20 +186,91 @@
     const medicineSellTypes = {
     @foreach (var med in Model.AllMedicines)
     {
-        <text>"@med.MedicineName": "@med.SellType",</text>
+            <text>"@med.MedicineName": "@med.SellType",</text>
     }
     };
 
-    function toggleSellMode() {
-        const selectedMed = medicineDropdown.value;
-        const sellType = medicineSellTypes[selectedMed];
-
-        if (sellType === "Both") {
-            sellModeDropdown.style.display = "block";
-        } else {
-            sellModeDropdown.style.display = "none";
-        }
-    }
-
-    medicineDropdown.addEventListener("change", toggleSellMode);
+    medicineDropdown.addEventListener("change", function () {
+        const type = medicineSellTypes[this.value];
+        sellModeDropdown.style.display = (type === "Both") ? "block" : "none";
+    });
 </script>
+
+<script>
+    function printInvoice(){
+        window.print();
+    }
+</script>
+
+
+<!-- ================= PRINT BILL ================= -->
+<div id="printBill" class="print-bill">
+
+    <div class="bill-header">
+        <h2>PHARMA PULSE MEDICAL</h2>
+        <p>Near City Hospital, Vadodara, Gujarat</p>
+        <p>GSTIN: 24ABCDE1234F1Z5 | DL No: GJ-122345</p>
+        <p>Phone: 9999999999</p>
+    </div>
+
+    <hr />
+
+    <div class="bill-info">
+        <div>
+            <b>Invoice No:</b> @Model.InvoiceNumber <br />
+            <b>Date:</b> @DateTime.Now.ToString("dd/MM/yyyy hh:mm tt")
+        </div>
+
+        <div>
+            <b>Customer:</b> @Model.SelectedCustomer?.FirstName @Model.SelectedCustomer?.Surname <br />
+            <b>Mobile:</b> @Model.SelectedCustomer?.MobileNumber
+        </div>
+    </div>
+
+    <table class="invoice-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Medicine</th>
+                <th>Batch</th>
+                <th>Expiry</th>
+                <th>Qty</th>
+                <th>MRP</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 1;
+            }
+            @foreach (var item in Model.BillItems)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>@item.MedicineName</td>
+                    <td>@item.BatchNo</td>
+                    <td>@item.ExpiryDate.ToString("MM/yy")</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Price.ToString("0.00")</td>
+                    <td>@item.Total.ToString("0.00")</td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+
+    <div class="totals">
+        <p>Subtotal : ₹@Model.SubTotal.ToString("0.00")</p>
+        <p>Discount : @Model.DiscountPercent %</p>
+        <p>GST (@Model.SelectedGstPercent%) : ₹@Model.GstAmount.ToString("0.00")</p>
+
+        <h2>Net Amount : ₹@Model.GrandTotal.ToString("0.00")</h2>
+    </div>
+
+    <div class="sign">
+        <p>Pharmacist Signature</p>
+    </div>
+
+    <p class="thanks">*** Thank You Visit Again ***</p>
+
+</div>
