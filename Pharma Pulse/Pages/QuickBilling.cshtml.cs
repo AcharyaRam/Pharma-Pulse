@@ -30,6 +30,10 @@ namespace Pharma_Pulse.Pages
         [BindProperty]
         public int SelectedCustomerId { get; set; }
 
+        [BindProperty]
+        public int ScrollPos { get; set; }
+
+
         // =======================
         // MEDICINE
         // =======================
@@ -203,7 +207,8 @@ namespace Pharma_Pulse.Pages
             HttpContext.Session.SetString("PaymentMode", PaymentMode);
 
             LoadData();
-            return Page();
+            TempData["ScrollPos"] = ScrollPos;
+            return RedirectToPage();
         }
 
         // =======================
