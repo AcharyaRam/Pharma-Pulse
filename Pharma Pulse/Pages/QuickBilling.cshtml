@@ -137,12 +137,12 @@
 
                 <div class="small-field">
                     <label>Discount (%)</label>
-                    <input asp-for="DiscountPercent" type="number" step="0.01" onchange="this.form.submit()" />
+                    <input asp-for="DiscountPercent" type="number" step="0.01" />
                 </div>
 
                 <div class="small-field">
                     <label>GST %</label>
-                    <select asp-for="SelectedGstPercent" onchange="this.form.submit()">
+                    <select asp-for="SelectedGstPercent">
                         <option value="0">0%</option>
                         <option value="5">5%</option>
                         <option value="12">12%</option>
@@ -152,7 +152,7 @@
 
                 <div class="small-field">
                     <label>Payment Mode</label>
-                    <select asp-for="PaymentMode" onchange="this.form.submit()">
+                    <select asp-for="PaymentMode">
                         <option>Cash</option>
                         <option>UPI</option>
                         <option>Card</option>
@@ -160,8 +160,16 @@
                     </select>
                 </div>
 
+                <!-- ✅ Professional Update Button -->
+                <button type="submit" class="update-btn">
+                    Update Bill
+                </button>
+
             </div>
         </form>
+
+
+
         <div class="amount-section">
 
 
@@ -291,3 +299,22 @@
     <p class="thanks">*** Thank You Visit Again ***</p>
 
 </div>
+
+<script>
+    function submitWithScroll(form) {
+
+        // Save scroll before submit
+        document.getElementById("scrollPos").value = window.scrollY;
+
+        form.submit();
+    }
+
+    window.addEventListener("load", function () {
+
+        let pos = document.getElementById("scrollPos").value;
+
+        if (pos && pos > 0) {
+            window.scrollTo(0, pos);
+        }
+    });
+</script>
