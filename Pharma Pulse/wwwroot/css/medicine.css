@@ -61,9 +61,6 @@
     transition: 0.2s;
 }
 
-.sidebar:not(:hover) .text {
-    display: none;
-}
 
 .sidebar:not(:hover) .menu-link {
     justify-content: center;
@@ -641,3 +638,41 @@ tbody tr:hover {
     .btn-save:hover {
         opacity: 0.9;
     }
+
+
+
+/* ================================ */
+/* FINAL SIDEBAR OVERLAP FIX */
+/* ================================ */
+
+/* Text hide smoothly (no display none) */
+.menu-link .text {
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+/* Hover pe show smoothly */
+.sidebar:hover .menu-link .text {
+    opacity: 1;
+    max-width: 200px;
+}
+
+/* Icon stable */
+.menu-link .icon {
+    min-width: 32px;
+    text-align: center;
+}
+
+/* Sidebar title smooth */
+.sidebar-title {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar:hover .sidebar-title {
+    opacity: 1;
+}
+
