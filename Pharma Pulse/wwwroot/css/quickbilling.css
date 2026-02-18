@@ -30,6 +30,7 @@ body {
     font-weight: 700;
     margin-bottom: 30px;
     white-space: nowrap;
+    text-align: center;
 }
 
 .sidebar:not(:hover) .sidebar-title {
@@ -543,6 +544,78 @@ button {
         width: 100%;
     }
 }
+.bill-row {
+    display: flex;
+    gap: 18px;
+    align-items: flex-end;
+    margin-top: 10px;
+}
+
+.small-field {
+    width: 140px;
+    display: flex;
+    flex-direction: column;
+}
+
+    .small-field label {
+        font-size: 13px;
+        margin-bottom: 6px;
+        color: #5f6f7a;
+        font-weight: 500;
+    }
+
+    .small-field input,
+    .small-field select {
+        height: 40px;
+        border-radius: 10px;
+        border: 1px solid #d6dde2;
+        padding: 0 10px;
+        font-size: 14px;
+        background: #fff;
+    }
+/* ================= FINAL AMOUNT POSITION FIX ================= */
+
+/* LEFT SIDE TOTAL BLOCK */
+.amount-section {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+/* SUBTOTAL */
+.subtotal-box {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2d3a40;
+}
+
+/* GRAND TOTAL LEFT */
+.total-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 20px;
+    justify-content: flex-start !important;
+    padding:15px;
+}
+
+.total-text {
+    font-weight: 700;
+    color: #2d3a40;
+}
+
+.total-price {
+    background: #e7f5ef;
+    color: #1f9d55;
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 22px;
+    border: 1px solid #b7e4d2;
+}
+
 
 
 

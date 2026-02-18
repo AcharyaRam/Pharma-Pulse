@@ -128,18 +128,19 @@
         </tbody>
     </table>
 
-    <!-- BILLING SUMMARY CARD -->
+    <!-- NEW COMPACT SUMMARY -->
     <div class="billing-summary">
 
         <form method="post" asp-page-handler="UpdateBill">
-            <div class="summary-grid">
 
-                <div class="input-box">
+            <div class="bill-row">
+
+                <div class="small-field">
                     <label>Discount (%)</label>
-                    <input asp-for="DiscountPercent" onchange="this.form.submit()" />
+                    <input asp-for="DiscountPercent" type="number" step="0.01" onchange="this.form.submit()" />
                 </div>
 
-                <div class="input-box">
+                <div class="small-field">
                     <label>GST %</label>
                     <select asp-for="SelectedGstPercent" onchange="this.form.submit()">
                         <option value="0">0%</option>
@@ -149,7 +150,7 @@
                     </select>
                 </div>
 
-                <div class="input-box full">
+                <div class="small-field">
                     <label>Payment Mode</label>
                     <select asp-for="PaymentMode" onchange="this.form.submit()">
                         <option>Cash</option>
@@ -161,20 +162,23 @@
 
             </div>
         </form>
+        <div class="amount-section">
 
-        <div class="total-card">
-            <div class="total-label">Grand Total</div>
-            <div class="total-amount">₹@Model.GrandTotal.ToString("0.00")</div>
+
+            <div class="total-row">
+                <span class="total-text">Grand Total :</span>
+                <span class="total-price">₹@Model.GrandTotal.ToString("0.00")</span>
+            </div>
 
         </div>
+
+
 
         <div class="action-buttons">
             <form method="post" asp-page-handler="CompleteSale">
                 <button class="complete-btn">Complete Sale</button>
             </form>
-
             <button type="button" class="print-btn" onclick="printInvoice()">🖨 Print Bill</button>
-
         </div>
 
     </div>
