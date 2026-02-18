@@ -619,3 +619,25 @@ tbody tr:hover {
         transform: translateY(-2px);
         box-shadow: 0 12px 22px rgba(34, 197, 94, 0.25);
     }
+
+/* ✅ Date Inputs Small */
+.medicine-form input[type="date"] {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    height: 38px !important;
+}
+
+/* ✅ Save Medicine Button Small */
+.btn-save {
+    width: fit-content !important; /* full width हटेगा */
+    padding: 10px 22px !important; /* छोटा button */
+    font-size: 14px !important;
+    border-radius: 10px !important;
+    margin: 15px auto 0; /* center but small */
+    display: block !important;
+}
+
+    /* Hover effect */
+    .btn-save:hover {
+        opacity: 0.9;
+    }
