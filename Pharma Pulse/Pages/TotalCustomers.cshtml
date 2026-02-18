@@ -29,28 +29,18 @@
 
         <div class="content-card">
 
-            <!-- Header -->
             <div class="card-header">
                 <h2>Total Customers</h2>
-
-                <button type="button" class="btn-add" id="openAddCustomer">
-                    + Add Customer
-                </button>
+                <button type="button" class="btn-add" id="openAddCustomer">+ Add Customer</button>
             </div>
 
             <!-- Search -->
             <form method="get" class="search-bar">
                 <div class="search-input">
                     <span class="search-icon">🔍</span>
-
-                    <input type="text"
-                           name="search"
-                           value="@Model.SearchTerm"
+                    <input type="text" name="search" value="@Model.SearchTerm"
                            placeholder="Search Customer name & Mobile Number" />
-
-                    <button type="submit" class="btn-search">
-                        Search
-                    </button>
+                    <button type="submit" class="btn-search">Search</button>
                 </div>
             </form>
 
@@ -67,6 +57,7 @@
                         <th>Email</th>
                         <th>Doctor Ref</th>
                         <th>Notes</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
 
@@ -74,7 +65,7 @@
                     @foreach (var cust in Model.Customers)
                     {
                         <tr>
-                            <td>@cust.FirstName</td>
+                            <td>@cust.FirstName @cust.Surname</td>
                             <td>@cust.MobileNumber</td>
                             <td>@cust.Gender</td>
                             <td>@cust.Age</td>
@@ -83,14 +74,36 @@
                             <td>@cust.Email</td>
                             <td>@cust.DoctorReference</td>
                             <td>@cust.MedicalNotes</td>
+
+                            <!-- ⭐ YEHI Sahi Jagah Hai -->
+                            <td>
+                                <button type="button" class="btn-view"
+                                        onclick="openPreview(
+                '@cust.FirstName @cust.Surname',
+                '@cust.MobileNumber',
+                '@cust.Gender',
+                '@cust.Age',
+                '@cust.City',
+                '@cust.CustomerType',
+                '@cust.Email',
+                '@cust.DoctorReference',
+                '@cust.MedicalNotes'
+            )">
+                                    View
+                                </button>
+                            </td>
+
                         </tr>
                     }
                 </tbody>
+
+
             </table>
 
         </div>
     </div>
 </div>
+
 
 
 <!-- ✅ MODAL OUTSIDE PAGE (CENTER FIXED) -->
@@ -105,6 +118,7 @@
 
         <!-- FORM -->
         <form method="post" asp-page-handler="SaveCustomer" class="customer-form">
+
             @Html.AntiForgeryToken()
 
             <div class="form-row">
@@ -128,6 +142,10 @@
                 <div>
                     <label>Mobile *</label>
                     <input asp-for="Customer.MobileNumber" required />
+                </div>
+                <div>
+                    <label>Email </label>
+                    <input asp-for="Customer.Email" required />
                 </div>
 
                 <div>
@@ -183,7 +201,11 @@
             <label>Doctor Name</label>
             <input asp-for="Customer.DoctorReference" />
 
+            <label>Notes</label>
+            <input asp-for="Customer.MedicalNotes" />
+
             <button type="submit" class="save-btn">
+
                 Save Customer
             </button>
 
@@ -193,27 +215,21 @@
 </div>
 
 
-<!-- ✅ MODAL SCRIPT -->
+
+
+<!-- ================= SCRIPT ================= -->
 <script>
     const modal = document.getElementById("customerModal");
     const openBtn = document.getElementById("openAddCustomer");
     const closeBtn = document.getElementById("closeModal");
 
-    // ✅ Start Hidden
     modal.style.display = "none";
 
-    openBtn.onclick = () => {
-        modal.style.display = "flex";
-    };
-
-    closeBtn.onclick = () => {
-        modal.style.display = "none";
-    };
+    openBtn.onclick = () => modal.style.display = "flex";
+    closeBtn.onclick = () => modal.style.display = "none";
 
     window.onclick = (e) => {
-        if (e.target === modal) {
-            modal.style.display = "none";
-        }
+        if (e.target === modal) modal.style.display = "none";
     };
 
     function calculateAge() {
@@ -226,10 +242,52 @@
         let age = today.getFullYear() - birthDate.getFullYear();
         let monthDiff = today.getMonth() - birthDate.getMonth();
 
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) age--;
 
         document.getElementById("ageField").value = age;
+    }
+</script>
+<!-- CUSTOMER PREVIEW MODAL -->
+<div class="preview-overlay" id="previewModal">
+
+    <div class="preview-box">
+
+        <div class="preview-header">
+            <h3>Customer Details</h3>
+            <span onclick="closePreview()" class="close-btn">&times;</span>
+        </div>
+
+        <div class="preview-grid">
+            <div><label>Name</label><span id="p_name"></span></div>
+            <div><label>Mobile</label><span id="p_mobile"></span></div>
+            <div><label>Gender</label><span id="p_gender"></span></div>
+            <div><label>Age</label><span id="p_age"></span></div>
+            <div><label>City</label><span id="p_city"></span></div>
+            <div><label>Type</label><span id="p_type"></span></div>
+            <div><label>Email</label><span id="p_email"></span></div>
+            <div><label>Doctor</label><span id="p_doctor"></span></div>
+            <div class="full"><label>Notes</label><span id="p_notes"></span></div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function openPreview(name,mobile,gender,age,city,type,email,doctor,notes){
+        document.getElementById("p_name").innerText=name;
+        document.getElementById("p_mobile").innerText=mobile;
+        document.getElementById("p_gender").innerText=gender;
+        document.getElementById("p_age").innerText=age;
+        document.getElementById("p_city").innerText=city;
+        document.getElementById("p_type").innerText=type;
+        document.getElementById("p_email").innerText=email;
+        document.getElementById("p_doctor").innerText=doctor;
+        document.getElementById("p_notes").innerText=notes;
+
+        document.getElementById("previewModal").style.display="flex";
+    }
+
+    function closePreview(){
+        document.getElementById("previewModal").style.display="none";
     }
 </script>
