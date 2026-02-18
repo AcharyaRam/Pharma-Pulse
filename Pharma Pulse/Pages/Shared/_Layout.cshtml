@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Pharma_Pulse.styles.css" asp-append-version="true" />
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
@@ -57,6 +58,10 @@
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        lucide.createIcons();
+    </script>
 
 </body>
 </html>

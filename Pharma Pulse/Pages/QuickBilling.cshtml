@@ -9,20 +9,68 @@
     <h2 class="sidebar-title">Pharma Pulse</h2>
 
     <ul class="sidebar-menu">
-        <li><a asp-page="/Dashboard" class="menu-link"><span>🏠</span><span class="text">Dashboard</span></a></li>
-        <li><a asp-page="/QuickBilling" class="menu-link active"><span>💵</span><span class="text">Quick Billing</span></a></li>
-        <li><a asp-page="/SalesSummary" class="menu-link"><span>📊</span><span class="text">Sales Summary</span></a></li>
-        <li><a asp-page="/TotalMedicine" class="menu-link"><span>💊</span><span class="text">Medicines</span></a></li>
-        <li><a asp-page="/TotalCustomers" class="menu-link"><span>👤</span><span class="text">Customers</span></a></li>
-        <li><a asp-page="/LowStockAlerts" class="menu-link"><span>⚠</span><span class="text">Low Stock Alerts</span></a></li>
-        <li><a asp-page="/ExpiryAlerts" class="menu-link"><span>⏳</span><span class="text">Expiry Alerts</span></a></li>
+        <li>
+            <a asp-page="/Dashboard" class="menu-link">
+                <i data-lucide="layout-dashboard" class="icon"></i>
+                <span class="text">Dashboard</span>
+            </a>
+        </li>
+
+        <li>
+            <a asp-page="/QuickBilling" class="menu-link active">
+                <i data-lucide="receipt" class="icon"></i>
+                <span class="text">Quick Billing</span>
+            </a>
+        </li>
+
+        <li>
+            <a asp-page="/SalesSummary" class="menu-link">
+                <i data-lucide="bar-chart-3" class="icon"></i>
+                <span class="text">Sales Summary</span>
+            </a>
+        </li>
+
+        <li>
+            <a asp-page="/TotalMedicine" class="menu-link">
+                <i data-lucide="pill" class="icon"></i>
+                <span class="text">Medicines</span>
+            </a>
+        </li>
+
+        <li>
+            <a asp-page="/TotalCustomers" class="menu-link">
+                <i data-lucide="users" class="icon"></i>
+                <span class="text">Customers</span>
+            </a>
+        </li>
+
+        <li>
+            <a asp-page="/LowStockAlerts" class="menu-link">
+                <i data-lucide="alert-triangle" class="icon"></i>
+                <span class="text">Low Stock Alerts</span>
+            </a>
+        </li>
+
+        <li>
+            <a asp-page="/ExpiryAlerts" class="menu-link">
+                <i data-lucide="alarm-clock" class="icon"></i>
+                <span class="text">Expiry Alerts</span>
+            </a>
+        </li>
         <li>
             <a asp-page="/Profile" class="menu-link">
-                <span class="icon">⚙️</span>
+                <i data-lucide="user-cog" class="icon"></i>
                 <span class="text">Profile</span>
             </a>
         </li>
-        <li><a asp-page="/Login" class="menu-link"><span>→</span><span class="text">Logout</span></a></li>
+
+
+        <li>
+            <a asp-page="/Login" class="menu-link">
+                <i data-lucide="log-out" class="icon"></i>
+                <span class="text">Logout</span>
+            </a>
+        </li>
     </ul>
 </aside>
 
