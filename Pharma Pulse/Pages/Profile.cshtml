@@ -1,0 +1,127 @@
+﻿@page
+@model Pharma_Pulse.Pages.ProfileModel
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<link rel="stylesheet" href="~/css/medicine.css" />
+<link rel="stylesheet" href="~/css/profile.css" />
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR SAME -->
+    <aside class="sidebar">
+        <h2 class="sidebar-title">Pharma Pulse</h2>
+
+        <ul class="sidebar-menu">
+
+            <li>
+                <a asp-page="/Dashboard" class="menu-link">
+                    <span class="icon">🏠</span>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/QuickBilling" class="menu-link">
+                    <span class="icon">💵</span>
+                    <span class="text">Quick Billing</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/SalesSummary" class="menu-link">
+                    <span class="icon">📊</span>
+                    <span class="text">Sales Summary</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/TotalMedicine" class="menu-link">
+                    <span class="icon">💊</span>
+                    <span class="text">Medicines</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/TotalCustomers" class="menu-link">
+                    <span class="icon">👤</span>
+                    <span class="text">Customers</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/LowStockAlerts" class="menu-link">
+                    <span class="icon">⚠</span>
+                    <span class="text">Low Stock Alerts</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/ExpiryAlerts" class="menu-link">
+                    <span class="icon">⏳</span>
+                    <span class="text">Expiry Alerts</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/Profile" class="menu-link active">
+                    <span class="icon">⚙️</span>
+                    <span class="text">Profile</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-page="/Login" class="menu-link">
+                    <span class="icon">→</span>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+
+        </ul>
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <div class="profile-wrapper">
+
+            <h2 class="title">Billing Print Settings</h2>
+            <p class="subtitle">Select your default pharmacy bill print format</p>
+
+            <div class="print-container">
+
+                <label class="print-option">
+                    <input type="radio" name="printSize" checked />
+                    <div class="box">
+                        <h3>Thermal Receipt (80mm)</h3>
+                        <p>Most common medical shop billing slip</p>
+                    </div>
+                </label>
+
+                <label class="print-option">
+                    <input type="radio" name="printSize" />
+                    <div class="box">
+                        <h3>A5 Invoice (Half Page)</h3>
+                        <p>Compact pharmacy invoice format</p>
+                    </div>
+                </label>
+
+                <label class="print-option">
+                    <input type="radio" name="printSize" />
+                    <div class="box">
+                        <h3>A4 GST Invoice (Full Page)</h3>
+                        <p>Detailed invoice for hospitals & wholesale</p>
+                    </div>
+                </label>
+
+            </div>
+
+            <button class="save-btn">Save Print Format</button>
+
+        </div>
+
+    </div>
+
+</div>

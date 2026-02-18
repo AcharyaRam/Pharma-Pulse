@@ -1,0 +1,60 @@
+﻿.profile-wrapper {
+    max-width: 750px;
+    margin: 40px auto;
+    padding: 25px;
+}
+
+.title {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 25px;
+}
+
+/* Print Options */
+.print-container {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Option Card */
+.print-option input {
+    display: none;
+}
+
+.print-option .box {
+    padding: 20px;
+    border-radius: 16px;
+    border: 2px solid #e5e7eb;
+    background: white;
+    transition: 0.25s;
+    cursor: pointer;
+}
+
+.print-option input:checked + .box {
+    border-color: #92b9b8;
+    background: rgba(146, 185, 184, 0.15);
+}
+
+.print-option .box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+}
+
+/* Save Button */
+.save-btn {
+    margin-top: 25px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 14px;
+    background: #92b9b8;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
