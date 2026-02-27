@@ -250,3 +250,16 @@ input[type="date"] {
         transform: translateY(0);
     }
 }
+.rupee-icon {
+    font-size: 20px;
+    font-weight: 600;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Active menu bold */
+.menu-link.active .text {
+    font-weight: 700;
+}

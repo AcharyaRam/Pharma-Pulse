@@ -10,7 +10,6 @@ namespace Pharma_Pulse.Pages
 {
     public class TotalMedicineModel : PageModel
     {
-        // ✅ Inject MedicineService
         private readonly MedicineService _service;
 
         public TotalMedicineModel(MedicineService service)
@@ -18,31 +17,44 @@ namespace Pharma_Pulse.Pages
             _service = service;
         }
 
-        // ✅ Medicine List
+        // Medicine List
         public List<Medicine> Medicines { get; set; } = new();
 
-        // ✅ Bind Property for Popup Form
         [BindProperty]
         public Medicine Medicine { get; set; }
 
-        // ✅ Pagination Variables
+        // Pagination
         public int CurrentPage { get; set; } = 1;
         public int PageSize { get; set; } = 10;
         public int TotalPages { get; set; }
 
-        // ✅ Search Term
+        // Search
         public string SearchTerm { get; set; }
 
-        // ================================
-        // ✅ GET : Load Medicines List
-        // ================================
+        // ============================
+        // GET : Load Medicines
+        // ============================
         public void OnGet(int pageNumber = 1, string search = "")
         {
             var allMedicines = _service.GetAllMedicines();
 
+            // 🔥 AUTO STATUS LOGIC (Stock + Expiry)
+            foreach (var med in allMedicines)
+            {
+                if (med.ExpiryDate.Date < DateTime.Today)
+                {
+                    med.IsActive = false;
+                }
+                else
+                {
+                    med.IsActive = med.StockUnits > 0;
+                }
+
+                _service.UpdateMedicine(med);
+            }
+
             SearchTerm = search;
 
-            // ✅ Apply Search Filter
             if (!string.IsNullOrWhiteSpace(search))
             {
                 search = search.Trim();
@@ -55,55 +67,91 @@ namespace Pharma_Pulse.Pages
                     .ToList();
             }
 
-            // ✅ Total Pages Calculation
             TotalPages = (int)Math.Ceiling(allMedicines.Count / (double)PageSize);
-
-            // ✅ Current Page Set
             CurrentPage = pageNumber;
 
-            // ✅ Pagination Apply
             Medicines = allMedicines
                 .Skip((CurrentPage - 1) * PageSize)
                 .Take(PageSize)
                 .ToList();
         }
 
-        // ================================
-        // ✅ POST : SAVE MEDICINE (Popup)
-        // ================================
+        // ============================
+        // ADD / UPDATE MEDICINE
+        // ============================
         public IActionResult OnPostSaveMedicine()
         {
             if (!ModelState.IsValid)
             {
-                // Reload medicines list if validation fails
                 Medicines = _service.GetAllMedicines();
                 return Page();
             }
 
-            // ✅ Default Active
-            Medicine.IsActive = true;
+            // 🔥 AUTO STATUS LOGIC
+            if (Medicine.ExpiryDate.Date < DateTime.Today)
+            {
+                Medicine.IsActive = false;
+            }
+            else
+            {
+                Medicine.IsActive = Medicine.StockUnits > 0;
+            }
 
-            // ✅ Save into Database using Service
-            _service.AddMedicine(Medicine);
+            if (Medicine.Id == 0)
+            {
+                _service.AddMedicine(Medicine);
+                TempData["Success"] = "Medicine Added Successfully!";
+            }
+            else
+            {
+                var existing = _service.GetAllMedicines()
+                    .FirstOrDefault(m => m.Id == Medicine.Id);
 
-            TempData["Success"] = "Medicine Added Successfully!";
+                if (existing != null)
+                {
+                    existing.MedicineName = Medicine.MedicineName;
+                    existing.Category = Medicine.Category;
+                    existing.BatchNo = Medicine.BatchNo;
+                    existing.MfgDate = Medicine.MfgDate;
+                    existing.StockUnits = Medicine.StockUnits;
+                    existing.LowStockLimit = Medicine.LowStockLimit;
+                    existing.BuyingPrice = Medicine.BuyingPrice;
+                    existing.SellingPrice = Medicine.SellingPrice;
+                    existing.HsnSac = Medicine.HsnSac;
+                    existing.SellType = Medicine.SellType;
+                    existing.ExpiryDate = Medicine.ExpiryDate;
+
+                    // 🔥 AUTO STATUS
+                    if (existing.ExpiryDate.Date < DateTime.Today)
+                        existing.IsActive = false;
+                    else
+                        existing.IsActive = existing.StockUnits > 0;
+
+                    _service.UpdateMedicine(existing);
+                }
+
+                TempData["Success"] = "Medicine Updated Successfully!";
+            }
 
             return RedirectToPage();
         }
 
-        // ================================
-        // ✅ POST : Toggle Active/Deactive
-        // ================================
-        public IActionResult OnPostToggleStatus(int id)
+        // ============================
+        // DELETE MEDICINE
+        // ============================
+        public IActionResult OnPostDeleteMedicine(int id)
         {
             var medicine = _service.GetAllMedicines()
                 .FirstOrDefault(m => m.Id == id);
 
             if (medicine != null)
             {
-                medicine.IsActive = !medicine.IsActive;
-
-                _service.UpdateMedicine(medicine);
+                _service.DeleteMedicine(id);
+                TempData["Success"] = "Medicine Deleted Successfully!";
+            }
+            else
+            {
+                TempData["Error"] = "Medicine not found!";
             }
 
             return RedirectToPage();

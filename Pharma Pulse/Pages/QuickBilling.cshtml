@@ -17,8 +17,8 @@
         </li>
 
         <li>
-            <a asp-page="/QuickBilling" class="menu-link active">
-                <i data-lucide="receipt" class="icon"></i>
+            <a asp-page="/QuickBilling" class="menu-link">
+                <span class="icon rupee-icon">₹</span>
                 <span class="text">Quick Billing</span>
             </a>
         </li>
@@ -74,7 +74,7 @@
     </ul>
 </aside>
 
-<div class="main-content">
+<div class="@(Model.IsReviewMode ? "main-content review-mode" : "main-content")">
 
     <h2>Billing</h2>
     <p>Invoice: @Model.InvoiceNumber</p>
@@ -113,6 +113,7 @@
     <hr />
 
     <!-- ADD MEDICINE -->
+    <!-- ADD MEDICINE -->
     <h3>Add Medicine</h3>
     <form method="post" asp-page-handler="AddItem">
         <select asp-for="SelectedMedicine" id="medicineDropdown" required>
@@ -130,6 +131,14 @@
 
         <input asp-for="Quantity" type="number" min="1" value="1" />
         <button type="submit">Add</button>
+
+        @if (TempData["StockError"] != null)
+        {
+            <div class="stock-error">
+                @TempData["StockError"]
+            </div>
+        }
+
     </form>
 
     <hr />
@@ -238,7 +247,9 @@
 
         <div class="action-buttons">
             <form method="post" asp-page-handler="CompleteSale">
-                <button class="complete-btn">Complete Sale</button>
+                <button type="button" onclick="completeSale()" class="complete-btn">
+                    Complete Sale
+                </button>
             </form>
             <button type="button" class="print-btn" onclick="printInvoice()">🖨 Print Bill</button>
         </div>
@@ -370,5 +381,77 @@
         if (pos && pos > 0) {
             window.scrollTo(0, pos);
         }
+    });
+</script>
+<script>
+    function completeSale() {
+
+        fetch('?handler=CompleteSale', {
+            method: 'POST',
+            headers: {
+                'RequestVerificationToken':
+                    document.querySelector('input[name="__RequestVerificationToken"]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+
+            if (data.success) {
+
+                alert(data.message);   // ✅ Sale Saved Successfully!
+
+                // Bill clear
+                fetch('?handler=ClearBill', {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken':
+                            document.querySelector('input[name="__RequestVerificationToken"]').value
+                    }
+                })
+                .then(() => {
+                    window.location.reload();
+                });
+
+            } else {
+                alert(data.message);
+            }
+
+        })
+        .catch(error => {
+            alert("Server Error!");
+            console.log(error);
+        });
+    }
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const isReviewMode = document.querySelector(".review-mode");
+
+        if (isReviewMode) {
+
+            // Sab forms block
+            document.querySelectorAll("form").forEach(form => {
+                form.addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    alert("Review Mode - Editing Disabled");
+                });
+            });
+
+            // JS buttons block (like CompleteSale)
+            document.querySelectorAll("button").forEach(btn => {
+                btn.addEventListener("click", function (e) {
+
+                    if (btn.type === "button") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        alert("Review Mode - Editing Disabled");
+                    }
+                });
+            });
+
+        }
+
     });
 </script>

@@ -10,7 +10,7 @@ namespace Pharma_Pulse.Data
             : base(options)
         {
         }
-
+        public DbSet<Pharmacy> Pharmacies { get; set; }
         public DbSet<Medicine> Medicines { get; set; }
 
         // ✅ GST Setting Table (New)

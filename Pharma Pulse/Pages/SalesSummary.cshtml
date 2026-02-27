@@ -233,6 +233,67 @@
         opacity: 1;
     }
 
+
+    .rupee-icon {
+        font-size: 20px;
+        font-weight: 600;
+        width: 24px;
+        height: 24px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    /* Active menu bold */
+    .menu-link.active .text {
+        font-weight: 700;
+    }
+
+    .print-btn {
+        background: #2563eb; /* premium blue */
+        color: white;
+        padding: 8px 18px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 10px rgba(37,99,235,0.3);
+    }
+
+        .print-btn:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(37,99,235,0.4);
+        }
+
+        .print-btn:active {
+            transform: scale(0.96);
+        }
+
+    .view-btn {
+        display: inline-block;
+        background: #f3f4f6;
+        color: #2563eb;
+        padding: 8px 18px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        text-decoration: none;
+        border: 1px solid #2563eb;
+        transition: all 0.25s ease;
+    }
+
+        .view-btn:hover {
+            background: #2563eb;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+        }
+
+        .view-btn:active {
+            transform: scale(0.96);
+        }
 </style>
 
 <div class="dashboard-container">
@@ -251,7 +312,7 @@
 
             <li>
                 <a asp-page="/QuickBilling" class="menu-link">
-                    <i data-lucide="receipt" class="icon"></i>
+                    <span class="icon rupee-icon">₹</span>
                     <span class="text">Quick Billing</span>
                 </a>
             </li>
@@ -354,6 +415,7 @@
                    background:#92b9b8; color:white; cursor:pointer;">
                     Apply
                 </button>
+            
             </form>
 
 
@@ -383,6 +445,8 @@
                     <th>GST</th>
                     <th>Grand Total</th>
                     <th>Date</th>
+                    <th>View</th>
+                    <th>Print</th>
                 </tr>
             </thead>
 
@@ -407,10 +471,47 @@
                         </td>
 
                         <td>@bill.BillDate.ToString("dd-MMM-yyyy")</td>
+                        <td>
+                            <a asp-page="/QuickBilling"
+                               asp-route-id="@bill.Id"
+                               class="view-btn">
+                                View
+                            </a>
+                        </td>
+                        <td>
+                            <button class="print-btn"
+                                    type="button"
+                                    onclick="printBill(@bill.Id)">
+                                Print
+                            </button>
+                        </td>
+                        
                     </tr>
                 }
             </tbody>
         </table>
 
     </div>
+    <div id="printSection" style="display:none;"></div>
+    <script>
+        function printBill(id) {
+
+            fetch('/SalesSummary?handler=PrintBill&id=' + id)
+                .then(res => res.text())
+                .then(html => {
+
+                    var original = document.body.innerHTML;
+
+                    document.body.innerHTML = html;
+
+                    window.print();
+
+                    document.body.innerHTML = original;
+
+                    location.reload();
+                });
+        }
+    </script>
+
 </div>
+

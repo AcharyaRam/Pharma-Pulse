@@ -39,5 +39,14 @@ namespace Pharma_Pulse.Services
             _context.Medicines.Update(medicine);
             _context.SaveChanges();
         }
+        public void DeleteMedicine(int id)
+        {
+            var medicine = _context.Medicines.FirstOrDefault(m => m.Id == id);
+            if (medicine != null)
+            {
+                _context.Medicines.Remove(medicine);
+                _context.SaveChanges();
+            }
+        }
     }
 }
