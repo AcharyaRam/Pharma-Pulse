@@ -23,6 +23,9 @@
 
         public decimal Price { get; set; }
 
+        public decimal PurchasePrice { get; set; }
+        public decimal SellingPrice { get; set; } = 0;
+
         public decimal Total { get; set; }
     }
 }

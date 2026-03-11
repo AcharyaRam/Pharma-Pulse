@@ -17,6 +17,8 @@ namespace Pharma_Pulse.Models
 
         public decimal SubTotal { get; set; }
 
+
+
         public decimal GstPercent { get; set; }
 
         public decimal CGST { get; set; }
@@ -33,5 +35,7 @@ namespace Pharma_Pulse.Models
         public decimal DiscountPercent { get; set; }
 
         public string? PaymentMode { get; set; }
+
+       
     }
 }

@@ -1,0 +1,44 @@
+﻿@page
+@model PharmaPulse.Admin.Pages.LoginModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="~/css/login.css" />
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-box">
+            <h2>Super Admin Login</h2>
+
+            <form method="post">
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" asp-for="Email" placeholder="Enter Email" required />
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" asp-for="Password" placeholder="Enter Password" required />
+                </div>
+
+                <button type="submit">Login</button>
+
+                @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                {
+                    <div class="error">@Model.ErrorMessage</div>
+                }
+
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

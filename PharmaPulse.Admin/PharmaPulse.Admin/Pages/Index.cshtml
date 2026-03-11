@@ -1,0 +1,54 @@
+﻿@page
+@model PharmaPulse.Admin.Pages.Users.IndexModel
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Users Page</h2>
+
+<div class="users-wrapper">
+
+    <div class="page-header">
+        <h2>Manage Pharmacies</h2>
+        <a asp-page="Create" class="add-btn">+ Add Pharmacy</a>
+    </div>
+
+    <table class="users-table">
+        <thead>
+            <tr>
+                <th>Pharmacy</th>
+                <th>Owner</th>
+                <th>Email</th>
+                <th>Plan</th>
+                <th>Expiry</th>
+                <th>Status</th>
+                <th>Last Login</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td>@user.PharmacyName</td>
+                    <td>@user.OwnerName</td>
+                    <td>@user.Email</td>
+                    <td>@user.Plan</td>
+                    <td>@user.ExpiryDate.ToShortDateString()</td>
+                    <td>
+                        <span class="status @(user.IsActive ? "active" : "suspended")">
+                            @(user.IsActive ? "Active" : "Suspended")
+                        </span>
+                    </td>
+                    <td>@user.LastLogin.ToShortDateString()</td>
+                    <td>
+                        <a href="#" class="action-btn">View</a>
+                        <a href="#" class="action-btn edit">Edit</a>
+                        <a href="#" class="action-btn danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

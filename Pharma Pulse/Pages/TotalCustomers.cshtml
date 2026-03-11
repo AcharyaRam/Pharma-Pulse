@@ -9,9 +9,9 @@
 
 <div class="dashboard-container">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
         <h2 class="sidebar-title">Pharma Pulse</h2>
+
         <ul class="sidebar-menu">
             <li>
                 <a asp-page="/Dashboard" class="menu-link">
@@ -22,13 +22,13 @@
 
             <li>
                 <a asp-page="/QuickBilling" class="menu-link">
-                    <i data-lucide="receipt" class="icon"></i>
+                    <span class="icon rupee-icon">₹</span>
                     <span class="text">Quick Billing</span>
                 </a>
             </li>
 
             <li>
-                <a asp-page="/SalesSummary" class="menu-link">
+                <a asp-page="/SalesSummary" class="menu-link active">
                     <i data-lucide="bar-chart-3" class="icon"></i>
                     <span class="text">Sales Summary</span>
                 </a>
@@ -42,7 +42,7 @@
             </li>
 
             <li>
-                <a asp-page="/TotalCustomers" class="menu-link active">
+                <a asp-page="/TotalCustomers" class="menu-link">
                     <i data-lucide="users" class="icon"></i>
                     <span class="text">Customers</span>
                 </a>
@@ -78,9 +78,7 @@
         </ul>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <div class="main-content">
-
         <div class="content-card">
 
             <div class="card-header">
@@ -88,17 +86,14 @@
                 <button type="button" class="btn-add" id="openAddCustomer">+ Add Customer</button>
             </div>
 
-            <!-- Search -->
             <form method="get" class="search-bar">
                 <div class="search-input">
-                    <span class="search-icon">🔍</span>
                     <input type="text" name="search" value="@Model.SearchTerm"
-                           placeholder="Search Customer name & Mobile Number" />
+                           placeholder="Customer name & Mobile Number" />
                     <button type="submit" class="btn-search">Search</button>
                 </div>
             </form>
 
-            <!-- Table -->
             <table class="sales-table">
                 <thead>
                     <tr>
@@ -128,30 +123,27 @@
                             <td>@cust.Email</td>
                             <td>@cust.DoctorReference</td>
                             <td>@cust.MedicalNotes</td>
-
-                            <!-- ⭐ YEHI Sahi Jagah Hai -->
                             <td>
                                 <button type="button" class="btn-view"
                                         onclick="openPreview(
-                '@cust.FirstName @cust.Surname',
-                '@cust.MobileNumber',
-                '@cust.Gender',
-                '@cust.Age',
-                '@cust.City',
-                '@cust.CustomerType',
-                '@cust.Email',
-                '@cust.DoctorReference',
-                '@cust.MedicalNotes'
-            )">
+                                        '@cust.CustomerId',
+                                        '@cust.FirstName',
+                                        '@cust.Surname',
+                                        '@cust.MobileNumber',
+                                        '@cust.Gender',
+                                        '@cust.Age',
+                                        '@cust.City',
+                                        '@cust.CustomerType',
+                                        '@cust.Email',
+                                        '@cust.DoctorReference',
+                                        '@cust.MedicalNotes'
+                                    )">
                                     View
                                 </button>
                             </td>
-
                         </tr>
                     }
                 </tbody>
-
-
             </table>
 
         </div>
@@ -159,33 +151,29 @@
 </div>
 
 
-
-<!-- ✅ MODAL OUTSIDE PAGE (CENTER FIXED) -->
+<!-- ADD / EDIT MODAL -->
 <div class="modal-overlay" id="customerModal">
-
     <div class="modal-box">
 
         <div class="modal-header">
-            <h2>Add Customer</h2>
+            <h2 id="modalTitle">Add Customer</h2>
             <span class="close-btn" id="closeModal">&times;</span>
         </div>
 
-        <!-- FORM -->
         <form method="post" asp-page-handler="SaveCustomer" class="customer-form">
-
             @Html.AntiForgeryToken()
+
+            <input type="hidden" asp-for="Customer.CustomerId" id="customerIdField" />
 
             <div class="form-row">
                 <div>
                     <label>First Name *</label>
                     <input asp-for="Customer.FirstName" required />
                 </div>
-
                 <div>
                     <label>Middle Name</label>
                     <input asp-for="Customer.MiddleName" />
                 </div>
-
                 <div>
                     <label>Surname *</label>
                     <input asp-for="Customer.Surname" required />
@@ -198,10 +186,9 @@
                     <input asp-for="Customer.MobileNumber" required />
                 </div>
                 <div>
-                    <label>Email </label>
-                    <input asp-for="Customer.Email" required />
+                    <label>Email</label>
+                    <input asp-for="Customer.Email" />
                 </div>
-
                 <div>
                     <label>GST</label>
                     <input asp-for="Customer.GSTNumber" />
@@ -218,21 +205,13 @@
                         <option>Other</option>
                     </select>
                 </div>
-
                 <div>
                     <label>DOB</label>
-                    <input asp-for="Customer.DateOfBirth"
-                           type="date"
-                           id="dobField"
-                           onchange="calculateAge()" />
+                    <input asp-for="Customer.DateOfBirth" type="date" id="dobField" onchange="calculateAge()" />
                 </div>
-
                 <div>
                     <label>Age *</label>
-                    <input asp-for="Customer.Age"
-                           type="number"
-                           id="ageField"
-                           required />
+                    <input asp-for="Customer.Age" type="number" id="ageField" required />
                 </div>
             </div>
 
@@ -241,7 +220,6 @@
                     <label>City</label>
                     <input asp-for="Customer.City" />
                 </div>
-
                 <div>
                     <label>Customer Type</label>
                     <select asp-for="Customer.CustomerType">
@@ -258,57 +236,22 @@
             <label>Notes</label>
             <input asp-for="Customer.MedicalNotes" />
 
-            <button type="submit" class="save-btn">
-
-                Save Customer
-            </button>
-
+            <button type="submit" class="save-btn" id="saveBtn">Save Customer</button>
         </form>
 
     </div>
 </div>
 
 
-
-
-<!-- ================= SCRIPT ================= -->
-<script>
-    const modal = document.getElementById("customerModal");
-    const openBtn = document.getElementById("openAddCustomer");
-    const closeBtn = document.getElementById("closeModal");
-
-    modal.style.display = "none";
-
-    openBtn.onclick = () => modal.style.display = "flex";
-    closeBtn.onclick = () => modal.style.display = "none";
-
-    window.onclick = (e) => {
-        if (e.target === modal) modal.style.display = "none";
-    };
-
-    function calculateAge() {
-        let dob = document.getElementById("dobField").value;
-        if (!dob) return;
-
-        let birthDate = new Date(dob);
-        let today = new Date();
-
-        let age = today.getFullYear() - birthDate.getFullYear();
-        let monthDiff = today.getMonth() - birthDate.getMonth();
-
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) age--;
-
-        document.getElementById("ageField").value = age;
-    }
-</script>
-<!-- CUSTOMER PREVIEW MODAL -->
+<!-- PREVIEW MODAL -->
 <div class="preview-overlay" id="previewModal">
-
     <div class="preview-box">
-
         <div class="preview-header">
             <h3>Customer Details</h3>
-            <span onclick="closePreview()" class="close-btn">&times;</span>
+            <div>
+                <button class="btn-edit" onclick="editCustomer()">Edit</button>
+                <span onclick="closePreview()" class="close-btn">&times;</span>
+            </div>
         </div>
 
         <div class="preview-grid">
@@ -322,26 +265,82 @@
             <div><label>Doctor</label><span id="p_doctor"></span></div>
             <div class="full"><label>Notes</label><span id="p_notes"></span></div>
         </div>
-
     </div>
 </div>
 
-<script>
-    function openPreview(name,mobile,gender,age,city,type,email,doctor,notes){
-        document.getElementById("p_name").innerText=name;
-        document.getElementById("p_mobile").innerText=mobile;
-        document.getElementById("p_gender").innerText=gender;
-        document.getElementById("p_age").innerText=age;
-        document.getElementById("p_city").innerText=city;
-        document.getElementById("p_type").innerText=type;
-        document.getElementById("p_email").innerText=email;
-        document.getElementById("p_doctor").innerText=doctor;
-        document.getElementById("p_notes").innerText=notes;
 
-        document.getElementById("previewModal").style.display="flex";
+<script>
+    let currentCustomerId = 0;
+
+    const modal = document.getElementById("customerModal");
+    const openBtn = document.getElementById("openAddCustomer");
+    const closeBtn = document.getElementById("closeModal");
+
+    modal.style.display = "none";
+
+    openBtn.onclick = () => {
+        resetForm();
+        modal.style.display = "flex";
+    };
+
+    closeBtn.onclick = () => modal.style.display = "none";
+
+    function openPreview(id, first, surname, mobile, gender, age, city, type, email, doctor, notes) {
+        currentCustomerId = id;
+        document.getElementById("p_name").innerText = first + " " + surname;
+        document.getElementById("p_mobile").innerText = mobile;
+        document.getElementById("p_gender").innerText = gender;
+        document.getElementById("p_age").innerText = age;
+        document.getElementById("p_city").innerText = city;
+        document.getElementById("p_type").innerText = type;
+        document.getElementById("p_email").innerText = email;
+        document.getElementById("p_doctor").innerText = doctor;
+        document.getElementById("p_notes").innerText = notes;
+        document.getElementById("previewModal").style.display = "flex";
     }
 
-    function closePreview(){
-        document.getElementById("previewModal").style.display="none";
+    function closePreview() {
+        document.getElementById("previewModal").style.display = "none";
+    }
+
+    function editCustomer() {
+        closePreview();
+        document.getElementById("customerIdField").value = currentCustomerId;
+
+        let nameParts = document.getElementById("p_name").innerText.split(" ");
+        document.querySelector("[name='Customer.FirstName']").value = nameParts[0];
+        document.querySelector("[name='Customer.Surname']").value = nameParts[1] || "";
+
+        document.querySelector("[name='Customer.MobileNumber']").value = document.getElementById("p_mobile").innerText;
+        document.querySelector("[name='Customer.Gender']").value = document.getElementById("p_gender").innerText;
+        document.querySelector("[name='Customer.Age']").value = document.getElementById("p_age").innerText;
+        document.querySelector("[name='Customer.City']").value = document.getElementById("p_city").innerText;
+        document.querySelector("[name='Customer.CustomerType']").value = document.getElementById("p_type").innerText;
+        document.querySelector("[name='Customer.Email']").value = document.getElementById("p_email").innerText;
+        document.querySelector("[name='Customer.DoctorReference']").value = document.getElementById("p_doctor").innerText;
+        document.querySelector("[name='Customer.MedicalNotes']").value = document.getElementById("p_notes").innerText;
+
+        document.getElementById("modalTitle").innerText = "Edit Customer";
+        document.getElementById("saveBtn").innerText = "Update Customer";
+
+        modal.style.display = "flex";
+    }
+
+    function resetForm() {
+        document.getElementById("customerIdField").value = 0;
+        document.getElementById("modalTitle").innerText = "Add Customer";
+        document.getElementById("saveBtn").innerText = "Save Customer";
+        document.querySelector("form").reset();
+    }
+
+    function calculateAge() {
+        let dob = document.getElementById("dobField").value;
+        if (!dob) return;
+        let birthDate = new Date(dob);
+        let today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        let monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) age--;
+        document.getElementById("ageField").value = age;
     }
 </script>

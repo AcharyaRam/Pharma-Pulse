@@ -1,0 +1,75 @@
+﻿@page
+@model PharmaPulse.Admin.Pages.DashboardModel
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="dashboard-wrapper">
+
+    <!-- PAGE TITLE -->
+    <div class="page-header">
+        <h2>Super Admin Dashboard</h2>
+        <p>System Overview & Control Panel</p>
+    </div>
+
+    <!-- STATS CARDS -->
+    <div class="stats-container">
+
+        <div class="stat-card blue">
+            <div>
+                <h4>Total Pharmacies</h4>
+                <h2>@Model.TotalPharmacies</h2>
+            </div>
+        </div>
+
+        <div class="stat-card green">
+            <div>
+                <h4>Active Pharmacies</h4>
+                <h2>@Model.ActivePharmacies</h2>
+            </div>
+        </div>
+
+        <div class="stat-card red">
+            <div>
+                <h4>Suspended Pharmacies</h4>
+                <h2>@Model.SuspendedPharmacies</h2>
+            </div>
+        </div>
+
+        <div class="stat-card purple">
+            <div>
+                <h4>Total Users</h4>
+                <h2>@Model.TotalUsers</h2>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- LOWER SECTION -->
+    <div class="dashboard-grid">
+
+        <!-- RECENT ACTIVITY -->
+        <div class="card">
+            <h3>Recent Activity</h3>
+            <ul class="activity-list">
+                @foreach (var item in Model.RecentActivities)
+                {
+                    <li>@item</li>
+                }
+            </ul>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="card">
+            <h3>Quick Actions</h3>
+
+            <div class="action-buttons">
+                <a href="#" class="btn">Add Pharmacy</a>
+                <a href="#" class="btn">Manage Users</a>
+                <a href="#" class="btn">System Settings</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>

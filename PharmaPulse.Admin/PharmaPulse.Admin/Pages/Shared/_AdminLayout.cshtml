@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>PharmaPulse - Admin</title>
+
+    <!-- FIXED CSS SPELLING -->
+    <link rel="stylesheet" href="~/css/Sidebar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <div class="admin-layout">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+
+            <div class="logo">
+                <h2>PharmaPulse</h2>
+            </div>
+
+            <ul class="menu">
+
+                <li>
+                    <a asp-page="/Dashboard">
+                        <i class="fa-solid fa-gauge"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/Index">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a asp-page="/Privacy">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>Privacy</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a asp-page="/Login">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            @RenderBody()
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -667,3 +667,33 @@ button {
     .update-btn:hover {
         opacity: 0.9;
     }
+@media print {
+    body {
+        width: 80mm;
+        margin: 0;
+    }
+
+    img {
+        display: block;
+        margin: auto;
+    }
+}
+.rupee-icon {
+    font-size: 20px;
+    font-weight: 600;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Active menu bold */
+.menu-link.active .text {
+    font-weight: 700;
+}
+.stock-error {
+    color: #e53935;
+    font-weight: 600;
+    margin-top: 8px;
+    font-size: 14px;
+}

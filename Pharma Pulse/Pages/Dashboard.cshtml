@@ -23,7 +23,7 @@
 
             <li>
                 <a asp-page="/QuickBilling" class="menu-link">
-                    <i data-lucide="receipt" class="icon"></i>
+                    <span class="icon rupee-icon">₹</span>
                     <span class="text">Quick Billing</span>
                 </a>
             </li>
@@ -105,15 +105,14 @@
                 <h3>Expiry Alerts</h3>
                 <p>@Model.ExpiryCount</p>
             </div>
-
             <div class="card">
                 <h3>Sales Today</h3>
-                <p>₹@Model.SalesToday</p>
+                <p>₹ @Model.SalesToday.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</p>
             </div>
 
             <div class="card">
                 <h3>Profit Today</h3>
-                <p>0</p>
+                <p>₹ @Model.ProfitToday.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</p>
             </div>
 
         </div>
@@ -237,24 +236,13 @@
                 <div class="card">
                     <h2>Top Selling Medicines</h2>
 
-                    <div class="medicine">
-                        <span class="rank">1</span>
-                        <span class="name">Paracetamol</span>
-                        <span class="price">₹1,020</span>
-                    </div>
-
-                    <div class="medicine">
-                        <span class="rank">2</span>
-                        <span class="name">Azithromycin</span>
-                        <span class="price">₹920</span>
-                    </div>
-
-                    <div class="medicine">
-                        <span class="rank">3</span>
-                        <span class="name">Neurobion Plus</span>
-                        <span class="price">₹870</span>
-                    </div>
-
+                    @foreach (var med in Model.Top3MedicinesToday)
+                    {
+                        <div class="medicine">
+                            <span class="rank">@med.Rank</span>
+                            <span class="name">@med.Name</span>
+                        </div>
+                    }
                 </div>
 
             </div>

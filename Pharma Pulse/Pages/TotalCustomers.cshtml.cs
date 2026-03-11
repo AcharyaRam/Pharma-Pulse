@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Pharma_Pulse.Data;
 using Pharma_Pulse.Models;
 using System.Collections.Generic;
@@ -18,10 +19,8 @@ namespace Pharma_Pulse.Pages
 
         public List<Customer> Customers { get; set; } = new();
 
-        // ✅ Search Term
         public string SearchTerm { get; set; } = "";
 
-        // ✅ Bind Customer Form Data
         [BindProperty]
         public Customer Customer { get; set; }
 
@@ -34,7 +33,6 @@ namespace Pharma_Pulse.Pages
 
             var query = _context.Customers.AsQueryable();
 
-            // ✅ SEARCH FILTER
             if (!string.IsNullOrWhiteSpace(search))
             {
                 string term = search.Trim().ToLower();
@@ -58,24 +56,48 @@ namespace Pharma_Pulse.Pages
         }
 
         // ============================
-        // ✅ POST: Save Customer Popup Form
+        // ✅ POST: Save / Update Customer
         // ============================
-        public IActionResult OnPostSaveCustomer()
+        public async Task<IActionResult> OnPostSaveCustomerAsync()
         {
             if (!ModelState.IsValid)
             {
-                // Reload table if invalid
                 Customers = _context.Customers.ToList();
                 return Page();
             }
 
-            // ✅ Save Customer in Database
-            _context.Customers.Add(Customer);
-            _context.SaveChanges();
+            if (Customer.CustomerId > 0)
+            {
+                var existingCustomer = await _context.Customers
+                    .FirstOrDefaultAsync(c => c.CustomerId == Customer.CustomerId);
 
-            TempData["Success"] = "Customer Added Successfully!";
+                if (existingCustomer != null)
+                {
+                    existingCustomer.FirstName = Customer.FirstName;
+                    existingCustomer.MiddleName = Customer.MiddleName;
+                    existingCustomer.Surname = Customer.Surname;
+                    existingCustomer.MobileNumber = Customer.MobileNumber;
+                    existingCustomer.Email = Customer.Email;
+                    existingCustomer.GSTNumber = Customer.GSTNumber;
+                    existingCustomer.Gender = Customer.Gender;
+                    existingCustomer.DateOfBirth = Customer.DateOfBirth;
+                    existingCustomer.Age = Customer.Age;
+                    existingCustomer.City = Customer.City;
+                    existingCustomer.CustomerType = Customer.CustomerType;
+                    existingCustomer.DoctorReference = Customer.DoctorReference;
+                    existingCustomer.MedicalNotes = Customer.MedicalNotes;
 
-            // ✅ Reload Page After Save
+                    await _context.SaveChangesAsync();
+                    TempData["Success"] = "Customer Updated Successfully!";
+                }
+            }
+            else
+            {
+                await _context.Customers.AddAsync(Customer);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Customer Added Successfully!";
+            }
+
             return RedirectToPage();
         }
     }

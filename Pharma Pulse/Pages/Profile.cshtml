@@ -3,9 +3,9 @@
 @{
     ViewData["Title"] = "Profile";
 }
-
-<link rel="stylesheet" href="~/css/medicine.css" />
 <link rel="stylesheet" href="~/css/profile.css" />
+<link rel="stylesheet" href="~/css/medicine.css" />
+
 
 <div class="dashboard-container">
 
@@ -83,45 +83,365 @@
 
 
     <!-- MAIN CONTENT -->
+    <!-- MAIN CONTENT -->
     <div class="main-content">
 
-        <div class="profile-wrapper">
+        <h1 class="page-title">Profile</h1>
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success" style="margin-bottom:15px;">
+                @TempData["Success"]
+            </div>
+        }
+        <div class="profile-grid">
 
-            <h2 class="title">Billing Print Settings</h2>
-            <p class="subtitle">Select your default pharmacy bill print format</p>
+            <!-- LEFT COLUMN -->
+            <div class="left-section">
 
-            <div class="print-container">
+                <!-- Pharmacy Info -->
+                <div class="card">
+                    <h2>Pharmacy Information</h2>
 
-                <label class="print-option">
-                    <input type="radio" name="printSize" checked />
-                    <div class="box">
-                        <h3>Thermal Receipt (80mm)</h3>
-                        <p>Most common medical shop billing slip</p>
+                    <!-- VIEW MODE -->
+                    <div id="viewMode">
+
+                        <div class="info-row">
+                            <span>Pharmacy Name</span>
+                            <strong>@Model.Pharmacy.PharmacyName</strong>
+                        </div>
+
+                        <div class="info-row">
+                            <span>Owner Name</span>
+                            <strong>@Model.Pharmacy.OwnerName</strong>
+                        </div>
+
+                        <div class="info-row">
+                            <span>Mobile</span>
+                            <strong>@Model.Pharmacy.MobileNumber</strong>
+                        </div>
+
+                        <div class="info-row">
+                            <span>Email</span>
+                            <strong>@Model.Pharmacy.Email</strong>
+                        </div>
+
+                        <div class="info-row">
+                            <span>GST No.</span>
+                            <strong>@Model.Pharmacy.GSTNumber</strong>
+                        </div>
+
+                        <div class="info-row">
+                            <span>Drug License</span>
+                            <strong>@Model.Pharmacy.DrugLicenseNo</strong>
+                        </div>
+
+                        <div class="info-row">
+                            <span>Address</span>
+                            <strong>@Model.Pharmacy.Address</strong>
+                        </div>
+
+                        <button class="blue-btn" onclick="enableEdit()">Edit Info</button>
                     </div>
-                </label>
 
-                <label class="print-option">
-                    <input type="radio" name="printSize" />
-                    <div class="box">
-                        <h3>A5 Invoice (Half Page)</h3>
-                        <p>Compact pharmacy invoice format</p>
-                    </div>
-                </label>
+                    <!-- EDIT MODE -->
+                    <form method="post"
+                          asp-page-handler="SaveProfile"
+                          id="profileForm"
+                          style="display:none;">
 
-                <label class="print-option">
-                    <input type="radio" name="printSize" />
-                    <div class="box">
-                        <h3>A4 GST Invoice (Full Page)</h3>
-                        <p>Detailed invoice for hospitals & wholesale</p>
+                        <input type="hidden" asp-for="Pharmacy.Id" />
+
+                        <div class="info-row">
+                            <span>Pharmacy Name</span>
+                            <input asp-for="Pharmacy.PharmacyName" class="form-input" />
+                        </div>
+
+                        <div class="info-row">
+                            <span>Owner Name</span>
+                            <input asp-for="Pharmacy.OwnerName" class="form-input" />
+                        </div>
+
+                        <div class="info-row">
+                            <span>Mobile</span>
+                            <input asp-for="Pharmacy.MobileNumber" class="form-input" />
+                        </div>
+
+                        <div class="info-row">
+                            <span>Email</span>
+                            <input asp-for="Pharmacy.Email" class="form-input" />
+                        </div>
+
+                        <div class="info-row">
+                            <span>GST No.</span>
+                            <input asp-for="Pharmacy.GSTNumber" class="form-input" />
+                        </div>
+
+                        <div class="info-row">
+                            <span>Drug License</span>
+                            <input asp-for="Pharmacy.DrugLicenseNo" class="form-input" />
+                        </div>
+
+                        <div class="info-row">
+                            <span>Address</span>
+                            <input asp-for="Pharmacy.Address" class="form-input" />
+                        </div>
+
+                        <div style="margin-top:15px;">
+                            <button type="submit" id="saveBtn" class="green-btn">
+                                <span class="btn-text">Save Profile</span>
+                                <span class="btn-loader" style="display:none;">Saving...</span>
+                            </button>
+                            <button type="button" class="outline-btn" onclick="cancelEdit()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Billing Print Settings -->
+                <div class="card">
+                    <h2>Billing Print Settings</h2>
+                    <p class="subtitle">Select your default pharmacy bill print format</p>
+
+                    <div class="card">
+                        <h2>Billing Print Settings</h2>
+                        <p class="subtitle">Select your default pharmacy bill print format</p>
+
+                        <!-- THERMAL -->
+                        <div class="print-option">
+                            <label class="radio-box">
+                                <input type="radio" name="print" checked />
+                                <div>
+                                    <h4>Thermal Receipt (80mm)</h4>
+                                    <p>Most common medical shop billing slip</p>
+                                </div>
+                            </label>
+
+                            <div class="preview-box">
+                                <div class="invoice-preview thermal">
+                                    <h5>PHARMA PULSE</h5>
+                                    <p>INV-12345</p>
+                                    <hr />
+                                    <p>Paracetamol x2 ₹40</p>
+                                    <p>Ibuprofen x1 ₹20</p>
+                                    <hr />
+                                    <strong>Total ₹60</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- A5 -->
+                        <div class="print-option">
+                            <label class="radio-box">
+                                <input type="radio" name="print" />
+                                <div>
+                                    <h4>A5 Invoice (Half Page)</h4>
+                                    <p>Compact pharmacy invoice format</p>
+                                </div>
+                            </label>
+
+                            <div class="preview-box">
+                                <div class="invoice-preview a5">
+                                    <h4>PHARMA PULSE MEDICAL</h4>
+                                    <p><b>Customer:</b> Priya</p>
+                                    <table>
+                                        <tr><td>Paracetamol</td><td>2</td><td>₹40</td></tr>
+                                    </table>
+                                    <hr />
+                                    <strong>Total ₹60</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- A4 -->
+                        <div class="print-option">
+                            <label class="radio-box">
+                                <input type="radio" name="print" />
+                                <div>
+                                    <h4>A4 GST Invoice (Full Page)</h4>
+                                    <p>Detailed invoice for hospitals & wholesale</p>
+                                </div>
+                            </label>
+
+                            <div class="preview-box">
+                                <div class="invoice-preview a4">
+                                    <h3>PHARMA PULSE MEDICAL</h3>
+                                    <p>GSTIN: 24ABCDE1234F1Z5</p>
+                                    <hr />
+                                    <table>
+                                        <tr>
+                                            <th>Medicine</th>
+                                            <th>Qty</th>
+                                            <th>Total</th>
+                                        </tr>
+                                        <tr>
+                                            <td>Paracetamol</td>
+                                            <td>2</td>
+                                            <td>₹40</td>
+                                        </tr>
+                                    </table>
+                                    <hr />
+                                    <p>CGST ₹5.40</p>
+                                    <p>SGST ₹5.40</p>
+                                    <h4>Grand Total ₹60</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="green-btn">Save Print Format</button>
                     </div>
-                </label>
+                </div>
 
             </div>
 
-            <button class="save-btn">Save Print Format</button>
+            <!-- RIGHT COLUMN -->
+            <div class="right-section">
+
+                <!-- Subscription -->
+                <div class="card">
+                    <h2>Subscription & Plan</h2>
+
+                    <div class="info-row">
+                        <span>Current Plan</span>
+                        <strong>Pro Plan</strong>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Billing Cycle</span>
+                        <strong>Monthly</strong>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Plan Price</span>
+                        <strong>₹999 / Month</strong>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Status</span>
+                        <span class="status">Active</span>
+                    </div>
+
+                    <div class="btn-row">
+                        <button class="blue-btn"
+                                data-bs-toggle="modal"
+                                data-bs-target="#upgradeModal">
+                            Upgrade Plan
+                        </button>
+                        <button class="outline-btn">View All Plans</button>
+                    </div>
+                </div>
+
+            </div>
 
         </div>
-
     </div>
-
 </div>
+
+<!-- ================= UPGRADE PLAN MODAL ================= -->
+
+<div class="modal fade" id="upgradeModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3>Select Your Plan</h3>
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="row text-center">
+
+                <!-- BASIC -->
+                <div class="col-md-4 mb-3">
+                    <div class="plan-card">
+                        <h4>Basic</h4>
+                        <h2 class="price">₹499<span>/month</span></h2>
+                        <ul>
+                            <li>✔ Billing</li>
+                            <li>✔ Stock Management</li>
+                            <li>✔ Basic Reports</li>
+                        </ul>
+                        <button class="btn btn-outline-success w-100 select-plan"
+                                data-plan="Basic"
+                                data-price="499">
+                            Choose Plan
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PRO -->
+                <div class="col-md-4 mb-3">
+                    <div class="plan-card popular">
+                        <div class="badge-popular">Most Popular</div>
+                        <h4>Pro</h4>
+                        <h2 class="price">₹999<span>/month</span></h2>
+                        <ul>
+                            <li>✔ Billing</li>
+                            <li>✔ GST Reports</li>
+                            <li>✔ Expiry Alerts</li>
+                        </ul>
+                        <button class="btn btn-success w-100 select-plan"
+                                data-plan="Pro"
+                                data-price="999">
+                            Current Plan
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ENTERPRISE -->
+                <div class="col-md-4 mb-3">
+                    <div class="plan-card">
+                        <h4>Enterprise</h4>
+                        <h2 class="price">₹1999<span>/month</span></h2>
+                        <ul>
+                            <li>✔ All Features</li>
+                            <li>✔ Multi Store</li>
+                            <li>✔ Priority Support</li>
+                        </ul>
+                        <button class="btn btn-outline-success w-100 select-plan"
+                                data-plan="Enterprise"
+                                data-price="1999">
+                            Upgrade
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- ===== Toast Notification ===== -->
+<div id="toast" class="custom-toast">
+    <span id="toastMessage">Saved Successfully!</span>
+</div>
+
+<script>
+    lucide.createIcons();
+</script>
+<script>
+    document.querySelectorAll(".select-plan").forEach(button => {
+
+        button.addEventListener("click", function () {
+
+            const plan = this.getAttribute("data-plan");
+            const price = this.getAttribute("data-price");
+
+            console.log("Selected Plan:", plan);
+            console.log("Price:", price);
+
+            // 🔥 Future Razorpay integration yaha hoga
+
+            alert("You selected " + plan + " Plan (₹" + price + ")");
+        });
+
+    });
+
+<script>
+    function enableEdit() {
+        document.getElementById("viewMode").style.display = "none";
+        document.getElementById("profileForm").style.display = "block";
+    }
+
+    function cancelEdit() {
+        document.getElementById("viewMode").style.display = "block";
+        document.getElementById("profileForm").style.display = "none";
+    }
+</script>

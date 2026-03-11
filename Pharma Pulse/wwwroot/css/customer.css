@@ -229,3 +229,143 @@
     font-family: 'Poppins',sans-serif;
     resize: none;
 }
+.rupee-icon {
+    font-size: 20px;
+    font-weight: 600;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Active menu bold */
+.menu-link.active .text {
+    font-weight: 700;
+}
+
+/* ===========================
+   PREVIEW MODAL OVERLAY
+=========================== */
+.preview-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* ===========================
+   PREVIEW BOX
+=========================== */
+.preview-box {
+    background: #ffffff;
+    width: 750px;
+    max-width: 95%;
+    border-radius: 18px;
+    padding: 30px 35px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    animation: fadeInScale 0.25s ease-in-out;
+}
+
+/* Smooth popup animation */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ===========================
+   HEADER
+=========================== */
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+    .preview-header h3 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0;
+    }
+
+    .preview-header div {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+/* ===========================
+   GRID LAYOUT
+=========================== */
+.preview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 40px;
+}
+
+    .preview-grid div {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .preview-grid label {
+        font-size: 13px;
+        font-weight: 500;
+        color: #6b7280;
+        margin-bottom: 4px;
+    }
+
+    .preview-grid span {
+        font-size: 16px;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    /* Full width row (Notes) */
+    .preview-grid .full {
+        grid-column: 1 / -1;
+    }
+
+/* ===========================
+   EDIT BUTTON IMPROVED
+=========================== */
+.btn-edit {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+}
+
+    .btn-edit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(245, 158, 11, 0.4);
+    }
+
+/* ===========================
+   CLOSE BUTTON
+=========================== */
+.close-btn {
+    font-size: 20px;
+    cursor: pointer;
+    color: #6b7280;
+    transition: 0.2s ease;
+}
+
+    .close-btn:hover {
+        color: #ef4444;
+        transform: rotate(90deg);
+    }

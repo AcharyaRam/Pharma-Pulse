@@ -12,140 +12,149 @@ namespace Pharma_Pulse.Pages
     public class DashboardModel : PageModel
     {
         private readonly MedicineService _service;
-        private readonly SalesService _salesService;
         private readonly AppDbContext _context;
 
-        public DashboardModel(
-            MedicineService service,
-            SalesService salesService,
-            AppDbContext context)
+
+        public DashboardModel(MedicineService service, AppDbContext context)
         {
             _service = service;
-            _salesService = salesService;
             _context = context;
         }
 
         // ============================
-        // ✅ Customer Form Binding
+        // Customer Form
         // ============================
-
         [BindProperty]
         public Customer Customer { get; set; } = new Customer();
-
 
         // ============================
         // Dashboard Stats
         // ============================
-
         public int TotalMedicineCount { get; set; }
         public int LowStockCount { get; set; }
         public int ExpiryCount { get; set; }
         public decimal SalesToday { get; set; }
-
         public int TotalBillsToday { get; set; }
-        public string TopSellerToday { get; set; }
+        public decimal ProfitToday { get; set; }
+
+        // ⭐ FINAL FEATURE
+        public List<(int Rank, string Name)> Top3MedicinesToday { get; set; } = new();
 
         // ============================
-        // Revenue Chart (15 Days)
+        // Revenue Chart (REAL DATA)
         // ============================
-
         public List<string> Days { get; set; } = new();
-        public List<int> Revenue { get; set; } = new();
-
+        public List<decimal> Revenue { get; set; } = new();
 
         public void OnGet()
         {
-            Customer = new Customer(); // ✅ Customer Form ke liye initialize
+            Customer = new Customer();
             LoadDashboard();
         }
 
         // ============================
-        // ✅ Save Customer Handler
+        // Save Customer
         // ============================
-
         public IActionResult OnPostSaveCustomer()
         {
             if (!ModelState.IsValid)
             {
-                LoadDashboard(); // Page reload properly
+                LoadDashboard();
                 return Page();
             }
 
-            // Optional Defaults
             Customer.Email ??= "";
             Customer.MedicalNotes ??= "N/A";
             Customer.GSTNumber ??= "";
 
-            // Save Customer in DB
             _context.Customers.Add(Customer);
             _context.SaveChanges();
 
             TempData["Success"] = "Customer Saved Successfully!";
-
             return RedirectToPage();
         }
 
-
         // ============================
-        // Dashboard Load Logic
+        // Dashboard Load
         // ============================
-
         private void LoadDashboard()
         {
             var allMedicines = _service.GetAllMedicines();
 
             TotalMedicineCount = allMedicines.Count;
             LowStockCount = allMedicines.Count(m => m.StockUnits <= m.LowStockLimit);
-
-            ExpiryCount = allMedicines.Count(m =>
-                m.ExpiryDate <= DateTime.Now.AddDays(30)
-            );
-
-            var sales = _salesService.GetAllSales() ?? new List<Sale>();
-
-            SalesToday = sales
-                .Where(s => s.SaleDate.Date == DateTime.Today)
-                .Sum(s => s.TotalAmount);
-
-            TotalBillsToday = sales
-                .Where(s => s.SaleDate.Date == DateTime.Today)
-                .Select(s => s.InvoiceNumber)
-                .Distinct()
-                .Count();
-
-            TopSellerToday = sales
-                .Where(s => s.SaleDate.Date == DateTime.Today)
-                .GroupBy(s => s.MedicineName)
-                .OrderByDescending(g => g.Sum(x => x.QuantitySold))
-                .Select(g => g.Key)
-                .FirstOrDefault() ?? "No Sales Yet";
-
-            TopSellerToday = sales
-    .Where(s => s.SaleDate.Date == DateTime.Today)
-    .GroupBy(s => s.MedicineName)
-    .OrderByDescending(g => g.Sum(x => x.QuantitySold))
-    .Select(g => g.Key)
-    .FirstOrDefault() ?? "No Sales Yet";
+            ExpiryCount = allMedicines.Count(m => m.ExpiryDate <= DateTime.Now.AddDays(30));
 
             // ============================
-            // 15 Days Revenue Chart Data
+            // TODAY SALES (Optimized)
             // ============================
+            var todayQuery = _context.Bills
+                .Where(b => b.BillDate.Date == DateTime.Today);
 
-            var random = new Random();
+            SalesToday = todayQuery.Sum(b => b.GrandTotal);
+            TotalBillsToday = todayQuery.Count();
 
+            // ============================
+            // TODAY PROFIT (Correct Way)
+            // ============================
+            ProfitToday = _context.BillDetails
+                .Where(d => d.Bill.BillDate.Date == DateTime.Today)
+                .Sum(d => (d.SellingPrice - d.PurchasePrice) * d.Quantity);
+
+            // ============================
+            // TOP 3 MEDICINES TODAY
+            // ============================
+            var topData = _context.BillDetails
+                .Where(d => d.Bill.BillDate.Date == DateTime.Today)
+                .GroupBy(d => d.MedicineName)
+                .Select(g => new
+                {
+                    Name = g.Key,
+                    Qty = g.Sum(x => x.Quantity)
+                })
+                .OrderByDescending(x => x.Qty)
+                .Take(3)
+                .ToList();
+
+            Top3MedicinesToday.Clear();
+
+            int rank = 1;
+            foreach (var item in topData)
+            {
+                Top3MedicinesToday.Add((rank, item.Name));
+                rank++;
+            }
+
+            if (Top3MedicinesToday.Count == 0)
+                Top3MedicinesToday.Add((1, "No Sales Today"));
+
+            // ============================
+            // LAST 15 DAYS REVENUE
+            // ============================
             Days.Clear();
             Revenue.Clear();
 
-            for (int i = 14; i >= 0; i--)
+            var startDate = DateTime.Today.AddDays(-14);
+
+            var revenueData = _context.Bills
+                .Where(b => b.BillDate.Date >= startDate &&
+                            b.BillDate.Date <= DateTime.Today)
+                .GroupBy(b => b.BillDate.Date)
+                .Select(g => new
+                {
+                    Date = g.Key,
+                    Total = g.Sum(x => x.GrandTotal)
+                })
+                .ToList();
+
+            for (int i = 0; i < 15; i++)
             {
-                var date = DateTime.Today.AddDays(-i);
-                Days.Add(date.ToString("dd MMM"));
+                var day = startDate.AddDays(i);
+                var found = revenueData.FirstOrDefault(x => x.Date == day);
 
-                // abhi dummy (later DB se replace karenge)
-                Revenue.Add(random.Next(800, 4500));
+                Days.Add(day.ToString("dd MMM"));
+                Revenue.Add(found != null ? found.Total : 0);
             }
-
-
         }
     }
 }

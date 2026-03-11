@@ -1,8 +1,13 @@
 ﻿using Pharma_Pulse.Data;
 using Pharma_Pulse.Services;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Infrastructure;   // ⭐ ADD
 
 var builder = WebApplication.CreateBuilder(args);
+
+// ⭐ QUESTPDF LICENSE (IMPORTANT)
+QuestPDF.Settings.License = LicenseType.Community;
+
 
 // ✅ Razor Pages
 builder.Services.AddRazorPages();
@@ -17,7 +22,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // ✅ Register Services
 builder.Services.AddScoped<MedicineService>();
 
-//register sales
+// register sales
 builder.Services.AddScoped<SalesService>();
 
 
