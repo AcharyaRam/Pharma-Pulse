@@ -15,7 +15,7 @@ namespace Pharma_Pulse.Pages
         private readonly AppDbContext _context;
 
 
-    public DashboardModel(MedicineService service, AppDbContext context)
+        public DashboardModel(MedicineService service, AppDbContext context)
         {
             _service = service;
             _context = context;
@@ -85,39 +85,25 @@ namespace Pharma_Pulse.Pages
             LowStockCount = allMedicines.Count(m => m.StockUnits <= m.LowStockLimit);
             ExpiryCount = allMedicines.Count(m => m.ExpiryDate <= DateTime.Now.AddDays(30));
 
-            // TODAY SALES
-            var todayBills = _context.Bills
-                .Where(b => b.BillDate.Date == DateTime.Today)
-                .ToList();
+            // ============================
+            // TODAY SALES (Optimized)
+            // ============================
+            var todayQuery = _context.Bills
+                .Where(b => b.BillDate.Date == DateTime.Today);
 
-            SalesToday = todayBills.Sum(b => b.GrandTotal);
-            TotalBillsToday = todayBills.Count;
+            SalesToday = todayQuery.Sum(b => b.GrandTotal);
+            TotalBillsToday = todayQuery.Count();
 
-            // TODAY PROFIT
-            var start = DateTime.Today;
-            var end = start.AddDays(1);
+            // ============================
+            // TODAY PROFIT (Correct Way)
+            // ============================
+            ProfitToday = _context.BillDetails
+                .Where(d => d.Bill.BillDate.Date == DateTime.Today)
+                .Sum(d => (d.SellingPrice - d.PurchasePrice) * d.Quantity);
 
-            var todayBillIds = _context.Bills
-                .Where(b => b.BillDate >= start && b.BillDate < end)
-                .Select(b => b.Id)
-                .ToList();
-
-            var todayDetails = _context.BillDetails
-                .Where(d => todayBillIds.Contains(d.BillId))
-                .ToList();
-
-            ProfitToday = 0;
-
-            foreach (var d in todayDetails)
-            {
-                var med = _context.Medicines
-                    .FirstOrDefault(m => m.MedicineName == d.MedicineName);
-
-                if (med != null)
-                    ProfitToday += (med.SellingPrice - med.BuyingPrice) * d.Quantity;
-            }
-
+            // ============================
             // TOP 3 MEDICINES TODAY
+            // ============================
             var topData = _context.BillDetails
                 .Where(d => d.Bill.BillDate.Date == DateTime.Today)
                 .GroupBy(d => d.MedicineName)
@@ -142,16 +128,17 @@ namespace Pharma_Pulse.Pages
             if (Top3MedicinesToday.Count == 0)
                 Top3MedicinesToday.Add((1, "No Sales Today"));
 
-            // ========================================
-            // ⭐ LAST 15 DAYS REVENUE (REAL DB DATA)
-            // ========================================
+            // ============================
+            // LAST 15 DAYS REVENUE
+            // ============================
             Days.Clear();
             Revenue.Clear();
 
             var startDate = DateTime.Today.AddDays(-14);
 
             var revenueData = _context.Bills
-                .Where(b => b.BillDate >= startDate && b.BillDate <= DateTime.Today)
+                .Where(b => b.BillDate.Date >= startDate &&
+                            b.BillDate.Date <= DateTime.Today)
                 .GroupBy(b => b.BillDate.Date)
                 .Select(g => new
                 {
@@ -170,6 +157,4 @@ namespace Pharma_Pulse.Pages
             }
         }
     }
-
-
 }

@@ -105,15 +105,14 @@
                 <h3>Expiry Alerts</h3>
                 <p>@Model.ExpiryCount</p>
             </div>
-
             <div class="card">
                 <h3>Sales Today</h3>
-                <p>₹@Model.SalesToday</p>
+                <p>₹ @Model.SalesToday.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</p>
             </div>
 
             <div class="card">
                 <h3>Profit Today</h3>
-                <p>@Model.ProfitToday</p>
+                <p>₹ @Model.ProfitToday.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</p>
             </div>
 
         </div>
