@@ -87,10 +87,10 @@
     <div class="main-content">
 
         <h1 class="page-title">Profile</h1>
-        @if (TempData["Success"] != null)
+        @if (TempData["ProfileSuccess"] != null)
         {
             <div class="alert alert-success" style="margin-bottom:15px;">
-                @TempData["Success"]
+                @TempData["ProfileSuccess"]
             </div>
         }
         <div class="profile-grid">
