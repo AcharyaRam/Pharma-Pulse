@@ -238,6 +238,8 @@ Pharmacist Signature
 
             foreach (var bill in AllBills)
             {
+                decimal discountMultiplier = 1 - (bill.DiscountPercent / 100);
+
                 foreach (var item in bill.BillDetails)
                 {
                     var med = _context.Medicines
@@ -245,10 +247,17 @@ Pharmacist Signature
 
                     if (med == null) continue;
 
-                    decimal profitPerUnit = med.SellingPrice - med.BuyingPrice;
-                    decimal itemProfit = profitPerUnit * item.Quantity;
+                    // ✅ Actual selling total after discount
+                    decimal actualSellingTotal = item.Total * discountMultiplier;
 
-                    TotalProfit += itemProfit;
+                    // ✅ Cost = buying price × actual units (strips × unitsPerStrip)
+                    int actualUnits = item.SaleMode == "Strip"
+                        ? item.Quantity * med.UnitsPerStrip
+                        : item.Quantity;
+
+                    decimal costTotal = med.BuyingPrice * actualUnits;
+
+                    TotalProfit += actualSellingTotal - costTotal;
                 }
             }
         }
