@@ -142,7 +142,8 @@ namespace Pharma_Pulse.Pages
                     ExpiryDate = x.ExpiryDate,
                     HsnSac = x.HsnSac,
                     Quantity = x.Quantity,
-                    Price = x.Price
+                    Price = x.Price,
+                    SaleMode = x.SaleMode
                 }).ToList();
         }
 
@@ -179,28 +180,34 @@ namespace Pharma_Pulse.Pages
             if (med == null || Quantity <= 0)
                 return RedirectToPage();
 
-            // ✅ FIX 1: Match by both MedicineName AND SaleMode (Strip/Unit are separate rows)
+            // Find existing item with same mode
             var existingItem = BillItems
                 .FirstOrDefault(x => x.MedicineName == med.MedicineName && x.SaleMode == SellMode);
 
-            int alreadyAddedQty = existingItem?.Quantity ?? 0;
+            // ✅ Calculate total units already in bill (Unit + Strip combined)
+            int unitsAlreadyInBill = BillItems
+                .Where(x => x.MedicineName == med.MedicineName)
+                .Sum(x => x.SaleMode == "Strip"
+                    ? x.Quantity * med.UnitsPerStrip
+                    : x.Quantity);
 
-            // ✅ Stock validation (strips consume UnitsPerStrip units each)
-            int unitsNeeded = SellMode == "Strip"
-                ? (alreadyAddedQty + Quantity) * med.UnitsPerStrip
-                : (alreadyAddedQty + Quantity);
+            // Units user is trying to add
+            int newUnits = SellMode == "Strip"
+                ? Quantity * med.UnitsPerStrip
+                : Quantity;
 
-            if (unitsNeeded > med.StockUnits)
+            int totalUnitsNeeded = unitsAlreadyInBill + newUnits;
+
+            // ✅ Stock validation
+            if (totalUnitsNeeded > med.StockUnits)
             {
-                int available = SellMode == "Strip"
-                    ? (med.StockUnits / med.UnitsPerStrip) - alreadyAddedQty
-                    : med.StockUnits - alreadyAddedQty;
+                int availableUnits = med.StockUnits - unitsAlreadyInBill;
 
-                TempData["StockError"] = $"Only {available} {SellMode}(s) left in stock!";
+                TempData["StockError"] = $"Only {availableUnits} units left in stock!";
                 return RedirectToPage();
             }
 
-            // ✅ FIX 2: Strip price = SellingPrice × UnitsPerStrip
+            // Price calculation
             decimal itemPrice = SellMode == "Strip"
                 ? med.SellingPrice * med.UnitsPerStrip
                 : med.SellingPrice;
@@ -220,7 +227,7 @@ namespace Pharma_Pulse.Pages
                     HsnSac = med.HsnSac,
                     Quantity = Quantity,
                     SaleMode = SellMode,
-                    Price = itemPrice  // ✅ Correct price based on mode
+                    Price = itemPrice
                 });
             }
 
