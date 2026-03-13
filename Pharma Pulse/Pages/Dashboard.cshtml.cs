@@ -37,6 +37,8 @@ namespace Pharma_Pulse.Pages
         public int TotalBillsToday { get; set; }
         public decimal ProfitToday { get; set; }
 
+       
+
         // ⭐ FINAL FEATURE
         public List<(int Rank, string Name)> Top3MedicinesToday { get; set; } = new();
 
@@ -94,12 +96,34 @@ namespace Pharma_Pulse.Pages
             SalesToday = todayQuery.Sum(b => b.GrandTotal);
             TotalBillsToday = todayQuery.Count();
 
+        
             // ============================
             // TODAY PROFIT (Correct Way)
             // ============================
-            ProfitToday = _context.BillDetails
+            ProfitToday = 0;
+
+            var todayBillDetails = _context.BillDetails
                 .Where(d => d.Bill.BillDate.Date == DateTime.Today)
-                .Sum(d => (d.SellingPrice - d.PurchasePrice) * d.Quantity);
+                .ToList();
+
+            foreach (var item in todayBillDetails)
+            {
+                var bill = _context.Bills.FirstOrDefault(b => b.Id == item.BillId);
+                var med = _context.Medicines.FirstOrDefault(m => m.MedicineName == item.MedicineName);
+
+                if (bill == null || med == null) continue;
+
+                decimal discountMultiplier = 1 - (bill.DiscountPercent / 100);
+                decimal actualSellingTotal = item.Total * discountMultiplier;
+
+                int actualUnits = item.SaleMode == "Strip"
+                    ? item.Quantity * med.UnitsPerStrip
+                    : item.Quantity;
+
+                decimal costTotal = med.BuyingPrice * actualUnits;
+
+                ProfitToday += actualSellingTotal - costTotal;
+            }
 
             // ============================
             // TOP 3 MEDICINES TODAY

@@ -125,13 +125,9 @@ namespace Pharma_Pulse.Pages
             decimal afterDiscount = SubTotal - discountAmount;
 
             if (afterDiscount > 0)
-            {
                 SelectedGstPercent = Math.Round((totalGst * 100) / afterDiscount);
-            }
             else
-            {
                 SelectedGstPercent = 0;
-            }
 
             SelectedCustomer = _context.Customers
                 .FirstOrDefault(c => c.MobileNumber == bill.MobileNumber);
@@ -142,6 +138,7 @@ namespace Pharma_Pulse.Pages
                 {
                     MedicineName = x.MedicineName,
                     BatchNo = x.BatchNo,
+                    MfgDate = x.MfgDate,
                     ExpiryDate = x.ExpiryDate,
                     HsnSac = x.HsnSac,
                     Quantity = x.Quantity,
@@ -182,18 +179,31 @@ namespace Pharma_Pulse.Pages
             if (med == null || Quantity <= 0)
                 return RedirectToPage();
 
-            // ✅ Already added quantity check
+            // ✅ FIX 1: Match by both MedicineName AND SaleMode (Strip/Unit are separate rows)
             var existingItem = BillItems
-                .FirstOrDefault(x => x.MedicineName == med.MedicineName);
+                .FirstOrDefault(x => x.MedicineName == med.MedicineName && x.SaleMode == SellMode);
 
             int alreadyAddedQty = existingItem?.Quantity ?? 0;
 
-            // ✅ FINAL STOCK VALIDATION
-            if ((alreadyAddedQty + Quantity) > med.StockUnits)
+            // ✅ Stock validation (strips consume UnitsPerStrip units each)
+            int unitsNeeded = SellMode == "Strip"
+                ? (alreadyAddedQty + Quantity) * med.UnitsPerStrip
+                : (alreadyAddedQty + Quantity);
+
+            if (unitsNeeded > med.StockUnits)
             {
-                TempData["StockError"] = $"Only {med.StockUnits - alreadyAddedQty} item(s) left in stock!";
+                int available = SellMode == "Strip"
+                    ? (med.StockUnits / med.UnitsPerStrip) - alreadyAddedQty
+                    : med.StockUnits - alreadyAddedQty;
+
+                TempData["StockError"] = $"Only {available} {SellMode}(s) left in stock!";
                 return RedirectToPage();
             }
+
+            // ✅ FIX 2: Strip price = SellingPrice × UnitsPerStrip
+            decimal itemPrice = SellMode == "Strip"
+                ? med.SellingPrice * med.UnitsPerStrip
+                : med.SellingPrice;
 
             if (existingItem != null)
             {
@@ -205,16 +215,16 @@ namespace Pharma_Pulse.Pages
                 {
                     MedicineName = med.MedicineName,
                     BatchNo = med.BatchNo,
+                    MfgDate = med.MfgDate,
                     ExpiryDate = med.ExpiryDate,
                     HsnSac = med.HsnSac,
                     Quantity = Quantity,
                     SaleMode = SellMode,
-                    Price = med.SellingPrice
+                    Price = itemPrice  // ✅ Correct price based on mode
                 });
             }
 
             HttpContext.Session.SetObject("BillItems", BillItems);
-
             return RedirectToPage();
         }
 
@@ -256,16 +266,11 @@ namespace Pharma_Pulse.Pages
                 InvoiceNumber = InvoiceNumber,
                 CustomerName = SelectedCustomer.FirstName,
                 MobileNumber = SelectedCustomer.MobileNumber,
-
-
                 SubTotal = SubTotal,
-                
                 DiscountPercent = DiscountPercent,
-
                 GstPercent = SelectedGstPercent,
-                CGST = GstAmount / 2,    // ✅ OPTIONAL (if using split)
-                SGST = GstAmount / 2,    // ✅ OPTIONAL
-
+                CGST = GstAmount / 2,
+                SGST = GstAmount / 2,
                 GrandTotal = GrandTotal,
                 PaymentMode = PaymentMode,
                 BillDate = DateTime.Now
@@ -281,20 +286,26 @@ namespace Pharma_Pulse.Pages
                     BillId = bill.Id,
                     MedicineName = item.MedicineName,
                     BatchNo = item.BatchNo,
+                    MfgDate = item.MfgDate,
                     ExpiryDate = item.ExpiryDate,
                     HsnSac = item.HsnSac,
                     Quantity = item.Quantity,
+                    SaleMode = item.SaleMode,
                     Price = item.Price,
                     Total = item.Total
                 });
 
-                // ✅ STOCK DEDUCT LOGIC
+                // ✅ FIX 3: Strip deducts UnitsPerStrip × Quantity from stock
                 var medicine = _context.Medicines
                     .FirstOrDefault(m => m.MedicineName == item.MedicineName);
 
                 if (medicine != null)
                 {
-                    medicine.StockUnits -= item.Quantity;
+                    int unitsToDeduct = item.SaleMode == "Strip"
+                        ? item.Quantity * medicine.UnitsPerStrip
+                        : item.Quantity;
+
+                    medicine.StockUnits -= unitsToDeduct;
                 }
             }
 

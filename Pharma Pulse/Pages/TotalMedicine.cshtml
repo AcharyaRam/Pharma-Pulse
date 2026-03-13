@@ -103,6 +103,7 @@
                         <th>Name</th>
                         <th>Category</th>
                         <th>Batch</th>
+                        <th>MFG</th>
                         <th>Expiry</th>
                         <th>Stock</th>
                         <th>Low Limit</th>
@@ -122,6 +123,7 @@
                             <td>@med.MedicineName</td>
                             <td>@med.Category</td>
                             <td>@med.BatchNo</td>
+                            <td>@med.MfgDate.ToString("MM/yyyy")</td>
                             <td>@med.ExpiryDate.ToString("MM/yyyy")</td>
                             <td class="stock-cell @(isLowStock && !isExpired ? "low-stock" : "")">
                                 @med.StockUnits

@@ -147,7 +147,8 @@
                     <form method="post"
                           asp-page-handler="SaveProfile"
                           id="profileForm"
-                          style="display:none;">
+                          style="display:none;"
+                          onsubmit="saveProfile(event)">
 
                         <input type="hidden" asp-for="Pharmacy.Id" />
 
@@ -416,23 +417,42 @@
 <script>
     lucide.createIcons();
 </script>
+
 <script>
     document.querySelectorAll(".select-plan").forEach(button => {
-
         button.addEventListener("click", function () {
-
             const plan = this.getAttribute("data-plan");
             const price = this.getAttribute("data-price");
-
-            console.log("Selected Plan:", plan);
-            console.log("Price:", price);
-
-            // 🔥 Future Razorpay integration yaha hoga
-
             alert("You selected " + plan + " Plan (₹" + price + ")");
         });
-
     });
+
+        function saveProfile(e) {
+        e.preventDefault();
+
+        const form = document.getElementById("profileForm");
+        const formData = new FormData(form);
+
+        fetch('?handler=SaveProfile', {
+            method: 'POST',
+            headers: {
+                'RequestVerificationToken':
+                    document.querySelector('input[name="__RequestVerificationToken"]').value
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Profile saved successfully!");
+                window.location.reload();
+            }
+        })
+        .catch(err => {
+            alert("Error saving profile!");
+        });
+    }
+</script>
 
 <script>
     function enableEdit() {

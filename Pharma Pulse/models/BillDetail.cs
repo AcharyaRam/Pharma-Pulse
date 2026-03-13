@@ -15,6 +15,10 @@
 
         public DateTime ExpiryDate { get; set; }
 
+        public string SaleMode { get; set; } = "Unit";
+
+        public DateTime MfgDate { get; set; }
+
 
         public string HsnSac { get; set; }
 
