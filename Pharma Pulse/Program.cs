@@ -1,32 +1,25 @@
 ﻿using Pharma_Pulse.Data;
 using Pharma_Pulse.Services;
 using Microsoft.EntityFrameworkCore;
-using QuestPDF.Infrastructure;   // ⭐ ADD
+using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ⭐ QUESTPDF LICENSE (IMPORTANT)
+// ✅ QuestPDF
 QuestPDF.Settings.License = LicenseType.Community;
 
-
-// ✅ Razor Pages
+// ✅ Services
 builder.Services.AddRazorPages();
 
-// ✅ Database Connection
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
 
-// ✅ Register Services
 builder.Services.AddScoped<MedicineService>();
-
-// register sales
 builder.Services.AddScoped<SalesService>();
 
-
-// ✅ Session
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
@@ -36,24 +29,12 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+
+// ✅ BUILD APP (IMPORTANT LINE)
 var app = builder.Build();
 
 
-// ✅ AUTO APPLY MIGRATIONS (Database + Tables Auto Create)
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();   // ✅ Tables automatically create
-}
-
-
-// Configure Middleware
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-    app.UseHsts();
-}
-
+// ✅ Middleware (NOW app is valid)
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -63,6 +44,22 @@ app.UseSession();
 
 app.UseAuthorization();
 
+
+// ✅ Redirect to Login
+app.MapGet("/", context =>
+{
+    context.Response.Redirect("/Login");
+    return Task.CompletedTask;
+});
+
 app.MapRazorPages();
+
+
+// ✅ Auto Migration
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 app.Run();
