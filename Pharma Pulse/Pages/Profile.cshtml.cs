@@ -6,7 +6,7 @@ using Pharma_Pulse.Models;
 
 namespace Pharma_Pulse.Pages
 {
-    public class ProfileModel : PageModel
+    public class ProfileModel : PharmacyPageModel
     {
         private readonly AppDbContext _context;
 
@@ -15,25 +15,26 @@ namespace Pharma_Pulse.Pages
             _context = context;
         }
 
-        // 🔥 Bind Pharmacy Model
         [BindProperty]
         public Pharmacy Pharmacy { get; set; }
 
         // ================= LOAD DATA =================
         public async Task OnGetAsync()
         {
-            Pharmacy = await _context.Pharmacies.FirstOrDefaultAsync();
+            // ✅ FIX: Filter by CurrentPharmacyId instead of grabbing first record
+            Pharmacy = await _context.Pharmacies
+                .FirstOrDefaultAsync(p => p.Id == CurrentPharmacyId);
 
             if (Pharmacy == null)
             {
                 Pharmacy = new Pharmacy
                 {
+                    Id = CurrentPharmacyId,
                     PlanName = "Pro Plan",
                     PlanPrice = 999,
                     PlanValidTill = DateTime.Now.AddMonths(1),
                     IsActive = true
                 };
-
                 _context.Pharmacies.Add(Pharmacy);
                 await _context.SaveChangesAsync();
             }
@@ -42,8 +43,9 @@ namespace Pharma_Pulse.Pages
         // ================= SAVE PROFILE INFO =================
         public async Task<IActionResult> OnPostSaveProfileAsync()
         {
+            // ✅ FIX: Filter by CurrentPharmacyId, not Pharmacy.Id from form
             var existing = await _context.Pharmacies
-                .FirstOrDefaultAsync(p => p.Id == Pharmacy.Id);
+                .FirstOrDefaultAsync(p => p.Id == CurrentPharmacyId);
 
             if (existing != null)
             {
@@ -54,7 +56,6 @@ namespace Pharma_Pulse.Pages
                 existing.GSTNumber = Pharmacy.GSTNumber;
                 existing.DrugLicenseNo = Pharmacy.DrugLicenseNo;
                 existing.Address = Pharmacy.Address;
-
                 await _context.SaveChangesAsync();
             }
 
@@ -65,7 +66,9 @@ namespace Pharma_Pulse.Pages
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> OnPostUpgradePlanAsync([FromBody] UpgradeRequest request)
         {
-            var pharmacy = await _context.Pharmacies.FirstOrDefaultAsync();
+            // ✅ FIX: Filter by CurrentPharmacyId
+            var pharmacy = await _context.Pharmacies
+                .FirstOrDefaultAsync(p => p.Id == CurrentPharmacyId);
 
             if (pharmacy != null)
             {
@@ -73,7 +76,6 @@ namespace Pharma_Pulse.Pages
                 pharmacy.PlanPrice = request.Price;
                 pharmacy.PlanValidTill = DateTime.Now.AddMonths(1);
                 pharmacy.IsActive = true;
-
                 await _context.SaveChangesAsync();
             }
 
@@ -81,7 +83,7 @@ namespace Pharma_Pulse.Pages
         }
     }
 
-    // 🔥 Request Model for Upgrade
+    // Request Model for Upgrade
     public class UpgradeRequest
     {
         public string Plan { get; set; }

@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Pharma_Pulse.Pages
 {
-    public class LowStockAlertsModel : PageModel
+    public class LowStockAlertsModel : PharmacyPageModel
     {
         private readonly MedicineService _service;
 
@@ -16,12 +16,10 @@ namespace Pharma_Pulse.Pages
             _service = service;
         }
 
-        public List<Medicine> LowStockMedicines { get; set; }
+        public List<Medicine> LowStockMedicines { get; set; } = new();
 
-        // ✅ Search Term
         public string SearchTerm { get; set; }
 
-        // ✅ Pagination
         public int CurrentPage { get; set; } = 1;
         public int TotalPages { get; set; }
 
@@ -30,35 +28,31 @@ namespace Pharma_Pulse.Pages
             SearchTerm = search;
             CurrentPage = pageNumber;
 
-            // ✅ Load Medicines
-            var allMedicines = _service.GetAllMedicines();
+            // ✅ Already filtered by PharmacyId
+            var allMedicines = _service.GetAllMedicines(CurrentPharmacyId);
 
-            // ✅ Step 1: Filter Low Stock Medicines
+            // ✅ Low stock filter
             var lowStockList = allMedicines
                 .Where(m => m.StockUnits <= m.LowStockLimit)
                 .ToList();
 
-            // ✅ Step 2: Search Filter (StartsWith Fix)
+            // ✅ Search filter
             if (!string.IsNullOrWhiteSpace(search))
             {
                 search = search.Trim().ToLower();
 
                 lowStockList = lowStockList
                     .Where(m =>
-                        (
-                            !string.IsNullOrEmpty(m.MedicineName) &&
-                            m.MedicineName.ToLower().StartsWith(search)
-                        )
+                        (!string.IsNullOrEmpty(m.MedicineName) &&
+                         m.MedicineName.ToLower().StartsWith(search))
                         ||
-                        (
-                            !string.IsNullOrEmpty(m.Category) &&
-                            m.Category.ToLower().StartsWith(search)
-                        )
+                        (!string.IsNullOrEmpty(m.Category) &&
+                         m.Category.ToLower().StartsWith(search))
                     )
                     .ToList();
             }
 
-            // ✅ Step 3: Pagination
+            // ✅ Pagination
             int pageSize = 8;
 
             TotalPages = (int)Math.Ceiling(lowStockList.Count / (double)pageSize);

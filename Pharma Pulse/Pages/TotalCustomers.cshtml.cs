@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Pharma_Pulse.Data;
 using Pharma_Pulse.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Pharma_Pulse.Pages
 {
-    public class TotalCustomersModel : PageModel
+    public class TotalCustomersModel : PharmacyPageModel
     {
         private readonly AppDbContext _context;
 
@@ -25,13 +25,16 @@ namespace Pharma_Pulse.Pages
         public Customer Customer { get; set; }
 
         // ============================
-        // ✅ GET: Load Customers + Search
+        // ✅ GET: Load Customers (FILTERED)
         // ============================
         public void OnGet(string search)
         {
             SearchTerm = search;
 
-            var query = _context.Customers.AsQueryable();
+            // 🔥 FILTER BY PHARMACY
+            var query = _context.Customers
+                .Where(c => c.PharmacyId == CurrentPharmacyId)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))
             {
@@ -62,14 +65,19 @@ namespace Pharma_Pulse.Pages
         {
             if (!ModelState.IsValid)
             {
-                Customers = _context.Customers.ToList();
+                Customers = _context.Customers
+                    .Where(c => c.PharmacyId == CurrentPharmacyId)
+                    .ToList();
+
                 return Page();
             }
 
             if (Customer.CustomerId > 0)
             {
+                // 🔥 UPDATE ONLY IF SAME PHARMACY
                 var existingCustomer = await _context.Customers
-                    .FirstOrDefaultAsync(c => c.CustomerId == Customer.CustomerId);
+                    .FirstOrDefaultAsync(c => c.CustomerId == Customer.CustomerId
+                                           && c.PharmacyId == CurrentPharmacyId);
 
                 if (existingCustomer != null)
                 {
@@ -93,8 +101,12 @@ namespace Pharma_Pulse.Pages
             }
             else
             {
+                // 🔥 MOST IMPORTANT LINE
+                Customer.PharmacyId = CurrentPharmacyId;
+
                 await _context.Customers.AddAsync(Customer);
                 await _context.SaveChangesAsync();
+
                 TempData["Success"] = "Customer Added Successfully!";
             }
 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Pharma_Pulse.Helpers;
 using Pharma_Pulse.Models;
 using Pharma_Pulse.Services;
@@ -10,7 +9,7 @@ using System.Linq;
 
 namespace Pharma_Pulse.Pages
 {
-    public class QuickBillingModel : PageModel
+    public class QuickBillingModel : PharmacyPageModel
     {
         private readonly MedicineService _service;
         private readonly AppDbContext _context;
@@ -70,13 +69,15 @@ namespace Pharma_Pulse.Pages
         {
             IsReviewMode = false;
 
-            AllMedicines = _service.GetAllMedicines()
+            AllMedicines = _service.GetAllMedicines(CurrentPharmacyId)
                 .Where(m => m.IsActive &&
                             m.StockUnits > 0 &&
                             m.ExpiryDate.Date >= DateTime.Today)
                 .ToList();
 
-            AllCustomers = _context.Customers.ToList();
+            AllCustomers = _context.Customers
+                .Where(c => c.PharmacyId == CurrentPharmacyId)
+                .ToList();
 
             BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems") ?? new();
 
@@ -103,7 +104,8 @@ namespace Pharma_Pulse.Pages
         {
             IsReviewMode = true;
 
-            var bill = _context.Bills.FirstOrDefault(x => x.Id == billId);
+            var bill = _context.Bills
+                .FirstOrDefault(x => x.Id == billId && x.PharmacyId == CurrentPharmacyId);
 
             if (bill == null)
             {
@@ -130,10 +132,11 @@ namespace Pharma_Pulse.Pages
                 SelectedGstPercent = 0;
 
             SelectedCustomer = _context.Customers
-                .FirstOrDefault(c => c.MobileNumber == bill.MobileNumber);
+                .FirstOrDefault(c => c.MobileNumber == bill.MobileNumber
+                                  && c.PharmacyId == CurrentPharmacyId);
 
             BillItems = _context.BillDetails
-                .Where(x => x.BillId == bill.Id)
+                .Where(x => x.BillId == bill.Id && x.PharmacyId == CurrentPharmacyId)
                 .Select(x => new BillItem
                 {
                     MedicineName = x.MedicineName,
@@ -145,6 +148,13 @@ namespace Pharma_Pulse.Pages
                     Price = x.Price,
                     SaleMode = x.SaleMode
                 }).ToList();
+        }
+
+        // ================= SELECT CUSTOMER =================
+        public IActionResult OnPostSelectCustomer()
+        {
+            HttpContext.Session.SetInt32("SelectedCustomerId", SelectedCustomerId);
+            return RedirectToPage();
         }
 
         // ================= CALCULATE TOTALS =================
@@ -159,13 +169,6 @@ namespace Pharma_Pulse.Pages
             GrandTotal = afterDiscount + GstAmount;
         }
 
-        // ================= SELECT CUSTOMER =================
-        public IActionResult OnPostSelectCustomer()
-        {
-            HttpContext.Session.SetInt32("SelectedCustomerId", SelectedCustomerId);
-            return RedirectToPage();
-        }
-
         // ================= ADD ITEM =================
         public IActionResult OnPostAddItem()
         {
@@ -174,48 +177,40 @@ namespace Pharma_Pulse.Pages
 
             LoadNewBill();
 
-            var med = _service.GetAllMedicines()
+            var med = _service.GetAllMedicines(CurrentPharmacyId)
                 .FirstOrDefault(m => m.MedicineName == SelectedMedicine);
 
             if (med == null || Quantity <= 0)
                 return RedirectToPage();
 
-            // Find existing item with same mode
             var existingItem = BillItems
                 .FirstOrDefault(x => x.MedicineName == med.MedicineName && x.SaleMode == SellMode);
 
-            // ✅ Calculate total units already in bill (Unit + Strip combined)
             int unitsAlreadyInBill = BillItems
                 .Where(x => x.MedicineName == med.MedicineName)
                 .Sum(x => x.SaleMode == "Strip"
                     ? x.Quantity * med.UnitsPerStrip
                     : x.Quantity);
 
-            // Units user is trying to add
             int newUnits = SellMode == "Strip"
                 ? Quantity * med.UnitsPerStrip
                 : Quantity;
 
             int totalUnitsNeeded = unitsAlreadyInBill + newUnits;
 
-            // ✅ Stock validation
             if (totalUnitsNeeded > med.StockUnits)
             {
                 int availableUnits = med.StockUnits - unitsAlreadyInBill;
-
                 TempData["StockError"] = $"Only {availableUnits} units left in stock!";
                 return RedirectToPage();
             }
 
-            // Price calculation
             decimal itemPrice = SellMode == "Strip"
                 ? med.SellingPrice * med.UnitsPerStrip
                 : med.SellingPrice;
 
             if (existingItem != null)
-            {
                 existingItem.Quantity += Quantity;
-            }
             else
             {
                 BillItems.Add(new BillItem
@@ -235,27 +230,13 @@ namespace Pharma_Pulse.Pages
             return RedirectToPage();
         }
 
-        // ================= DELETE ITEM =================
-        public IActionResult OnPostDeleteItem(string medicineName)
-        {
-            BillItems = HttpContext.Session.GetObject<List<BillItem>>("BillItems") ?? new();
-
-            var item = BillItems.FirstOrDefault(x => x.MedicineName == medicineName);
-            if (item != null)
-            {
-                BillItems.Remove(item);
-                HttpContext.Session.SetObject("BillItems", BillItems);
-            }
-
-            return RedirectToPage();
-        }
-
         // ================= UPDATE BILL =================
+        // ✅ FIX: Was missing — caused Update Bill to wipe all session data on submit
         public IActionResult OnPostUpdateBill()
         {
             HttpContext.Session.SetString("Discount", DiscountPercent.ToString());
             HttpContext.Session.SetString("GST", SelectedGstPercent.ToString());
-            HttpContext.Session.SetString("PaymentMode", PaymentMode);
+            HttpContext.Session.SetString("PaymentMode", PaymentMode ?? "Cash");
 
             return RedirectToPage();
         }
@@ -270,6 +251,7 @@ namespace Pharma_Pulse.Pages
 
             Bill bill = new Bill
             {
+                PharmacyId = CurrentPharmacyId,
                 InvoiceNumber = InvoiceNumber,
                 CustomerName = SelectedCustomer.FirstName,
                 MobileNumber = SelectedCustomer.MobileNumber,
@@ -290,6 +272,7 @@ namespace Pharma_Pulse.Pages
             {
                 _context.BillDetails.Add(new BillDetail
                 {
+                    PharmacyId = CurrentPharmacyId,
                     BillId = bill.Id,
                     MedicineName = item.MedicineName,
                     BatchNo = item.BatchNo,
@@ -302,9 +285,9 @@ namespace Pharma_Pulse.Pages
                     Total = item.Total
                 });
 
-                // ✅ FIX 3: Strip deducts UnitsPerStrip × Quantity from stock
                 var medicine = _context.Medicines
-                    .FirstOrDefault(m => m.MedicineName == item.MedicineName);
+                    .FirstOrDefault(m => m.MedicineName == item.MedicineName
+                                      && m.PharmacyId == CurrentPharmacyId);
 
                 if (medicine != null)
                 {
@@ -317,7 +300,14 @@ namespace Pharma_Pulse.Pages
             }
 
             _context.SaveChanges();
-            HttpContext.Session.Clear();
+
+            // ✅ FIX: Remove only billing keys — Session.Clear() was logging the user out
+            HttpContext.Session.Remove("BillItems");
+            HttpContext.Session.Remove("SelectedCustomerId");
+            HttpContext.Session.Remove("Discount");
+            HttpContext.Session.Remove("GST");
+            HttpContext.Session.Remove("PaymentMode");
+            HttpContext.Session.Remove("InvoiceNumber");
 
             return new JsonResult(new { success = true, message = "Sale Saved Successfully!" });
         }
@@ -325,7 +315,14 @@ namespace Pharma_Pulse.Pages
         // ================= CLEAR BILL =================
         public JsonResult OnPostClearBill()
         {
-            HttpContext.Session.Clear();
+            // ✅ FIX: Remove only billing keys — Session.Clear() was logging the user out
+            HttpContext.Session.Remove("BillItems");
+            HttpContext.Session.Remove("SelectedCustomerId");
+            HttpContext.Session.Remove("Discount");
+            HttpContext.Session.Remove("GST");
+            HttpContext.Session.Remove("PaymentMode");
+            HttpContext.Session.Remove("InvoiceNumber");
+
             return new JsonResult(new { success = true });
         }
     }

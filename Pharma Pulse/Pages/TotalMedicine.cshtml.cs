@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Pharma_Pulse.Models;
 using Pharma_Pulse.Services;
 using System;
@@ -8,7 +7,7 @@ using System.Linq;
 
 namespace Pharma_Pulse.Pages
 {
-    public class TotalMedicineModel : PageModel
+    public class TotalMedicineModel : PharmacyPageModel
     {
         private readonly MedicineService _service;
 
@@ -36,21 +35,18 @@ namespace Pharma_Pulse.Pages
         // ============================
         public void OnGet(int pageNumber = 1, string search = "")
         {
-            var allMedicines = _service.GetAllMedicines();
+            // ✅ FILTER BY PHARMACY
+            var allMedicines = _service.GetAllMedicines(CurrentPharmacyId);
 
-            // 🔥 AUTO STATUS LOGIC (Stock + Expiry)
+            // 🔥 AUTO STATUS LOGIC
             foreach (var med in allMedicines)
             {
                 if (med.ExpiryDate.Date < DateTime.Today)
-                {
                     med.IsActive = false;
-                }
                 else
-                {
                     med.IsActive = med.StockUnits > 0;
-                }
 
-                _service.UpdateMedicine(med);
+                _service.UpdateMedicine(med, CurrentPharmacyId);
             }
 
             SearchTerm = search;
@@ -83,28 +79,27 @@ namespace Pharma_Pulse.Pages
         {
             if (!ModelState.IsValid)
             {
-                Medicines = _service.GetAllMedicines();
+                Medicines = _service.GetAllMedicines(CurrentPharmacyId);
                 return Page();
             }
 
-            // 🔥 AUTO STATUS LOGIC
+            // 🔥 AUTO STATUS
             if (Medicine.ExpiryDate.Date < DateTime.Today)
-            {
                 Medicine.IsActive = false;
-            }
             else
-            {
                 Medicine.IsActive = Medicine.StockUnits > 0;
-            }
 
             if (Medicine.Id == 0)
             {
+                // ✅ SET PHARMACY ID
+                Medicine.PharmacyId = CurrentPharmacyId;
+
                 _service.AddMedicine(Medicine);
                 TempData["Success"] = "Medicine Added Successfully!";
             }
             else
             {
-                var existing = _service.GetAllMedicines()
+                var existing = _service.GetAllMedicines(CurrentPharmacyId)
                     .FirstOrDefault(m => m.Id == Medicine.Id);
 
                 if (existing != null)
@@ -127,7 +122,7 @@ namespace Pharma_Pulse.Pages
                     else
                         existing.IsActive = existing.StockUnits > 0;
 
-                    _service.UpdateMedicine(existing);
+                    _service.UpdateMedicine(existing, CurrentPharmacyId);
                 }
 
                 TempData["Success"] = "Medicine Updated Successfully!";
@@ -141,12 +136,12 @@ namespace Pharma_Pulse.Pages
         // ============================
         public IActionResult OnPostDeleteMedicine(int id)
         {
-            var medicine = _service.GetAllMedicines()
+            var medicine = _service.GetAllMedicines(CurrentPharmacyId)
                 .FirstOrDefault(m => m.Id == id);
 
             if (medicine != null)
             {
-                _service.DeleteMedicine(id);
+                _service.DeleteMedicine(id, CurrentPharmacyId);
                 TempData["Success"] = "Medicine Deleted Successfully!";
             }
             else

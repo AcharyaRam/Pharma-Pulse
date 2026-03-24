@@ -139,7 +139,7 @@
                             <td>@med.Category</td>
                             <td>@med.BatchNo</td>
 
-                            <td class="@(med.ExpiryDate <= DateTime.Now.AddMonths(2) ? "text-danger" : "")">
+                            <td class="@(med.ExpiryDate <= DateTime.Now.AddMonths(1) ? "text-danger" : "")">
                                 @med.ExpiryDate.ToString("MM/yyyy")
                             </td>
 

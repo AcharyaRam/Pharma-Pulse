@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Pharma_Pulse.Data;
 using Pharma_Pulse.Models;
@@ -12,7 +11,7 @@ using System.Text;
 
 namespace Pharma_Pulse.Pages
 {
-    public class SalesSummaryModel : PageModel
+    public class SalesSummaryModel : PharmacyPageModel
     {
         private readonly AppDbContext _context;
 
@@ -50,7 +49,7 @@ namespace Pharma_Pulse.Pages
         {
             var bill = _context.Bills
                 .Include(b => b.BillDetails)
-                .FirstOrDefault(x => x.Id == id);
+                .FirstOrDefault(x => x.Id == id && x.PharmacyId == CurrentPharmacyId);
 
             if (bill == null)
                 return Content("Invoice Not Found");
@@ -172,6 +171,7 @@ Pharmacist Signature
 
             return Content(sb.ToString(), "text/html");
         }
+
         // ================= PDF DOWNLOAD =================
         public IActionResult OnGetExportPdf()
         {
@@ -189,8 +189,10 @@ Pharmacist Signature
             if (string.IsNullOrEmpty(ReportType))
                 ReportType = "Daily";
 
+            // ✅ FILTER BY PHARMACY
             var billsQuery = _context.Bills
                 .Include(b => b.BillDetails)
+                .Where(b => b.PharmacyId == CurrentPharmacyId)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(SearchTerm))
@@ -243,14 +245,13 @@ Pharmacist Signature
                 foreach (var item in bill.BillDetails)
                 {
                     var med = _context.Medicines
-                        .FirstOrDefault(m => m.MedicineName == item.MedicineName);
+                        .FirstOrDefault(m => m.MedicineName == item.MedicineName
+                                          && m.PharmacyId == CurrentPharmacyId);
 
                     if (med == null) continue;
 
-                    // ✅ Actual selling total after discount
                     decimal actualSellingTotal = item.Total * discountMultiplier;
 
-                    // ✅ Cost = buying price × actual units (strips × unitsPerStrip)
                     int actualUnits = item.SaleMode == "Strip"
                         ? item.Quantity * med.UnitsPerStrip
                         : item.Quantity;

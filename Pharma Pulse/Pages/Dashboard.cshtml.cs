@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Pharma_Pulse.Models;
 using Pharma_Pulse.Services;
 using Pharma_Pulse.Data;
@@ -9,11 +8,10 @@ using System.Linq;
 
 namespace Pharma_Pulse.Pages
 {
-    public class DashboardModel : PageModel
+    public class DashboardModel : PharmacyPageModel
     {
         private readonly MedicineService _service;
         private readonly AppDbContext _context;
-
 
         public DashboardModel(MedicineService service, AppDbContext context)
         {
@@ -21,15 +19,9 @@ namespace Pharma_Pulse.Pages
             _context = context;
         }
 
-        // ============================
-        // Customer Form
-        // ============================
         [BindProperty]
         public Customer Customer { get; set; } = new Customer();
 
-        // ============================
-        // Dashboard Stats
-        // ============================
         public int TotalMedicineCount { get; set; }
         public int LowStockCount { get; set; }
         public int ExpiryCount { get; set; }
@@ -37,14 +29,8 @@ namespace Pharma_Pulse.Pages
         public int TotalBillsToday { get; set; }
         public decimal ProfitToday { get; set; }
 
-       
-
-        // ⭐ FINAL FEATURE
         public List<(int Rank, string Name)> Top3MedicinesToday { get; set; } = new();
 
-        // ============================
-        // Revenue Chart (REAL DATA)
-        // ============================
         public List<string> Days { get; set; } = new();
         public List<decimal> Revenue { get; set; } = new();
 
@@ -54,9 +40,7 @@ namespace Pharma_Pulse.Pages
             LoadDashboard();
         }
 
-        // ============================
-        // Save Customer
-        // ============================
+        // ================= SAVE CUSTOMER =================
         public IActionResult OnPostSaveCustomer()
         {
             if (!ModelState.IsValid)
@@ -69,6 +53,9 @@ namespace Pharma_Pulse.Pages
             Customer.MedicalNotes ??= "N/A";
             Customer.GSTNumber ??= "";
 
+            // 🔥 MOST IMPORTANT LINE
+            Customer.PharmacyId = CurrentPharmacyId;
+
             _context.Customers.Add(Customer);
             _context.SaveChanges();
 
@@ -76,40 +63,39 @@ namespace Pharma_Pulse.Pages
             return RedirectToPage();
         }
 
-        // ============================
-        // Dashboard Load
-        // ============================
+        // ================= DASHBOARD =================
         private void LoadDashboard()
         {
-            var allMedicines = _service.GetAllMedicines();
+            var allMedicines = _service.GetAllMedicines(CurrentPharmacyId);
 
             TotalMedicineCount = allMedicines.Count;
             LowStockCount = allMedicines.Count(m => m.StockUnits <= m.LowStockLimit);
             ExpiryCount = allMedicines.Count(m => m.ExpiryDate <= DateTime.Now.AddDays(30));
 
-            // ============================
-            // TODAY SALES (Optimized)
-            // ============================
+            // ✅ FILTER BILLS BY PHARMACY
             var todayQuery = _context.Bills
-                .Where(b => b.BillDate.Date == DateTime.Today);
+                .Where(b => b.PharmacyId == CurrentPharmacyId &&
+                            b.BillDate.Date == DateTime.Today);
 
             SalesToday = todayQuery.Sum(b => b.GrandTotal);
             TotalBillsToday = todayQuery.Count();
 
-        
-            // ============================
-            // TODAY PROFIT (Correct Way)
-            // ============================
+            // ================= PROFIT =================
             ProfitToday = 0;
 
             var todayBillDetails = _context.BillDetails
-                .Where(d => d.Bill.BillDate.Date == DateTime.Today)
+                .Where(d => d.PharmacyId == CurrentPharmacyId &&
+                            d.Bill.BillDate.Date == DateTime.Today)
                 .ToList();
 
             foreach (var item in todayBillDetails)
             {
-                var bill = _context.Bills.FirstOrDefault(b => b.Id == item.BillId);
-                var med = _context.Medicines.FirstOrDefault(m => m.MedicineName == item.MedicineName);
+                var bill = _context.Bills
+                    .FirstOrDefault(b => b.Id == item.BillId && b.PharmacyId == CurrentPharmacyId);
+
+                var med = _context.Medicines
+                    .FirstOrDefault(m => m.MedicineName == item.MedicineName &&
+                                         m.PharmacyId == CurrentPharmacyId);
 
                 if (bill == null || med == null) continue;
 
@@ -125,11 +111,10 @@ namespace Pharma_Pulse.Pages
                 ProfitToday += actualSellingTotal - costTotal;
             }
 
-            // ============================
-            // TOP 3 MEDICINES TODAY
-            // ============================
+            // ================= TOP 3 MEDICINES =================
             var topData = _context.BillDetails
-                .Where(d => d.Bill.BillDate.Date == DateTime.Today)
+                .Where(d => d.PharmacyId == CurrentPharmacyId &&
+                            d.Bill.BillDate.Date == DateTime.Today)
                 .GroupBy(d => d.MedicineName)
                 .Select(g => new
                 {
@@ -152,16 +137,15 @@ namespace Pharma_Pulse.Pages
             if (Top3MedicinesToday.Count == 0)
                 Top3MedicinesToday.Add((1, "No Sales Today"));
 
-            // ============================
-            // LAST 15 DAYS REVENUE
-            // ============================
+            // ================= REVENUE =================
             Days.Clear();
             Revenue.Clear();
 
             var startDate = DateTime.Today.AddDays(-14);
 
             var revenueData = _context.Bills
-                .Where(b => b.BillDate.Date >= startDate &&
+                .Where(b => b.PharmacyId == CurrentPharmacyId &&
+                            b.BillDate.Date >= startDate &&
                             b.BillDate.Date <= DateTime.Today)
                 .GroupBy(b => b.BillDate.Date)
                 .Select(g => new

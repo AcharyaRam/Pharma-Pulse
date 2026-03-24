@@ -6,7 +6,7 @@ namespace Pharma_Pulse.Pages
 {
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     [IgnoreAntiforgeryToken]
-    public class ErrorModel : PageModel
+    public class ErrorModel : PharmacyPageModel
     {
         public string? RequestId { get; set; }
 
