@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Pharma_Pulse.Models;
 using Pharma_Pulse.Services;
 
 namespace Pharma_Pulse.Pages
 {
-    public class AddMedicineModel : PageModel
+    public class AddMedicineModel : PharmacyPageModel
     {
         private readonly MedicineService _service;
 
@@ -17,7 +16,7 @@ namespace Pharma_Pulse.Pages
         [BindProperty]
         public Medicine Medicine { get; set; }
 
-        [TempData]   // ⭐ IMPORTANT
+        [TempData]
         public string SuccessMessage { get; set; }
 
         public void OnGet()
@@ -31,11 +30,14 @@ namespace Pharma_Pulse.Pages
                 Medicine.UnitsPerStrip = 1;
             }
 
+            // ✅ MULTI-TENANCY FIX
+            Medicine.PharmacyId = CurrentPharmacyId;
+
             _service.AddMedicine(Medicine);
 
             SuccessMessage = "Medicine Added Successfully ✔";
 
-            return RedirectToPage(); // PRG Pattern
+            return RedirectToPage();
         }
     }
 }

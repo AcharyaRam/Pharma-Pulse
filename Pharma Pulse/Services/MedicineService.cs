@@ -14,34 +14,47 @@ namespace Pharma_Pulse.Services
             _context = context;
         }
 
-        // ✅ Get All Medicines from Database
-        public List<Medicine> GetAllMedicines()
+        // ✅ Get Medicines for CURRENT pharmacy ONLY
+        public List<Medicine> GetAllMedicines(int pharmacyId)
         {
-            return _context.Medicines.ToList();
+            return _context.Medicines
+                .Where(m => m.PharmacyId == pharmacyId)
+                .ToList();
         }
 
-        // ✅ Add Medicine into Database
+        // ✅ Add Medicine (PharmacyId already set from PageModel)
         public void AddMedicine(Medicine medicine)
         {
             _context.Medicines.Add(medicine);
             _context.SaveChanges();
         }
 
-        // ✅ Find Medicine by Name
-        public Medicine? GetMedicineByName(string name)
+        // ✅ Find Medicine by Name (only for current pharmacy)
+        public Medicine? GetMedicineByName(string name, int pharmacyId)
         {
-            return _context.Medicines.FirstOrDefault(m => m.MedicineName == name);
+            return _context.Medicines
+                .FirstOrDefault(m => m.MedicineName == name && m.PharmacyId == pharmacyId);
         }
 
-        // ✅ Update Medicine Stock
-        public void UpdateMedicine(Medicine medicine)
+        // ✅ Update Medicine (only if belongs to current pharmacy)
+        public void UpdateMedicine(Medicine medicine, int pharmacyId)
         {
-            _context.Medicines.Update(medicine);
-            _context.SaveChanges();
+            var existing = _context.Medicines
+                .FirstOrDefault(m => m.Id == medicine.Id && m.PharmacyId == pharmacyId);
+
+            if (existing != null)
+            {
+                _context.Entry(existing).CurrentValues.SetValues(medicine);
+                _context.SaveChanges();
+            }
         }
-        public void DeleteMedicine(int id)
+
+        // ✅ Delete Medicine (only from current pharmacy)
+        public void DeleteMedicine(int id, int pharmacyId)
         {
-            var medicine = _context.Medicines.FirstOrDefault(m => m.Id == id);
+            var medicine = _context.Medicines
+                .FirstOrDefault(m => m.Id == id && m.PharmacyId == pharmacyId);
+
             if (medicine != null)
             {
                 _context.Medicines.Remove(medicine);

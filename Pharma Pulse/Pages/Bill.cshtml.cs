@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Pharma_Pulse.Helpers;
 using Pharma_Pulse.Models;
 using Pharma_Pulse.Data;
@@ -8,11 +7,10 @@ using System.Linq;
 
 namespace Pharma_Pulse.Pages
 {
-    public class BillModel : PageModel
+    public class BillModel : PharmacyPageModel
     {
         private readonly AppDbContext _context;
 
-        // ✅ Inject DbContext
         public BillModel(AppDbContext context)
         {
             _context = context;
@@ -54,13 +52,18 @@ namespace Pharma_Pulse.Pages
             CustomerName = HttpContext.Session.GetString("CustomerName");
             MobileNumber = HttpContext.Session.GetString("MobileNumber");
 
-            // ✅ Load GST Percent from Database
-            GstPercent = _context.GstSettings.FirstOrDefault()?.GstPercent ?? 5;
+            // ✅ FIX: GST per pharmacy
+            GstPercent = _context.GstSettings
+                .Where(g => g.PharmacyId == CurrentPharmacyId)
+                .Select(g => g.GstPercent)
+                .FirstOrDefault();
+
+            if (GstPercent == 0)
+                GstPercent = 5; // fallback
 
             // Calculate Totals
             SubTotal = BillItems.Sum(x => x.Total);
 
-            // Dynamic GST Calculation
             CGST = SubTotal * (GstPercent / 100) / 2;
             SGST = SubTotal * (GstPercent / 100) / 2;
 

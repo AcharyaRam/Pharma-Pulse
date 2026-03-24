@@ -83,14 +83,23 @@
     <!-- CUSTOMER -->
     <h3>Select Customer</h3>
     <form method="post" asp-page-handler="SelectCustomer">
-        <select asp-for="SelectedCustomerId" required>
+
+        <select asp-for="SelectedCustomerId" class="form-control" onchange="this.form.submit()">
+
             <option value="">-- Select Customer --</option>
-            @foreach (var cust in Model.AllCustomers)
+
+            @foreach (var customer in Model.AllCustomers)
             {
-                <option value="@cust.CustomerId">@cust.FirstName - @cust.MobileNumber</option>
+                <option value="@customer.CustomerId"
+                        selected="@(customer.CustomerId == Model.SelectedCustomerId ? "selected" : null)">
+
+                    @customer.FirstName @customer.Surname (@customer.MobileNumber)
+
+                </option>
             }
+
         </select>
-        <button type="submit">Select</button>
+
     </form>
 
     @if (Model.SelectedCustomer != null)
@@ -409,7 +418,7 @@
                     }
                 })
                 .then(() => {
-                    window.location.reload();
+                    window.location.href = '/SalesSummary';
                 });
 
             } else {

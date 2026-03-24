@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Pharma_Pulse.Pages
 {
-    public class ExpiryAlertsModel : PageModel
+    public class ExpiryAlertsModel : PharmacyPageModel
     {
         private readonly MedicineService _service;
 
@@ -31,11 +31,11 @@ namespace Pharma_Pulse.Pages
             CurrentPage = pageNumber;
 
             // ✅ Load All Medicines
-            var allMedicines = _service.GetAllMedicines();
+            var allMedicines = _service.GetAllMedicines(CurrentPharmacyId);
 
             // ✅ Step 1: Filter Only Expired + Expiring Soon (Next 2 Months)
             var expiryList = allMedicines
-                .Where(m => m.ExpiryDate <= DateTime.Now.AddMonths(2))
+                .Where(m => m.ExpiryDate <= DateTime.Now.AddMonths(1))
                 .ToList();
 
             // ✅ Step 2: Search Filter (StartsWith like LowStock)
