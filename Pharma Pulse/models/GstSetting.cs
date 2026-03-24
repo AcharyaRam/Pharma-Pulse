@@ -8,6 +8,8 @@ namespace Pharma_Pulse.Models
 
         public decimal GstPercent { get; set; }
 
+        public int PharmacyId { get; set; }
+
         public DateTime UpdatedOn { get; set; } = DateTime.Now;
     }
 }

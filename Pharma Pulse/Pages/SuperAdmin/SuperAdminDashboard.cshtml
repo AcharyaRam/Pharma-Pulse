@@ -1,0 +1,949 @@
+﻿@page
+@model Pharma_Pulse.Pages.SuperAdmin.SuperAdminDashboardModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Super Admin – Pharma Pulse</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --teal: #6b9e9e;
+            --teal-dark: #4e8282;
+            --teal-light: #e8f2f2;
+            --teal-hover: #5a8f8f;
+            --bg: #f4f7f7;
+            --surface: #ffffff;
+            --border: #dde8e8;
+            --text: #1a2e2e;
+            --muted: #7a9898;
+            --danger: #e05c5c;
+            --success: #4caf83;
+            --warning: #e09e3e;
+            --sidebar-w: 240px;
+            --radius: 12px;
+            --shadow: 0 2px 12px rgba(107,158,158,0.10);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            padding: 22px 20px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+            .sidebar-logo h2 {
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 17px;
+                font-weight: 700;
+                color: var(--teal-dark);
+            }
+
+            .sidebar-logo span {
+                font-size: 11px;
+                color: var(--muted);
+                margin-top: 2px;
+                display: block;
+            }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 14px 12px;
+            overflow-y: auto;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 12px 8px 5px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 9px 12px;
+            border-radius: 8px;
+            color: var(--muted);
+            font-size: 13.5px;
+            font-weight: 500;
+            text-decoration: none;
+            margin-bottom: 2px;
+            transition: all .18s;
+        }
+
+            .nav-item i {
+                width: 17px;
+                text-align: center;
+            }
+
+            .nav-item:hover {
+                background: var(--teal-light);
+                color: var(--teal-dark);
+            }
+
+            .nav-item.active {
+                background: var(--teal);
+                color: #fff;
+            }
+
+        .sidebar-foot {
+            padding: 14px 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .admin-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--teal-light);
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--teal);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .admin-card p {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .admin-card span {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* ── Main ── */
+        .main {
+            margin-left: var(--sidebar-w);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 13px 26px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+            .topbar h1 {
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 19px;
+                font-weight: 700;
+            }
+
+            .topbar p {
+                font-size: 12.5px;
+                color: var(--muted);
+                margin-top: 1px;
+            }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 7px 13px;
+            font-size: 13px;
+            color: var(--muted);
+            width: 210px;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all .18s;
+            position: relative;
+        }
+
+            .icon-btn:hover {
+                background: var(--teal-light);
+                color: var(--teal-dark);
+            }
+
+        .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            border-radius: 10px;
+            padding: 1px 5px;
+        }
+
+        .body {
+            padding: 26px;
+        }
+
+        /* ── Stat Cards ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+            transition: transform .18s;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-2px);
+            }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .s-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+        }
+
+            .s-icon.teal {
+                background: var(--teal-light);
+                color: var(--teal-dark);
+            }
+
+            .s-icon.green {
+                background: #e6f5ee;
+                color: var(--success);
+            }
+
+            .s-icon.red {
+                background: #fdeaea;
+                color: var(--danger);
+            }
+
+            .s-icon.orange {
+                background: #fef4e4;
+                color: var(--warning);
+            }
+
+        .s-pill {
+            font-size: 10.5px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+            .s-pill.up {
+                background: #e6f5ee;
+                color: var(--success);
+            }
+
+            .s-pill.down {
+                background: #fdeaea;
+                color: var(--danger);
+            }
+
+            .s-pill.neutral {
+                background: var(--teal-light);
+                color: var(--teal-dark);
+            }
+
+        .stat-val {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 27px;
+            font-weight: 700;
+        }
+
+        .stat-lbl {
+            font-size: 12.5px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        /* ── Revenue Row ── */
+        .rev-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+
+        .rev-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+            .rev-card h3 {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--muted);
+                margin-bottom: 8px;
+            }
+
+        .rev-big {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+            .rev-big em {
+                font-style: normal;
+                font-size: 13.5px;
+                color: var(--success);
+                font-family: 'DM Sans', sans-serif;
+                font-weight: 600;
+                margin-left: 8px;
+            }
+
+        .health-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: blink 2s infinite;
+        }
+
+        @@keyframes blink {
+            0%, 100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .35
+            }
+        }
+
+        .rev-sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 8px;
+        }
+
+        /* ── Panels ── */
+        .panels-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .panel-title {
+            font-size: 14.5px;
+            font-weight: 700;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 12px;
+        }
+
+        .p-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .p-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 11px;
+            border-radius: 8px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            text-decoration: none;
+            transition: all .18s;
+        }
+
+            .p-btn:hover {
+                background: var(--teal-light);
+                border-color: var(--teal);
+                color: var(--teal-dark);
+            }
+
+        .p-btn-l {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .p-btn-l i {
+                color: var(--teal);
+                font-size: 12.5px;
+                width: 15px;
+                text-align: center;
+            }
+
+        .p-arr {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+            .two-col .p-btn {
+                justify-content: center;
+            }
+
+        /* ── Table ── */
+        .tbl-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-top: 22px;
+        }
+
+        .tbl-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+            .tbl-head h3 {
+                font-size: 14.5px;
+                font-weight: 700;
+            }
+
+        .view-all {
+            font-size: 13px;
+            color: var(--teal-dark);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            padding: 0 12px 10px;
+        }
+
+        td {
+            padding: 11px 12px;
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+        }
+
+        tr:hover td {
+            background: var(--bg);
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 20px;
+        }
+
+            .chip::before {
+                content: '●';
+                font-size: 7px;
+            }
+
+            .chip.active {
+                background: #e6f5ee;
+                color: var(--success);
+            }
+
+            .chip.blocked {
+                background: #fdeaea;
+                color: var(--danger);
+            }
+
+            .chip.pending {
+                background: #fef4e4;
+                color: var(--warning);
+            }
+
+        @@media(max-width:1100px) {
+            .stats-grid {
+                grid-template-columns: repeat(2,1fr);
+            }
+
+            .panels-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @@media(max-width:700px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .panels-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .rev-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <h2>⚕ Pharma Pulse</h2>
+            <span>Super Admin Panel</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-label">Main</div>
+            <a class="nav-item active" href="/SuperAdmin/SuperAdminDashboard">
+                <i class="fa-solid fa-chart-pie"></i> Dashboard
+            </a>
+            <div class="nav-label">Pharmacy</div>
+            <a class="nav-item" href="/SuperAdmin/Pharmacies">
+                <i class="fa-solid fa-store"></i> Pharmacies
+            </a>
+            <a class="nav-item" href="/SuperAdmin/Workers">
+                <i class="fa-solid fa-user-tie"></i> Workers
+            </a>
+            <div class="nav-label">Finance</div>
+            <a class="nav-item" href="/SuperAdmin/SubscriptionPlans">
+                <i class="fa-solid fa-file-invoice-dollar"></i> Billing & Plans
+            </a>
+            <a class="nav-item" href="/SuperAdmin/PaymentHistory">
+                <i class="fa-solid fa-clock-rotate-left"></i> Payment History
+            </a>
+            <div class="nav-label">Medicine</div>
+            <a class="nav-item" href="/SuperAdmin/Medicines">
+                <i class="fa-solid fa-capsules"></i> Global Medicines
+            </a>
+            <div class="nav-label">System</div>
+            <a class="nav-item" href="/SuperAdmin/Notifications">
+                <i class="fa-solid fa-bell"></i> Notifications
+            </a>
+            <a class="nav-item" href="/SuperAdmin/Security">
+                <i class="fa-solid fa-shield-halved"></i> Security & Access
+            </a>
+            <a class="nav-item" href="/SuperAdmin/Settings">
+                <i class="fa-solid fa-gear"></i> Settings
+            </a>
+        </nav>
+        <div class="sidebar-foot">
+            <div class="admin-card">
+                <div class="avatar">SA</div>
+                <div>
+                    <p>Super Admin</p>
+                    <span>admin@pharmapulse.in</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- Topbar -->
+        <div class="topbar">
+            <div>
+                <h1>Super Admin Dashboard</h1>
+                <p>Managing all pharmacies across Pharma Pulse</p>
+            </div>
+            <div class="topbar-right">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i> Search pharmacies…
+                </div>
+                <div class="icon-btn">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="icon-btn">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="body">
+
+            <!-- Stat Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <div class="s-icon teal"><i class="fa-solid fa-store"></i></div>
+                        <span class="s-pill neutral">All</span>
+                    </div>
+                    <div class="stat-val">@Model.TotalPharmacies</div>
+                    <div class="stat-lbl">Total Pharmacies</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <div class="s-icon green"><i class="fa-solid fa-circle-check"></i></div>
+                        <span class="s-pill up">Active</span>
+                    </div>
+                    <div class="stat-val">@Model.ActivePharmacies</div>
+                    <div class="stat-lbl">Active Pharmacies</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <div class="s-icon red"><i class="fa-solid fa-ban"></i></div>
+                        <span class="s-pill down">Blocked</span>
+                    </div>
+                    <div class="stat-val">@Model.BlockedPharmacies</div>
+                    <div class="stat-lbl">Blocked Pharmacies</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <div class="s-icon orange"><i class="fa-solid fa-users"></i></div>
+                        <span class="s-pill neutral">Users</span>
+                    </div>
+                    <div class="stat-val">@Model.TotalUsers</div>
+                    <div class="stat-lbl">Total Users</div>
+                </div>
+            </div>
+
+            <!-- Revenue + Health -->
+            <div class="rev-grid">
+                <div class="rev-card">
+                    <h3><i class="fa-solid fa-chart-line" style="color:var(--teal);margin-right:6px"></i>Total Revenue</h3>
+                    <div class="rev-big">
+                        ₹@Model.TotalRevenue.ToString("N0")
+                        <em>↑ @Model.RevenueGrowth%</em>
+                    </div>
+                    <p class="rev-sub">Across all pharmacies this month</p>
+                </div>
+                <div class="rev-card">
+                    <h3><i class="fa-solid fa-heart-pulse" style="color:var(--success);margin-right:6px"></i>System Health</h3>
+                    <div class="health-row">
+                        <div class="dot"></div>
+                        <span style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700">Normal</span>
+                    </div>
+                    <p class="rev-sub">All services running · DB connected · No critical alerts</p>
+                </div>
+            </div>
+
+            <!-- Management Panels -->
+            <div class="panels-grid">
+
+                <!-- Pharmacy Management -->
+                <div class="panel">
+                    <div class="panel-title"><i class="fa-solid fa-store" style="color:var(--teal);margin-right:7px"></i>Pharmacy Management</div>
+                    <div class="p-actions">
+                        <div class="two-col">
+                            <a class="p-btn" href="/SuperAdmin/AddPharmacy">
+                                <div class="p-btn-l"><i class="fa-solid fa-plus"></i> Add Pharmacy</div>
+                            </a>
+                            <a class="p-btn" href="/SuperAdmin/Pharmacies">
+                                <div class="p-btn-l"><i class="fa-solid fa-list"></i> View All</div>
+                            </a>
+                            <a class="p-btn" href="/SuperAdmin/EditPharmacy">
+                                <div class="p-btn-l"><i class="fa-solid fa-pen"></i> Edit</div>
+                            </a>
+                            <a class="p-btn" href="/SuperAdmin/DeletePharmacy">
+                                <div class="p-btn-l"><i class="fa-solid fa-trash" style="color:var(--danger)"></i> Delete</div>
+                            </a>
+                        </div>
+                        <a class="p-btn" href="/SuperAdmin/TogglePharmacy">
+                            <div class="p-btn-l"><i class="fa-solid fa-toggle-on"></i> Activate / Deactivate</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                        <a class="p-btn" href="/SuperAdmin/SearchPharmacy">
+                            <div class="p-btn-l"><i class="fa-solid fa-magnifying-glass"></i> Search Pharmacy</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Billing & Subscription -->
+                <div class="panel">
+                    <div class="panel-title"><i class="fa-solid fa-file-invoice-dollar" style="color:var(--teal);margin-right:7px"></i>Billing & Subscription</div>
+                    <div class="p-actions">
+                        <a class="p-btn" href="/SuperAdmin/SubscriptionPlans">
+                            <div class="p-btn-l"><i class="fa-solid fa-layer-group"></i> Manage Plans</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                        <a class="p-btn" href="/SuperAdmin/AssignPlan">
+                            <div class="p-btn-l"><i class="fa-solid fa-link"></i> Assign Plan to Pharmacy</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                        <a class="p-btn" href="/SuperAdmin/PaymentHistory">
+                            <div class="p-btn-l"><i class="fa-solid fa-clock-rotate-left"></i> Payment History</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                        <a class="p-btn" href="/SuperAdmin/PendingPayments">
+                            <div class="p-btn-l"><i class="fa-solid fa-hourglass-half" style="color:var(--warning)"></i> Pending Payments</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                        <a class="p-btn" href="/SuperAdmin/GenerateInvoice">
+                            <div class="p-btn-l"><i class="fa-solid fa-receipt"></i> Generate Invoice</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="panel">
+                    <div class="panel-title"><i class="fa-solid fa-bell" style="color:var(--teal);margin-right:7px"></i>Notifications System</div>
+                    <div class="p-actions">
+                        <a class="p-btn" href="/SuperAdmin/NotifyAll">
+                            <div class="p-btn-l"><i class="fa-solid fa-bullhorn"></i> Send to All Pharmacies</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                        <a class="p-btn" href="/SuperAdmin/NotifyOne">
+                            <div class="p-btn-l"><i class="fa-solid fa-paper-plane"></i> Send to Specific Pharmacy</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                        <a class="p-btn" href="/SuperAdmin/Alerts">
+                            <div class="p-btn-l"><i class="fa-solid fa-triangle-exclamation" style="color:var(--warning)"></i> System / Stock Alerts</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                        <a class="p-btn" href="/SuperAdmin/GenerateInvoice">
+                            <div class="p-btn-l"><i class="fa-solid fa-receipt"></i> Generate Invoice</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Worker Management -->
+                <div class="panel">
+                    <div class="panel-title"><i class="fa-solid fa-user-tie" style="color:var(--teal);margin-right:7px"></i>Worker Management</div>
+                    <div class="p-actions">
+                        <div class="two-col">
+                            <a class="p-btn" href="/SuperAdmin/AddWorker">
+                                <div class="p-btn-l"><i class="fa-solid fa-user-plus"></i> Add Worker</div>
+                            </a>
+                            <a class="p-btn" href="/SuperAdmin/Workers">
+                                <div class="p-btn-l"><i class="fa-solid fa-users"></i> View Workers</div>
+                            </a>
+                        </div>
+                        <a class="p-btn" href="/SuperAdmin/AssignWorker">
+                            <div class="p-btn-l"><i class="fa-solid fa-arrows-left-right"></i> Assign to Pharmacy</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                        <a class="p-btn" href="/SuperAdmin/RemoveWorker">
+                            <div class="p-btn-l"><i class="fa-solid fa-user-minus" style="color:var(--danger)"></i> Remove Worker</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                        <a class="p-btn" href="/SuperAdmin/WorkerLogs">
+                            <div class="p-btn-l"><i class="fa-solid fa-file-lines"></i> Activity Logs</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Medicine & Inventory -->
+                <div class="panel">
+                    <div class="panel-title"><i class="fa-solid fa-capsules" style="color:var(--teal);margin-right:7px"></i>Medicine & Inventory</div>
+                    <div class="p-actions">
+                        <a class="p-btn" href="/SuperAdmin/Medicines">
+                            <div class="p-btn-l"><i class="fa-solid fa-list"></i> View All Medicines</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                        <a class="p-btn" href="/SuperAdmin/AddMedicine">
+                            <div class="p-btn-l"><i class="fa-solid fa-plus"></i> Add Global Medicine</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                        <a class="p-btn" href="/SuperAdmin/EditMedicine">
+                            <div class="p-btn-l"><i class="fa-solid fa-pen"></i> Edit Medicine</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                        <a class="p-btn" href="/SuperAdmin/RemoveMedicine">
+                            <div class="p-btn-l"><i class="fa-solid fa-trash" style="color:var(--danger)"></i> Remove Medicine</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Security & Access -->
+                <div class="panel">
+                    <div class="panel-title"><i class="fa-solid fa-shield-halved" style="color:var(--teal);margin-right:7px"></i>Security & Access</div>
+                    <div class="p-actions">
+                        <a class="p-btn" href="/SuperAdmin/Roles">
+                            <div class="p-btn-l"><i class="fa-solid fa-user-gear"></i> Manage Roles</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                        <a class="p-btn" href="/SuperAdmin/Permissions">
+                            <div class="p-btn-l"><i class="fa-solid fa-key"></i> Permissions Control</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                        <a class="p-btn" href="/SuperAdmin/LoginLogs">
+                            <div class="p-btn-l"><i class="fa-solid fa-right-to-bracket"></i> Login Activity Logs</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                        <a class="p-btn" href="/SuperAdmin/BlockUsers">
+                            <div class="p-btn-l"><i class="fa-solid fa-user-slash" style="color:var(--danger)"></i> Block Suspicious Users</div>
+                            <i class="fa-solid fa-chevron-right p-arr"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Recent Pharmacies Table -->
+            <div class="tbl-section">
+                <div class="tbl-head">
+                    <h3><i class="fa-solid fa-store" style="color:var(--teal);margin-right:8px"></i>Recent Pharmacies</h3>
+                    <a class="view-all" href="/SuperAdmin/Pharmacies">View All →</a>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Pharmacy Name</th>
+                            <th>Owner</th>
+                            <th>City</th>
+                            <th>Plan</th>
+                            <th>Status</th>
+                            <th>Joined</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.RecentPharmacies.Count > 0)
+                        {
+                            int i = 1;
+                            foreach (var p in Model.RecentPharmacies)
+                            {
+                                <tr>
+                                    <td>@i</td>
+                                    <td><strong>@p.Name</strong></td>
+                                    <td>@p.OwnerName</td>
+                                    <td>@p.City</td>
+                                    <td>@p.Plan</td>
+                                    <td><span class="chip @p.StatusClass">@p.Status</span></td>
+                                    <td>@p.JoinedDate.ToString("dd MMM yyyy")</td>
+                                    <td><a href="/SuperAdmin/Pharmacies/@p.Id" style="color:var(--teal-dark);font-weight:600;text-decoration:none;font-size:13px">View →</a></td>
+                                </tr>
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" style="text-align:center;padding:30px;color:var(--muted)">
+                                    No pharmacies yet. <a href="/SuperAdmin/AddPharmacy" style="color:var(--teal-dark);font-weight:600">Add your first →</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div><!-- /body -->
+    </div><!-- /main -->
+</body>
+</html>

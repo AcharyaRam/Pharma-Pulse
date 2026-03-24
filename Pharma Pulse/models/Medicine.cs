@@ -7,6 +7,8 @@ namespace Pharma_Pulse.Models
         // ✅ Auto Primary Key (Yehi SR No ka kaam karega)
         public int Id { get; set; }
 
+        public int PharmacyId { get; set; }
+
         // ✅ Basic Info
         public string MedicineName { get; set; }
         public string Category { get; set; }

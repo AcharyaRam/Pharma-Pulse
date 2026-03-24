@@ -1,0 +1,344 @@
+﻿@page
+@model Pharma_Pulse.Pages.SuperAdmin.SuperAdminLoginModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Super Admin Login – Pharma Pulse</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --teal: #6b9e9e;
+            --teal-dark: #4e8282;
+            --teal-light: #e8f2f2;
+            --bg: #f4f7f7;
+            --surface: #ffffff;
+            --border: #dde8e8;
+            --text: #1a2e2e;
+            --muted: #7a9898;
+            --danger: #e05c5c;
+            --radius: 12px;
+            --shadow: 0 2px 12px rgba(107,158,158,0.10);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-wrap {
+            display: flex;
+            width: 820px;
+            background: var(--surface);
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 40px rgba(107,158,158,0.13);
+            overflow: hidden;
+        }
+
+        .brand-panel {
+            width: 320px;
+            background: linear-gradient(160deg, var(--teal-dark) 0%, #3a6b6b 100%);
+            padding: 48px 36px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #fff;
+        }
+
+        .brand-logo h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 21px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .brand-logo span {
+            font-size: 12px;
+            opacity: .7;
+            background: rgba(255,255,255,.15);
+            padding: 3px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .brand-features {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .feat-row {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .feat-icon {
+            width: 34px;
+            height: 34px;
+            background: rgba(255,255,255,.15);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        .feat-row p {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .feat-row small {
+            font-size: 11px;
+            opacity: .6;
+            display: block;
+        }
+
+        .brand-foot {
+            font-size: 11px;
+            opacity: .5;
+        }
+
+        .form-panel {
+            flex: 1;
+            padding: 48px 42px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+            .form-panel h3 {
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 22px;
+                font-weight: 700;
+                margin-bottom: 6px;
+            }
+
+            .form-panel p.sub {
+                font-size: 13px;
+                color: var(--muted);
+                margin-bottom: 28px;
+            }
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+            .field label {
+                font-size: 12.5px;
+                font-weight: 600;
+                color: var(--text);
+                display: block;
+                margin-bottom: 6px;
+            }
+
+        .input-wrap {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: var(--bg);
+            overflow: hidden;
+            transition: border-color .18s;
+        }
+
+            .input-wrap:focus-within {
+                border-color: var(--teal);
+                background: #fff;
+            }
+
+            .input-wrap i {
+                padding: 0 13px;
+                color: var(--muted);
+                font-size: 13px;
+            }
+
+            .input-wrap input {
+                flex: 1;
+                border: none;
+                background: transparent;
+                padding: 11px 12px 11px 0;
+                font-size: 13.5px;
+                font-family: 'DM Sans', sans-serif;
+                color: var(--text);
+                outline: none;
+            }
+
+        .toggle-eye {
+            padding: 0 13px;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 13px;
+            background: none;
+            border: none;
+        }
+
+            .toggle-eye:hover {
+                color: var(--teal-dark);
+            }
+
+        .err-msg {
+            background: #fdeaea;
+            border: 1px solid #f5c6c6;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 12.5px;
+            color: var(--danger);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: var(--teal-dark);
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .18s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+            .btn-login:hover {
+                background: #3a6b6b;
+            }
+
+        .form-foot {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        @@media(max-width:640px) {
+            .login-wrap {
+                flex-direction: column;
+                width: 95%;
+            }
+
+            .brand-panel {
+                width: 100%;
+                padding: 28px 24px;
+            }
+
+            .form-panel {
+                padding: 28px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-wrap">
+
+        <!-- Left brand panel -->
+        <div class="brand-panel">
+            <div class="brand-logo">
+                <h2>⚕ Pharma Pulse</h2>
+                <span>Super Admin</span>
+            </div>
+            <div class="brand-features">
+                <div class="feat-row">
+                    <div class="feat-icon"><i class="fa-solid fa-store"></i></div>
+                    <div><p>Manage Pharmacies</p><small>Add, edit, activate or block</small></div>
+                </div>
+                <div class="feat-row">
+                    <div class="feat-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                    <div><p>Revenue Overview</p><small>Track all billing & plans</small></div>
+                </div>
+                <div class="feat-row">
+                    <div class="feat-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div><p>Security & Access</p><small>Control roles & permissions</small></div>
+                </div>
+                <div class="feat-row">
+                    <div class="feat-icon"><i class="fa-solid fa-capsules"></i></div>
+                    <div><p>Global Medicines</p><small>Manage master medicine list</small></div>
+                </div>
+            </div>
+            <div class="brand-foot">© 2025 Pharma Pulse · Super Admin Portal</div>
+        </div>
+
+        <!-- Right form panel -->
+        <div class="form-panel">
+            <h3>Welcome back</h3>
+            <p class="sub">Sign in to your Super Admin account</p>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="err-msg">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    Invalid username or password. Please try again.
+                </div>
+            }
+
+            <form method="post">
+                <div class="field">
+                    <label>Username</label>
+                    <div class="input-wrap">
+                        <i class="fa-solid fa-user"></i>
+                        <input asp-for="Username" placeholder="Enter admin username" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Password</label>
+                    <div class="input-wrap">
+                        <i class="fa-solid fa-lock"></i>
+                        <input asp-for="Password" type="password" id="pwdInput" placeholder="Enter password" />
+                        <button type="button" class="toggle-eye" onclick="togglePwd()">
+                            <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fa-solid fa-right-to-bracket"></i> Sign In
+                </button>
+            </form>
+
+            <div class="form-foot">
+                Pharmacy login? <a href="/Login" style="color:var(--teal-dark);font-weight:600">Go to Pharmacy Login →</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePwd() {
+            var inp = document.getElementById('pwdInput');
+            var icon = document.getElementById('eyeIcon');
+            if (inp.type === 'password') {
+                inp.type = 'text';
+                icon.className = 'fa-solid fa-eye-slash';
+            } else {
+                inp.type = 'password';
+                icon.className = 'fa-solid fa-eye';
+            }
+        }
+    </script>
+</body>
+</html>

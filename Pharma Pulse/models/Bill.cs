@@ -7,6 +7,8 @@ namespace Pharma_Pulse.Models
     {
         public int Id { get; set; }
 
+        public int PharmacyId { get; set; }
+
         public string InvoiceNumber { get; set; }
 
         public string CustomerName { get; set; }
