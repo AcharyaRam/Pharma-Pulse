@@ -7,6 +7,8 @@
         // ✅ NEW Fields (Invoice Important)
         public string BatchNo { get; set; }
 
+        public int PharmacyId { get; set; }
+
         public DateTime ExpiryDate { get; set; }
 
         public DateTime MfgDate { get; set; }

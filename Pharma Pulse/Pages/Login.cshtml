@@ -1,12 +1,10 @@
-﻿
-@page
-@model LoginPage.Pages.LoginModel
+﻿@page
+@model Pharma_Pulse.Pages.LoginModel
+
 @{
-    ViewData["Title"] = "Login";
     ViewData["Title"] = "Login";
     ViewData["HideFooter"] = true;
 }
-
 
 <link rel="stylesheet" href="~/css/login.css" />
 
@@ -20,25 +18,24 @@
                 <img src="~/images/pulse.png" alt="Pharma Pulse Logo">
             </div>
 
-            <form onsubmit="demoLogin(event)" novalidate>
+            <form method="post">
 
                 <!-- Username -->
                 <div class="input-group">
                     <label>Username</label>
-                    <input id="username" placeholder="Enter your Username" />
-
-                    <!-- Error Message -->
-                    <span id="userError" class="error-text"></span>
+                    <input asp-for="Username" placeholder="Enter your Username" />
+                    <span asp-validation-for="Username" class="error-text"></span>
                 </div>
 
                 <!-- Password -->
                 <div class="input-group">
                     <label>Password</label>
-                    <input id="password" type="password" placeholder="Enter your password" />
-
-                    <!-- Error Message -->
-                    <span id="passError" class="error-text"></span>
+                    <input asp-for="Password" type="password" placeholder="Enter your password" />
+                    <span asp-validation-for="Password" class="error-text"></span>
                 </div>
+
+                <!-- Global Error -->
+                <div asp-validation-summary="All" class="error-text"></div>
 
                 <!-- Button -->
                 <button type="submit" class="btn-login">
@@ -49,16 +46,17 @@
                     Forgot Password?
                 </a>
 
-                <div class="login-extra">
+                <a asp-page="/SuperAdmin/SuperAdminLogin" class="forgot-link">
+                    Super Admin?
+                </a>
 
+                <div class="login-extra">
                     <p class="terms-text">
                         By Signing In, I agree to
                         <a asp-page="Terms">Terms of Service</a> and
                         <a asp-page="/Privacy">Privacy Policy</a>
-
                     </p>
                 </div>
-
 
             </form>
 
@@ -67,45 +65,9 @@
         <!-- RIGHT IMAGE -->
         <div class="login-right"></div>
 
-
     </div>
 </div>
 
-<script>
-    function demoLogin(event) {
-        event.preventDefault();
-
-        // Values
-        let username = document.getElementById("username").value;
-        let password = document.getElementById("password").value;
-
-        // Error spans
-        let userError = document.getElementById("userError");
-        let passError = document.getElementById("passError");
-
-        // Clear old errors
-        userError.innerText = "";
-        passError.innerText = "";
-
-        // Validation
-        if (username === "" ) {
-            userError.innerText = "Username is required!";
-            return;
-        }
-
-        if (password === "") {
-            passError.innerText = "Password is required!";
-            return;
-        }
-
-        // Wrong Credentials
-        if (username !== "user" || password !== "user") {
-            userError.innerText = "Invalid Username!";
-            passError.innerText = "Invalid Password!";
-            return;
-        }
-
-        // Success Redirect
-        window.location.href = "/Dashboard";
-    }
-</script>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

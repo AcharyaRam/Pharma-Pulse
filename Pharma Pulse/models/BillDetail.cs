@@ -4,6 +4,8 @@
     {
         public int Id { get; set; }
 
+        public int PharmacyId { get; set; }
+
         // Foreign Key
         public int BillId { get; set; }
         public Bill Bill { get; set; }

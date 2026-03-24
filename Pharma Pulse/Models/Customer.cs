@@ -6,6 +6,8 @@ namespace Pharma_Pulse.Models
     {
         public int CustomerId { get; set; }
 
+        public int PharmacyId { get; set; }
+
         // ✅ Required Fields
         public string FirstName { get; set; } = "";
         public string Surname { get; set; } = "";

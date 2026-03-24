@@ -1,30 +1,28 @@
 ﻿using Pharma_Pulse.Data;
 using Pharma_Pulse.Models;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Pharma_Pulse.Services
+public class SalesService
 {
-    public class SalesService
+    private readonly AppDbContext _context;
+
+    public SalesService(AppDbContext context)
     {
-        private readonly AppDbContext _context;
+        _context = context;
+    }
 
-        public SalesService(AppDbContext context)
-        {
-            _context = context;
-        }
+    // ✅ Add Sale
+    public void AddSale(Sale sale, int pharmacyId)
+    {
+        sale.PharmacyId = pharmacyId;   // VERY IMPORTANT
+        _context.Sales.Add(sale);
+        _context.SaveChanges();
+    }
 
-        // ✅ Add Sale Record into Database
-        public void AddSale(Sale sale)
-        {
-            _context.Sales.Add(sale);
-            _context.SaveChanges();
-        }
-
-        // ✅ Get All Sales from Database
-        public List<Sale> GetAllSales()
-        {
-            return _context.Sales.ToList();
-        }
+    // ✅ Get Sales for current pharmacy ONLY
+    public List<Sale> GetAllSales(int pharmacyId)
+    {
+        return _context.Sales
+            .Where(s => s.PharmacyId == pharmacyId)
+            .ToList();
     }
 }

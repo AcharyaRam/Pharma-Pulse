@@ -22,6 +22,12 @@ namespace Pharma_Pulse.Models
 
         public string? Address { get; set; }
 
+        public string PlainPassword { get; set; } = string.Empty; // Stored for SuperAdmin view
+
+        // NEW — LOGIN SYSTEM
+        public string Username { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
+
         // Subscription & Settings
         public string? PrintFormat { get; set; }
 
@@ -32,5 +38,8 @@ namespace Pharma_Pulse.Models
         public DateTime PlanValidTill { get; set; } = DateTime.Now;
 
         public bool IsActive { get; set; } = true;
+
+        // NEW — TRACKING
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

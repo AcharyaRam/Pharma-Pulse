@@ -1,0 +1,884 @@
+﻿@page
+@model Pharma_Pulse.Pages.SuperAdmin.PharmaciesModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pharmacies – Pharma Pulse</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --teal: #6b9e9e;
+            --teal-dark: #4e8282;
+            --teal-light: #e8f2f2;
+            --bg: #f4f7f7;
+            --surface: #ffffff;
+            --border: #dde8e8;
+            --text: #1a2e2e;
+            --muted: #7a9898;
+            --danger: #e05c5c;
+            --success: #4caf83;
+            --warning: #e09e3e;
+            --sidebar-w: 240px;
+            --radius: 12px;
+            --shadow: 0 2px 12px rgba(107,158,158,0.10);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans',sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            padding: 22px 20px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+            .sidebar-logo h2 {
+                font-family: 'Space Grotesk',sans-serif;
+                font-size: 17px;
+                font-weight: 700;
+                color: var(--teal-dark);
+            }
+
+            .sidebar-logo span {
+                font-size: 11px;
+                color: var(--muted);
+                margin-top: 2px;
+                display: block;
+            }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 14px 12px;
+            overflow-y: auto;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 12px 8px 5px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 9px 12px;
+            border-radius: 8px;
+            color: var(--muted);
+            font-size: 13.5px;
+            font-weight: 500;
+            text-decoration: none;
+            margin-bottom: 2px;
+            transition: all .18s;
+        }
+
+            .nav-item i {
+                width: 17px;
+                text-align: center;
+            }
+
+            .nav-item:hover {
+                background: var(--teal-light);
+                color: var(--teal-dark);
+            }
+
+            .nav-item.active {
+                background: var(--teal);
+                color: #fff;
+            }
+
+        .sidebar-foot {
+            padding: 14px 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .admin-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--teal-light);
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--teal);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .admin-card p {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .admin-card span {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* ── Main ── */
+        .main {
+            margin-left: var(--sidebar-w);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 13px 26px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+            .topbar h1 {
+                font-family: 'Space Grotesk',sans-serif;
+                font-size: 19px;
+                font-weight: 700;
+            }
+
+            .topbar p {
+                font-size: 12.5px;
+                color: var(--muted);
+                margin-top: 1px;
+            }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 7px 13px;
+            width: 220px;
+        }
+
+            .search-box input {
+                border: none;
+                background: transparent;
+                outline: none;
+                font-family: 'DM Sans',sans-serif;
+                font-size: 13px;
+                color: var(--text);
+                width: 100%;
+            }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all .18s;
+            text-decoration: none;
+        }
+
+            .icon-btn:hover {
+                background: var(--teal-light);
+                color: var(--teal-dark);
+            }
+
+        /* ── Body ── */
+        .body {
+            padding: 26px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            color: var(--muted);
+            margin-bottom: 18px;
+        }
+
+            .breadcrumb a {
+                color: var(--teal-dark);
+                text-decoration: none;
+                font-weight: 500;
+            }
+
+                .breadcrumb a:hover {
+                    text-decoration: underline;
+                }
+
+            .breadcrumb i {
+                font-size: 10px;
+            }
+
+        /* ── Alerts ── */
+        .success-banner {
+            background: #e6f5ee;
+            border: 1px solid #b2dfc7;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 13px;
+            color: var(--success);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .err-banner {
+            background: #fdeaea;
+            border: 1px solid #f5c6c6;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 13px;
+            color: var(--danger);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ── Table Section ── */
+        .tbl-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .tbl-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+            .tbl-head h3 {
+                font-size: 14.5px;
+                font-weight: 700;
+            }
+
+        .tbl-head-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-select {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 7px 12px;
+            font-size: 13px;
+            font-family: 'DM Sans',sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            cursor: pointer;
+            outline: none;
+        }
+
+        .btn-add {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 16px;
+            background: var(--teal-dark);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-family: 'DM Sans',sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background .18s;
+        }
+
+            .btn-add:hover {
+                background: #3a6b6b;
+            }
+
+        /* ── Table ── */
+        .tbl-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        th {
+            text-align: left;
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            padding: 10px 14px;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 11px 14px;
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: #fafcfc;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 20px;
+        }
+
+            .chip::before {
+                content: '●';
+                font-size: 7px;
+            }
+
+            .chip.active {
+                background: #e6f5ee;
+                color: var(--success);
+            }
+
+            .chip.blocked {
+                background: #fdeaea;
+                color: var(--danger);
+            }
+
+        .plan-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 20px;
+            background: var(--teal-light);
+            color: var(--teal-dark);
+        }
+
+            .plan-badge.premium {
+                background: #fef4e4;
+                color: var(--warning);
+            }
+
+            .plan-badge.standard {
+                background: #e6f5ee;
+                color: var(--success);
+            }
+
+        .pwd-cell {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pwd-mask {
+            font-family: monospace;
+            letter-spacing: 2px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .pwd-text {
+            font-family: monospace;
+            font-size: 13px;
+            display: none;
+            color: var(--text);
+        }
+
+        .eye-btn {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 2px 4px;
+            font-size: 12px;
+            transition: color .15s;
+        }
+
+            .eye-btn:hover {
+                color: var(--teal-dark);
+            }
+
+        .action-btns {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .act-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 9px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            border: 1px solid;
+            transition: all .15s;
+            white-space: nowrap;
+        }
+
+        .act-edit {
+            color: var(--warning);
+            border-color: #f5dba0;
+            background: #fef9ee;
+        }
+
+            .act-edit:hover {
+                background: #fef4e4;
+            }
+
+        .act-block {
+            color: var(--danger);
+            border-color: #f5c6c6;
+            background: #fdeaea;
+        }
+
+            .act-block:hover {
+                background: #fbd5d5;
+            }
+
+        .act-activate {
+            color: var(--success);
+            border-color: #b2dfc7;
+            background: #e6f5ee;
+        }
+
+            .act-activate:hover {
+                background: #d4eee1;
+            }
+
+        .act-delete {
+            color: var(--muted);
+            border-color: var(--border);
+            background: var(--bg);
+        }
+
+            .act-delete:hover {
+                color: var(--danger);
+                border-color: #f5c6c6;
+                background: #fdeaea;
+            }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted);
+        }
+
+            .empty-state i {
+                font-size: 40px;
+                margin-bottom: 14px;
+                opacity: .35;
+                display: block;
+            }
+
+            .empty-state p {
+                font-size: 14px;
+                margin-bottom: 16px;
+            }
+
+        /* ── Stats row ── */
+        .stats-mini {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-mini {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .sm-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+        }
+
+            .sm-icon.teal {
+                background: var(--teal-light);
+                color: var(--teal-dark);
+            }
+
+            .sm-icon.green {
+                background: #e6f5ee;
+                color: var(--success);
+            }
+
+            .sm-icon.red {
+                background: #fdeaea;
+                color: var(--danger);
+            }
+
+            .sm-icon.orange {
+                background: #fef4e4;
+                color: var(--warning);
+            }
+
+        .sm-val {
+            font-family: 'Space Grotesk',sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .sm-lbl {
+            font-size: 11.5px;
+            color: var(--muted);
+        }
+
+        @@media(max-width:700px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .stats-mini {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <h2>⚕ Pharma Pulse</h2>
+            <span>Super Admin Panel</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-label">Main</div>
+            <a class="nav-item" href="/SuperAdmin/SuperAdminDashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+            <div class="nav-label">Pharmacy</div>
+            <a class="nav-item active" href="/SuperAdmin/Pharmacies"><i class="fa-solid fa-store"></i> Pharmacies</a>
+            <a class="nav-item" href="/SuperAdmin/Workers"><i class="fa-solid fa-user-tie"></i> Workers</a>
+            <div class="nav-label">Finance</div>
+            <a class="nav-item" href="/SuperAdmin/SubscriptionPlans"><i class="fa-solid fa-file-invoice-dollar"></i> Billing & Plans</a>
+            <a class="nav-item" href="/SuperAdmin/PaymentHistory"><i class="fa-solid fa-clock-rotate-left"></i> Payment History</a>
+            <div class="nav-label">Medicine</div>
+            <a class="nav-item" href="/SuperAdmin/Medicines"><i class="fa-solid fa-capsules"></i> Global Medicines</a>
+            <div class="nav-label">System</div>
+            <a class="nav-item" href="/SuperAdmin/Notifications"><i class="fa-solid fa-bell"></i> Notifications</a>
+            <a class="nav-item" href="/SuperAdmin/Security"><i class="fa-solid fa-shield-halved"></i> Security & Access</a>
+            <a class="nav-item" href="/SuperAdmin/Settings"><i class="fa-solid fa-gear"></i> Settings</a>
+        </nav>
+        <div class="sidebar-foot">
+            <div class="admin-card">
+                <div class="avatar">SA</div>
+                <div><p>Super Admin</p><span>admin@pharmapulse.in</span></div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+        <div class="topbar">
+            <div>
+                <h1>Pharmacies</h1>
+                <p>All registered pharmacies with login credentials</p>
+            </div>
+            <div class="topbar-right">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass" style="color:var(--muted)"></i>
+                    <input type="text" id="searchInput" placeholder="Search pharmacies…" oninput="filterTable()" />
+                </div>
+                <a class="icon-btn" href="/SuperAdmin/SuperAdminDashboard" title="Dashboard">
+                    <i class="fa-solid fa-house"></i>
+                </a>
+                <a class="icon-btn" href="/SuperAdmin/SuperAdminLogout" title="Logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="body">
+
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="/SuperAdmin/SuperAdminDashboard">Dashboard</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>Pharmacies</span>
+            </div>
+
+            <!-- Alerts -->
+            @if (TempData["Success"] != null)
+            {
+                <div class="success-banner">
+                    <i class="fa-solid fa-circle-check"></i> @TempData["Success"]
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="err-banner">
+                    <i class="fa-solid fa-circle-exclamation"></i> @TempData["Error"]
+                </div>
+            }
+
+            <!-- Mini Stats -->
+            <div class="stats-mini">
+                <div class="stat-mini">
+                    <div class="sm-icon teal"><i class="fa-solid fa-store"></i></div>
+                    <div>
+                        <div class="sm-val">@Model.Pharmacies.Count</div>
+                        <div class="sm-lbl">Total</div>
+                    </div>
+                </div>
+                <div class="stat-mini">
+                    <div class="sm-icon green"><i class="fa-solid fa-circle-check"></i></div>
+                    <div>
+                        <div class="sm-val">@Model.Pharmacies.Count(p => p.IsActive)</div>
+                        <div class="sm-lbl">Active</div>
+                    </div>
+                </div>
+                <div class="stat-mini">
+                    <div class="sm-icon red"><i class="fa-solid fa-ban"></i></div>
+                    <div>
+                        <div class="sm-val">@Model.Pharmacies.Count(p => !p.IsActive)</div>
+                        <div class="sm-lbl">Blocked</div>
+                    </div>
+                </div>
+                <div class="stat-mini">
+                    <div class="sm-icon orange"><i class="fa-solid fa-crown"></i></div>
+                    <div>
+                        <div class="sm-val">@Model.Pharmacies.Count(p => p.PlanName == "Premium")</div>
+                        <div class="sm-lbl">Premium</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="tbl-section">
+                <div class="tbl-head">
+                    <h3><i class="fa-solid fa-store" style="color:var(--teal);margin-right:8px"></i>All Pharmacies</h3>
+                    <div class="tbl-head-right">
+                        <select class="filter-select" onchange="filterStatus(this.value)">
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="blocked">Blocked</option>
+                        </select>
+                        <a class="btn-add" href="/SuperAdmin/AddPharmacy">
+                            <i class="fa-solid fa-plus"></i> Add Pharmacy
+                        </a>
+                    </div>
+                </div>
+
+                @if (Model.Pharmacies.Count > 0)
+                {
+                    <div class="tbl-wrap">
+                        <table id="pharmTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Pharmacy Name</th>
+                                    <th>Owner</th>
+                                    <th>Mobile</th>
+                                    <th>Plan</th>
+                                    <th>Valid Till</th>
+                                    <th>Username</th>
+                                    <th>Password</th>
+                                    <th>Status</th>
+                                    <th>Joined</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int i = 1;
+                                }
+                                @foreach (var p in Model.Pharmacies)
+                                {
+                                    <tr data-status="@(p.IsActive ? "active" : "blocked")">
+                                        <td style="color:var(--muted);font-size:12px">@i</td>
+                                        <td>
+                                            <strong>@p.PharmacyName</strong>
+                                            @if (!string.IsNullOrEmpty(p.Address))
+                                            {
+                                                <div style="font-size:11px;color:var(--muted);margin-top:2px">@p.Address</div>
+                                            }
+                                        </td>
+                                        <td>@(p.OwnerName ?? "—")</td>
+                                        <td>@(p.MobileNumber ?? "—")</td>
+                                        <td>
+                                            <span class="plan-badge @(p.PlanName == "Premium" ? "premium" : p.PlanName == "Standard" ? "standard" : "")">
+                                                @(p.PlanName ?? "Basic")
+                                            </span>
+                                        </td>
+                                        <td style="font-size:12px;color:var(--muted)">
+                                            @p.PlanValidTill.ToString("dd MMM yyyy")
+                                            @if (p.PlanValidTill < DateTime.Now)
+                                            {
+                                                <span style="color:var(--danger);font-size:10px;display:block">Expired</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <code style="background:var(--bg);padding:2px 7px;border-radius:5px;font-size:12px">@p.Username</code>
+                                        </td>
+                                        <td>
+                                            <div class="pwd-cell">
+                                                <span class="pwd-mask" id="mask_@p.Id">••••••••</span>
+                                                <span class="pwd-text" id="pwd_@p.Id">@p.PlainPassword</span>
+                                                <button class="eye-btn" onclick="togglePwd(@p.Id)" title="Show/Hide">
+                                                    <i class="fa-solid fa-eye" id="eye_@p.Id"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="chip @(p.IsActive ? "active" : "blocked")">
+                                                @(p.IsActive ? "Active" : "Blocked")
+                                            </span>
+                                        </td>
+                                        <td style="color:var(--muted);font-size:12px">
+                                            @p.CreatedAt.ToString("dd MMM yyyy")
+                                        </td>
+                                        <td>
+                                            <div class="action-btns">
+                                                <a class="act-btn act-edit"
+                                                   href="/SuperAdmin/EditPharmacy/@p.Id"
+                                                   title="Edit">
+                                                    <i class="fa-solid fa-pen"></i> Edit
+                                                </a>
+                                                <a class="act-btn @(p.IsActive ? "act-block" : "act-activate")"
+                                                   href="/SuperAdmin/Pharmacies?handler=Toggle&id=@p.Id"
+                                                   onclick="return confirm('@(p.IsActive ? "Block" : "Activate") @p.PharmacyName?')">
+                                                    <i class="fa-solid @(p.IsActive ? "fa-ban" : "fa-circle-check")"></i>
+                                                    @(p.IsActive ? "Block" : "Activate")
+                                                </a>
+                                                <a class="act-btn act-delete"
+                                                   href="/SuperAdmin/Pharmacies?handler=Delete&id=@p.Id"
+                                                   onclick="return confirm('Permanently delete @p.PharmacyName? This cannot be undone.')">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <i class="fa-solid fa-store"></i>
+                        <p>No pharmacies registered yet.</p>
+                        <a class="btn-add" href="/SuperAdmin/AddPharmacy" style="display:inline-flex">
+                            <i class="fa-solid fa-plus"></i> Add First Pharmacy
+                        </a>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function togglePwd(id) {
+            var mask = document.getElementById('mask_' + id);
+            var pwd  = document.getElementById('pwd_'  + id);
+            var icon = document.getElementById('eye_'  + id);
+            var isHidden = mask.style.display !== 'none';
+            mask.style.display = isHidden ? 'none'   : 'inline';
+            pwd.style.display  = isHidden ? 'inline' : 'none';
+            icon.className     = isHidden ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+        }
+
+        function filterTable() {
+            var q = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('#pharmTable tbody tr').forEach(function(row) {
+                row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+            });
+        }
+
+        function filterStatus(val) {
+            document.querySelectorAll('#pharmTable tbody tr').forEach(function(row) {
+                if (val === 'all') { row.style.display = ''; return; }
+                row.style.display = row.dataset.status === val ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>
