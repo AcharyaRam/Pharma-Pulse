@@ -1,0 +1,393 @@
+﻿@page "{id:int}"
+@model Pharma_Pulse.Pages.SuperAdmin.ViewPharmacyModel
+@{
+    Layout = null;
+    var p = Model.Pharmacy;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>@p.PharmacyName – Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: #f4f6fb;
+            color: #1a1a2e;
+            min-height: 100vh;
+            padding: 32px 16px;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #6b7280;
+            font-size: 14px;
+            text-decoration: none;
+            margin-bottom: 24px;
+            transition: color .2s;
+        }
+
+            .back-btn:hover {
+                color: #0d9488;
+            }
+
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(0,0,0,.07);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            padding: 20px 28px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .card-header i {
+                color: #0d9488;
+                font-size: 18px;
+            }
+
+            .card-header h2 {
+                font-size: 16px;
+                font-weight: 700;
+            }
+
+        .card-body {
+            padding: 24px 28px;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, #0d9488, #0f766e);
+            border-radius: 16px;
+            padding: 28px;
+            color: #fff;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .top-bar-left h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .top-bar-left p {
+            font-size: 14px;
+            opacity: .85;
+            margin-top: 4px;
+        }
+
+        .status-badge {
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+            .status-badge.active {
+                background: rgba(255,255,255,.25);
+                color: #fff;
+            }
+
+            .status-badge.blocked {
+                background: rgba(255,100,100,.3);
+                color: #ffe0e0;
+            }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 32px;
+        }
+        @@media(max - width:600px) {
+            .grid
+
+        {
+            grid-template-columns: 1fr;
+        }
+
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 14px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+            .field:last-child {
+                border-bottom: none;
+            }
+
+            .field label {
+                font-size: 11px;
+                font-weight: 600;
+                color: #9ca3af;
+                text-transform: uppercase;
+                letter-spacing: .5px;
+            }
+
+            .field span {
+                font-size: 15px;
+                font-weight: 500;
+                color: #1a1a2e;
+            }
+
+        .plan-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+            .plan-badge.premium {
+                background: #fef3c7;
+                color: #b45309;
+            }
+
+            .plan-badge.standard {
+                background: #ede9fe;
+                color: #7c3aed;
+            }
+
+        .pwd-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pwd-text {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .eye-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #9ca3af;
+            font-size: 15px;
+            padding: 2px 6px;
+        }
+
+            .eye-btn:hover {
+                color: #0d9488;
+            }
+
+        .expired {
+            color: #ef4444;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: opacity .2s;
+        }
+
+            .btn:hover {
+                opacity: .85;
+            }
+
+        .btn-edit {
+            background: #0d9488;
+            color: #fff;
+        }
+
+        .btn-back {
+            background: #f3f4f6;
+            color: #374151;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <a class="back-btn" href="/SuperAdmin/Pharmacies">
+            <i class="fa-solid fa-arrow-left"></i> Back to Pharmacies
+        </a>
+
+        <!-- Top Banner -->
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <h1><i class="fa-solid fa-store" style="margin-right:10px"></i>@p.PharmacyName</h1>
+                <p>@(p.Address ?? "No address provided")</p>
+            </div>
+            <span class="status-badge @(p.IsActive ? "active" : "blocked")">
+                <i class="fa-solid @(p.IsActive ? "fa-circle-check" : "fa-ban")" style="margin-right:6px"></i>
+                @(p.IsActive ? "Active" : "Deactive")
+            </span>
+        </div>
+
+        <!-- Basic Info -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fa-solid fa-circle-info"></i>
+                <h2>Basic Information</h2>
+            </div>
+            <div class="card-body">
+                <div class="grid">
+                    <div class="field">
+                        <label>Pharmacy Name</label>
+                        <span>@p.PharmacyName</span>
+                    </div>
+                    <div class="field">
+                        <label>Owner Name</label>
+                        <span>@(p.OwnerName ?? "—")</span>
+                    </div>
+                    <div class="field">
+                        <label>Email</label>
+                        <span>@(p.Email ?? "—")</span>
+                    </div>
+                    <div class="field">
+                        <label>Mobile Number</label>
+                        <span>@(p.MobileNumber ?? "—")</span>
+                    </div>
+                    <div class="field">
+                        <label>GST Number</label>
+                        <span>@(p.GSTNumber ?? "—")</span>
+                    </div>
+                    <div class="field">
+                        <label>Drug License No</label>
+                        <span>@(p.DrugLicenseNo ?? "—")</span>
+                    </div>
+                    <div class="field" style="grid-column: 1 / -1">
+                        <label>Address</label>
+                        <span>@(p.Address ?? "—")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Plan Info -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fa-solid fa-crown"></i>
+                <h2>Plan Details</h2>
+            </div>
+            <div class="card-body">
+                <div class="grid">
+                    <div class="field">
+                        <label>Plan</label>
+                        <span>
+                            <span class="plan-badge @(p.PlanName == "Premium" ? "premium" : p.PlanName == "Standard" ? "standard" : "")">
+                                @(p.PlanName ?? "Basic")
+                            </span>
+                        </span>
+                    </div>
+                    <div class="field">
+                        <label>Plan Price</label>
+                        <span>₹@p.PlanPrice.ToString("N2")</span>
+                    </div>
+                    <div class="field">
+                        <label>Valid Till</label>
+                        <span>
+                            @p.PlanValidTill.ToString("dd MMM yyyy")
+                            @if (p.PlanValidTill < DateTime.Now)
+                            {
+                                <span class="expired">Expired</span>
+                            }
+                        </span>
+                    </div>
+                    <div class="field">
+                        <label>Joined On</label>
+                        <span>@p.CreatedAt.ToString("dd MMM yyyy")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Credentials -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fa-solid fa-key"></i>
+                <h2>Login Credentials</h2>
+            </div>
+            <div class="card-body">
+                <div class="grid">
+                    <div class="field">
+                        <label>Username</label>
+                        <span><code style="background:#f4f6fb;padding:3px 10px;border-radius:6px">@p.Username</code></span>
+                    </div>
+                    <div class="field">
+                        <label>Password</label>
+                        <div class="pwd-row">
+                            <span class="pwd-text" id="pwdMask">••••••••</span>
+                            <span class="pwd-text" id="pwdText" style="display:none">@p.PlainPassword</span>
+                            <button class="eye-btn" onclick="togglePwd()" title="Show/Hide">
+                                <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="action-row">
+            <a class="btn btn-edit" href="/SuperAdmin/EditPharmacy/@p.Id">
+                <i class="fa-solid fa-pen"></i> Edit Pharmacy
+            </a>
+            <a class="btn btn-back" href="/SuperAdmin/Pharmacies">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+        function togglePwd() {
+            const mask = document.getElementById('pwdMask');
+            const text = document.getElementById('pwdText');
+            const icon = document.getElementById('eyeIcon');
+            const showing = text.style.display !== 'none';
+            mask.style.display = showing ? '' : 'none';
+            text.style.display = showing ? 'none' : '';
+            icon.className = showing ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash';
+        }
+    </script>
+</body>
+</html>

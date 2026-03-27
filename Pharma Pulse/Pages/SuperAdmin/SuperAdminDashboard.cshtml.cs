@@ -32,6 +32,8 @@ namespace Pharma_Pulse.Pages.SuperAdmin
         public int TotalUsers { get; set; }
         public decimal TotalRevenue { get; set; }
         public decimal RevenueGrowth { get; set; }
+
+        public int ExpiringPlans { get; set; }
         public List<PharmacyRow> RecentPharmacies { get; set; } = new();
 
         public async Task OnGetAsync()
@@ -56,6 +58,10 @@ namespace Pharma_Pulse.Pages.SuperAdmin
                     .Where(s => s.SaleDate >= lastMonthStart && s.SaleDate < thisMonthStart)
                     .SumAsync(s => (decimal?)s.TotalAmount) ?? 0;
 
+                var thirtyDaysLater = now.AddDays(30);
+                ExpiringPlans = await _db.Pharmacies
+                    .CountAsync(p => p.IsActive && p.PlanValidTill >= now && p.PlanValidTill <= thirtyDaysLater);
+
                 RevenueGrowth = lastMonth > 0
                     ? Math.Round((thisMonth - lastMonth) / lastMonth * 100, 1)
                     : 0;
@@ -70,7 +76,7 @@ namespace Pharma_Pulse.Pages.SuperAdmin
                         OwnerName = p.OwnerName ?? "N/A",
                         City = p.Address ?? "N/A",
                         Plan = p.PlanName ?? "Basic",
-                        Status = p.IsActive ? "Active" : "Blocked",
+                        Status = p.IsActive ? "Active" : "Deactive",
                         JoinedDate = p.PlanValidTill
                     })
                     .ToListAsync();
