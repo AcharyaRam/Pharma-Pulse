@@ -22,6 +22,6 @@
         public string SaleMode { get; set; }
 
         // Auto Total
-        public decimal Total => Quantity * Price;
+        public decimal Total { get; set; }
     }
 }

@@ -146,7 +146,8 @@ namespace Pharma_Pulse.Pages
                     HsnSac = x.HsnSac,
                     Quantity = x.Quantity,
                     Price = x.Price,
-                    SaleMode = x.SaleMode
+                    SaleMode = x.SaleMode,
+                    Total = x.Total  // ✅ FIX: Load Total from DB for review mode
                 }).ToList();
         }
 
@@ -183,6 +184,13 @@ namespace Pharma_Pulse.Pages
             if (med == null || Quantity <= 0)
                 return RedirectToPage();
 
+            // ✅ FIX: Force Unit mode if medicine doesn't support strips
+            if (med.SellType != "Both")
+                SellMode = "Unit";
+
+            if (string.IsNullOrEmpty(SellMode))
+                SellMode = "Unit";
+
             var existingItem = BillItems
                 .FirstOrDefault(x => x.MedicineName == med.MedicineName && x.SaleMode == SellMode);
 
@@ -205,14 +213,20 @@ namespace Pharma_Pulse.Pages
                 return RedirectToPage();
             }
 
+            // ✅ FIX: Strip price = SellingPrice × UnitsPerStrip
             decimal itemPrice = SellMode == "Strip"
                 ? med.SellingPrice * med.UnitsPerStrip
                 : med.SellingPrice;
 
             if (existingItem != null)
+            {
+                // ✅ FIX: Update quantity AND recalculate Total
                 existingItem.Quantity += Quantity;
+                existingItem.Total = existingItem.Price * existingItem.Quantity;
+            }
             else
             {
+                // ✅ FIX: Set Total on new item
                 BillItems.Add(new BillItem
                 {
                     MedicineName = med.MedicineName,
@@ -222,7 +236,8 @@ namespace Pharma_Pulse.Pages
                     HsnSac = med.HsnSac,
                     Quantity = Quantity,
                     SaleMode = SellMode,
-                    Price = itemPrice
+                    Price = itemPrice,
+                    Total = itemPrice * Quantity
                 });
             }
 
@@ -231,7 +246,6 @@ namespace Pharma_Pulse.Pages
         }
 
         // ================= UPDATE BILL =================
-        // ✅ FIX: Was missing — caused Update Bill to wipe all session data on submit
         public IActionResult OnPostUpdateBill()
         {
             HttpContext.Session.SetString("Discount", DiscountPercent.ToString());
@@ -282,7 +296,7 @@ namespace Pharma_Pulse.Pages
                     Quantity = item.Quantity,
                     SaleMode = item.SaleMode,
                     Price = item.Price,
-                    Total = item.Total
+                    Total = item.Total  // ✅ Now correctly saved to DB
                 });
 
                 var medicine = _context.Medicines
@@ -291,8 +305,9 @@ namespace Pharma_Pulse.Pages
 
                 if (medicine != null)
                 {
+                    // ✅ FIX: Safe deduction — handle UnitsPerStrip = 0 edge case
                     int unitsToDeduct = item.SaleMode == "Strip"
-                        ? item.Quantity * medicine.UnitsPerStrip
+                        ? item.Quantity * (medicine.UnitsPerStrip > 0 ? medicine.UnitsPerStrip : 1)
                         : item.Quantity;
 
                     medicine.StockUnits -= unitsToDeduct;
@@ -301,7 +316,6 @@ namespace Pharma_Pulse.Pages
 
             _context.SaveChanges();
 
-            // ✅ FIX: Remove only billing keys — Session.Clear() was logging the user out
             HttpContext.Session.Remove("BillItems");
             HttpContext.Session.Remove("SelectedCustomerId");
             HttpContext.Session.Remove("Discount");
@@ -315,7 +329,6 @@ namespace Pharma_Pulse.Pages
         // ================= CLEAR BILL =================
         public JsonResult OnPostClearBill()
         {
-            // ✅ FIX: Remove only billing keys — Session.Clear() was logging the user out
             HttpContext.Session.Remove("BillItems");
             HttpContext.Session.Remove("SelectedCustomerId");
             HttpContext.Session.Remove("Discount");
