@@ -34,7 +34,7 @@ namespace Pharma_Pulse.Pages.SuperAdmin
             {
                 pharmacy.IsActive = !pharmacy.IsActive;
                 _db.SaveChanges();
-                TempData["Success"] = $"'{pharmacy.PharmacyName}' has been {(pharmacy.IsActive ? "activated" : "blocked")}.";
+                TempData["Success"] = $"'{pharmacy.PharmacyName}' has been {(pharmacy.IsActive ? "activated" : "Deactive")}.";
             }
             else
             {

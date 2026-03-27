@@ -717,7 +717,7 @@
                     <div class="sm-icon red"><i class="fa-solid fa-ban"></i></div>
                     <div>
                         <div class="sm-val">@Model.Pharmacies.Count(p => !p.IsActive)</div>
-                        <div class="sm-lbl">Blocked</div>
+                        <div class="sm-lbl">Deactive</div>
                     </div>
                 </div>
                 <div class="stat-mini">
@@ -737,7 +737,7 @@
                         <select class="filter-select" onchange="filterStatus(this.value)">
                             <option value="all">All Status</option>
                             <option value="active">Active</option>
-                            <option value="blocked">Blocked</option>
+                            <option value="blocked">Deactive</option>
                         </select>
                         <a class="btn-add" href="/SuperAdmin/AddPharmacy">
                             <i class="fa-solid fa-plus"></i> Add Pharmacy
@@ -757,10 +757,7 @@
                                     <th>Mobile</th>
                                     <th>Plan</th>
                                     <th>Valid Till</th>
-                                    <th>Username</th>
-                                    <th>Password</th>
                                     <th>Status</th>
-                                    <th>Joined</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -793,26 +790,13 @@
                                                 <span style="color:var(--danger);font-size:10px;display:block">Expired</span>
                                             }
                                         </td>
-                                        <td>
-                                            <code style="background:var(--bg);padding:2px 7px;border-radius:5px;font-size:12px">@p.Username</code>
-                                        </td>
-                                        <td>
-                                            <div class="pwd-cell">
-                                                <span class="pwd-mask" id="mask_@p.Id">••••••••</span>
-                                                <span class="pwd-text" id="pwd_@p.Id">@p.PlainPassword</span>
-                                                <button class="eye-btn" onclick="togglePwd(@p.Id)" title="Show/Hide">
-                                                    <i class="fa-solid fa-eye" id="eye_@p.Id"></i>
-                                                </button>
-                                            </div>
-                                        </td>
+                                     
                                         <td>
                                             <span class="chip @(p.IsActive ? "active" : "blocked")">
-                                                @(p.IsActive ? "Active" : "Blocked")
+                                                @(p.IsActive ? "Active" : "Deactive")
                                             </span>
                                         </td>
-                                        <td style="color:var(--muted);font-size:12px">
-                                            @p.CreatedAt.ToString("dd MMM yyyy")
-                                        </td>
+                              
                                         <td>
                                             <div class="action-btns">
                                                 <a class="act-btn act-edit"
@@ -824,7 +808,7 @@
                                                    href="/SuperAdmin/Pharmacies?handler=Toggle&id=@p.Id"
                                                    onclick="return confirm('@(p.IsActive ? "Block" : "Activate") @p.PharmacyName?')">
                                                     <i class="fa-solid @(p.IsActive ? "fa-ban" : "fa-circle-check")"></i>
-                                                    @(p.IsActive ? "Block" : "Activate")
+                                                    @(p.IsActive ? "Deactive" : "Activate")
                                                 </a>
                                                 <a class="act-btn act-delete"
                                                    href="/SuperAdmin/Pharmacies?handler=Delete&id=@p.Id"

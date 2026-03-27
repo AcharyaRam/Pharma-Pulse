@@ -701,10 +701,10 @@
                 <div class="stat-card">
                     <div class="stat-top">
                         <div class="s-icon red"><i class="fa-solid fa-ban"></i></div>
-                        <span class="s-pill down">Blocked</span>
+                        <span class="s-pill down">Deactive</span>
                     </div>
                     <div class="stat-val">@Model.BlockedPharmacies</div>
-                    <div class="stat-lbl">Blocked Pharmacies</div>
+                    <div class="stat-lbl">Deactive Pharmacies</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-top">
@@ -727,12 +727,16 @@
                     <p class="rev-sub">Across all pharmacies this month</p>
                 </div>
                 <div class="rev-card">
-                    <h3><i class="fa-solid fa-heart-pulse" style="color:var(--success);margin-right:6px"></i>System Health</h3>
-                    <div class="health-row">
-                        <div class="dot"></div>
-                        <span style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700">Normal</span>
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                        <div style="background:#fff0f0;border-radius:10px;padding:10px;">
+                            <i class="fa-solid fa-clock" style="color:#e74c3c;font-size:18px;"></i>
+                        </div>
+                        <span style="background:#fff0f0;color:#e74c3c;font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px;">Expiring Soon</span>
                     </div>
-                    <p class="rev-sub">All services running · DB connected · No critical alerts</p>
+                    <div style="margin-top:14px;">
+                        <span style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--text);">@Model.ExpiringPlans</span>
+                    </div>
+                    <p class="rev-sub">Plan validity ending in next 30 days</p>
                 </div>
             </div>
 
@@ -926,7 +930,7 @@
                                     <td>@p.Plan</td>
                                     <td><span class="chip @p.StatusClass">@p.Status</span></td>
                                     <td>@p.JoinedDate.ToString("dd MMM yyyy")</td>
-                                    <td><a href="/SuperAdmin/Pharmacies/@p.Id" style="color:var(--teal-dark);font-weight:600;text-decoration:none;font-size:13px">View →</a></td>
+                                    <td><a href="/SuperAdmin/ViewPharmacy/@p.Id" style="color:var(--teal-dark);font-weight:600;text-decoration:none;font-size:13px">View →</a></td>
                                 </tr>
                                 i++;
                             }
