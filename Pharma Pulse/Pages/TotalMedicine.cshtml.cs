@@ -16,29 +16,21 @@ namespace Pharma_Pulse.Pages
             _service = service;
         }
 
-        // Medicine List
         public List<Medicine> Medicines { get; set; } = new();
 
         [BindProperty]
         public Medicine Medicine { get; set; }
 
-        // Pagination
         public int CurrentPage { get; set; } = 1;
         public int PageSize { get; set; } = 10;
         public int TotalPages { get; set; }
 
-        // Search
         public string SearchTerm { get; set; }
 
-        // ============================
-        // GET : Load Medicines
-        // ============================
         public void OnGet(int pageNumber = 1, string search = "")
         {
-            // ✅ FILTER BY PHARMACY
             var allMedicines = _service.GetAllMedicines(CurrentPharmacyId);
 
-            // 🔥 AUTO STATUS LOGIC
             foreach (var med in allMedicines)
             {
                 if (med.ExpiryDate.Date < DateTime.Today)
@@ -54,7 +46,6 @@ namespace Pharma_Pulse.Pages
             if (!string.IsNullOrWhiteSpace(search))
             {
                 search = search.Trim();
-
                 allMedicines = allMedicines
                     .Where(m =>
                         !string.IsNullOrEmpty(m.MedicineName) &&
@@ -72,9 +63,6 @@ namespace Pharma_Pulse.Pages
                 .ToList();
         }
 
-        // ============================
-        // ADD / UPDATE MEDICINE
-        // ============================
         public IActionResult OnPostSaveMedicine()
         {
             if (!ModelState.IsValid)
@@ -83,17 +71,18 @@ namespace Pharma_Pulse.Pages
                 return Page();
             }
 
-            // 🔥 AUTO STATUS
             if (Medicine.ExpiryDate.Date < DateTime.Today)
                 Medicine.IsActive = false;
             else
                 Medicine.IsActive = Medicine.StockUnits > 0;
 
+            // ✅ FIX: Force UnitsPerStrip = 1 if Unit only
+            if (Medicine.SellType == "Unit")
+                Medicine.UnitsPerStrip = 1;
+
             if (Medicine.Id == 0)
             {
-                // ✅ SET PHARMACY ID
                 Medicine.PharmacyId = CurrentPharmacyId;
-
                 _service.AddMedicine(Medicine);
                 TempData["Success"] = "Medicine Added Successfully!";
             }
@@ -115,8 +104,8 @@ namespace Pharma_Pulse.Pages
                     existing.HsnSac = Medicine.HsnSac;
                     existing.SellType = Medicine.SellType;
                     existing.ExpiryDate = Medicine.ExpiryDate;
+                    existing.UnitsPerStrip = Medicine.UnitsPerStrip; // ✅ FIX: Save UnitsPerStrip
 
-                    // 🔥 AUTO STATUS
                     if (existing.ExpiryDate.Date < DateTime.Today)
                         existing.IsActive = false;
                     else
@@ -131,9 +120,6 @@ namespace Pharma_Pulse.Pages
             return RedirectToPage();
         }
 
-        // ============================
-        // DELETE MEDICINE
-        // ============================
         public IActionResult OnPostDeleteMedicine(int id)
         {
             var medicine = _service.GetAllMedicines(CurrentPharmacyId)
