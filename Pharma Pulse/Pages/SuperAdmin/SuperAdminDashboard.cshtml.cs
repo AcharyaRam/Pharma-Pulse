@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Pharma_Pulse.Data;  // ✅ your actual namespace
+using Pharma_Pulse.Data;
 
 namespace Pharma_Pulse.Pages.SuperAdmin
 {
@@ -25,26 +24,26 @@ namespace Pharma_Pulse.Pages.SuperAdmin
 
     public class SuperAdminDashboardModel : PageModel
     {
-        private readonly AppDbContext _db;  // ✅ fixed
-        public SuperAdminDashboardModel(AppDbContext db) => _db = db;  // ✅ fixed
+        private readonly AppDbContext _db;
+        public SuperAdminDashboardModel(AppDbContext db) => _db = db;
 
         public int TotalPharmacies { get; set; }
         public int ActivePharmacies { get; set; }
         public int BlockedPharmacies { get; set; }
         public int TotalUsers { get; set; }
+        public int TotalPlansSold { get; set; }
+        public int ExpiringPlans { get; set; }
         public decimal TotalRevenue { get; set; }
+        public decimal TotalDiscount { get; set; }
         public decimal RevenueGrowth { get; set; }
 
-        public int ExpiringPlans { get; set; }
         public List<PharmacyRow> RecentPharmacies { get; set; } = new();
-
 
         public async Task<IActionResult> OnPostLogoutAsync()
         {
             HttpContext.Session.Clear();
             return RedirectToPage("/SuperAdmin/SuperAdminLogin");
         }
-
 
         public async Task OnGetAsync()
         {
@@ -54,27 +53,36 @@ namespace Pharma_Pulse.Pages.SuperAdmin
                 ActivePharmacies = await _db.Pharmacies.CountAsync(p => p.IsActive);
                 BlockedPharmacies = await _db.Pharmacies.CountAsync(p => !p.IsActive);
                 TotalUsers = TotalPharmacies;
-                TotalRevenue = await _db.Sales.SumAsync(s => (decimal?)s.TotalAmount) ?? 0;
+                TotalPlansSold = TotalPharmacies;
 
                 var now = DateTime.Now;
                 var thisMonthStart = new DateTime(now.Year, now.Month, 1);
                 var lastMonthStart = thisMonthStart.AddMonths(-1);
-
-                var thisMonth = await _db.Sales
-                    .Where(s => s.SaleDate >= thisMonthStart)
-                    .SumAsync(s => (decimal?)s.TotalAmount) ?? 0;
-
-                var lastMonth = await _db.Sales
-                    .Where(s => s.SaleDate >= lastMonthStart && s.SaleDate < thisMonthStart)
-                    .SumAsync(s => (decimal?)s.TotalAmount) ?? 0;
-
                 var thirtyDaysLater = now.AddDays(30);
-                ExpiringPlans = await _db.Pharmacies
-                    .CountAsync(p => p.IsActive && p.PlanValidTill >= now && p.PlanValidTill <= thirtyDaysLater);
+
+                // SuperAdmin revenue from plan sales
+                TotalRevenue = await _db.Pharmacies
+                    .SumAsync(p => (decimal?)p.NetPrice) ?? 0;
+
+                TotalDiscount = await _db.Pharmacies
+                    .SumAsync(p => (decimal?)(p.PlanPrice * p.DiscountPercent / 100)) ?? 0;
+
+                // This month vs last month growth
+                var thisMonth = await _db.Pharmacies
+                    .Where(p => p.CreatedAt >= thisMonthStart)
+                    .SumAsync(p => (decimal?)p.NetPrice) ?? 0;
+
+                var lastMonth = await _db.Pharmacies
+                    .Where(p => p.CreatedAt >= lastMonthStart && p.CreatedAt < thisMonthStart)
+                    .SumAsync(p => (decimal?)p.NetPrice) ?? 0;
 
                 RevenueGrowth = lastMonth > 0
                     ? Math.Round((thisMonth - lastMonth) / lastMonth * 100, 1)
-                    : 0;
+                    : thisMonth > 0 ? 100 : 0;
+
+                // Plans expiring in next 30 days
+                ExpiringPlans = await _db.Pharmacies
+                    .CountAsync(p => p.IsActive && p.PlanValidTill >= now && p.PlanValidTill <= thirtyDaysLater);
 
                 RecentPharmacies = await _db.Pharmacies
                     .OrderByDescending(p => p.Id)
@@ -93,7 +101,6 @@ namespace Pharma_Pulse.Pages.SuperAdmin
             }
             catch (Exception ex)
             {
-                // This will show the real error in browser
                 throw new Exception("SuperAdmin Dashboard Error: " + ex.Message, ex);
             }
         }

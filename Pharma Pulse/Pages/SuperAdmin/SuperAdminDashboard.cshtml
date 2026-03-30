@@ -760,12 +760,15 @@
             <!-- Revenue + Health -->
             <div class="rev-grid">
                 <div class="rev-card">
-                    <h3><i class="fa-solid fa-chart-line" style="color:var(--teal);margin-right:6px"></i>Total Revenue</h3>
+                    <h3>
+                        <i class="fa-solid fa-chart-line" style="color:var(--teal);margin-right:6px"></i>
+                        Total Revenue
+                    </h3>
                     <div class="rev-big">
                         ₹@Model.TotalRevenue.ToString("N0")
-                        <em>↑ @Model.RevenueGrowth%</em>
+                        <em>@(Model.RevenueGrowth >= 0 ? "↑" : "↓") @Math.Abs(Model.RevenueGrowth)%</em>
                     </div>
-                    <p class="rev-sub">Across all pharmacies this month</p>
+                    <p class="rev-sub">Net collected after discounts across all pharmacies</p>
                 </div>
                 <div class="rev-card">
                     <div style="display:flex;justify-content:space-between;align-items:flex-start;">
