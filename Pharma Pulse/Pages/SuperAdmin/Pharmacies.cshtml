@@ -738,6 +738,11 @@
                             <option value="all">All Status</option>
                             <option value="active">Active</option>
                             <option value="blocked">Deactive</option>
+                            <option value="expiring">Plan Expiring Soon</option>
+                            @* <option value="expired">Expired</option> *@
+                            <option value="premium">Premium</option>
+                            <option value="standard">Standard</option>
+                            <option value="basic">Basic</option>
                         </select>
                         <a class="btn-add" href="/SuperAdmin/AddPharmacy">
                             <i class="fa-solid fa-plus"></i> Add Pharmacy
@@ -767,7 +772,15 @@
                                 }
                                 @foreach (var p in Model.Pharmacies)
                                 {
+                                    var daysLeft = (p.PlanValidTill - DateTime.Now).TotalDays;
+                                    var isExpired = p.PlanValidTill < DateTime.Now;
+                                    var isExpiring = !isExpired && daysLeft <= 30;
+                                    var planKey = (p.PlanName ?? "Basic").ToLower();
+
                                     <tr data-status="@(p.IsActive ? "active" : "blocked")"
+                                        data-plan="@planKey"
+                                        data-expiring="@(isExpiring ? "true" : "false")"
+                                        data-expired="@(isExpired ? "true" : "false")"
                                         onclick="window.location='/SuperAdmin/ViewPharmacy/@p.Id'"
                                         style="cursor:pointer">
                                         <td style="color:var(--muted);font-size:12px">@i</td>
@@ -787,9 +800,13 @@
                                         </td>
                                         <td style="font-size:12px;color:var(--muted)">
                                             @p.PlanValidTill.ToString("dd MMM yyyy")
-                                            @if (p.PlanValidTill < DateTime.Now)
+                                            @if (isExpired)
                                             {
                                                 <span style="color:var(--danger);font-size:10px;display:block">Expired</span>
+                                            }
+                                            else if (isExpiring)
+                                            {
+                                                <span style="color:orange;font-size:10px;display:block">Expiring Soon</span>
                                             }
                                         </td>
                                         <td>
@@ -834,6 +851,31 @@
                 }
             </div>
 
+            <script>
+                function filterStatus(value) {
+                    const rows = document.querySelectorAll('#pharmTable tbody tr');
+                    rows.forEach(row => {
+                        const status = row.dataset.status;
+                        const plan = row.dataset.plan;
+                        const expiring = row.dataset.expiring;
+                        const expired = row.dataset.expired;
+
+                        let show = false;
+
+                        if (value === 'all')           show = true;
+                        else if (value === 'active')   show = status === 'active';
+                        else if (value === 'blocked')  show = status === 'blocked';
+                        else if (value === 'expiring') show = expiring === 'true';
+                        else if (value === 'expired')  show = expired === 'true';
+                        else if (value === 'premium')  show = plan === 'premium';
+                        else if (value === 'standard') show = plan === 'standard';
+                        else if (value === 'basic')    show = plan === 'basic';
+
+                        row.style.display = show ? '' : 'none';
+                    });
+                }
+            </script>
+
     <script>
         function togglePwd(id) {
             var mask = document.getElementById('mask_' + id);
@@ -852,12 +894,6 @@
             });
         }
 
-        function filterStatus(val) {
-            document.querySelectorAll('#pharmTable tbody tr').forEach(function(row) {
-                if (val === 'all') { row.style.display = ''; return; }
-                row.style.display = row.dataset.status === val ? '' : 'none';
-            });
-        }
     </script>
 </body>
 </html>
