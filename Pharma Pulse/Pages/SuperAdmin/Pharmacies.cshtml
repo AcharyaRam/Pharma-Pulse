@@ -767,7 +767,9 @@
                                 }
                                 @foreach (var p in Model.Pharmacies)
                                 {
-                                    <tr data-status="@(p.IsActive ? "active" : "blocked")">
+                                    <tr data-status="@(p.IsActive ? "active" : "blocked")"
+                                        onclick="window.location='/SuperAdmin/ViewPharmacy/@p.Id'"
+                                        style="cursor:pointer">
                                         <td style="color:var(--muted);font-size:12px">@i</td>
                                         <td>
                                             <strong>@p.PharmacyName</strong>
@@ -790,15 +792,13 @@
                                                 <span style="color:var(--danger);font-size:10px;display:block">Expired</span>
                                             }
                                         </td>
-                                     
                                         <td>
                                             <span class="chip @(p.IsActive ? "active" : "blocked")">
                                                 @(p.IsActive ? "Active" : "Deactive")
                                             </span>
                                         </td>
-                              
                                         <td>
-                                            <div class="action-btns">
+                                            <div class="action-btns" onclick="event.stopPropagation()">
                                                 <a class="act-btn act-edit" href="/SuperAdmin/EditPharmacy/@p.Id" title="Edit">
                                                     <i class="fa-solid fa-pen"></i> Edit
                                                 </a>
@@ -833,9 +833,6 @@
                     </div>
                 }
             </div>
-
-        </div>
-    </div>
 
     <script>
         function togglePwd(id) {
