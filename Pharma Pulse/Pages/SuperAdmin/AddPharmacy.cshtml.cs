@@ -10,6 +10,14 @@ namespace Pharma_Pulse.Pages.SuperAdmin
         private readonly AppDbContext _db;
         public AddPharmacyModel(AppDbContext db) => _db = db;
 
+        // Hardcoded plan prices — change here if needed
+        private static readonly Dictionary<string, decimal> PlanPrices = new()
+        {
+            { "Basic",    999m  },
+            { "Standard", 2499m },
+            { "Premium",  4999m }
+        };
+
         [BindProperty]
         public PharmacyInputModel Input { get; set; } = new();
 
@@ -22,9 +30,18 @@ namespace Pharma_Pulse.Pages.SuperAdmin
             public string GSTNumber { get; set; } = string.Empty;
             public string DrugLicenseNo { get; set; } = string.Empty;
             public string Address { get; set; } = string.Empty;
-            public string PlanName { get; set; } = "Basic";
-            public decimal PlanPrice { get; set; } = 0;
+
+            // Plan
+            public string PlanName { get; set; } = string.Empty;
+            public decimal PlanPrice { get; set; } = 0;   // set by server, not user
+            public decimal DiscountPercent { get; set; } = 0;
+            public decimal NetPrice { get; set; } = 0;   // calculated by server
             public DateTime PlanValidTill { get; set; } = DateTime.Now.AddMonths(1);
+
+            // Payment
+            public string PaymentMode { get; set; } = string.Empty;
+
+            // Login
             public string Username { get; set; } = string.Empty;
             public string Password { get; set; } = string.Empty;
         }
@@ -47,6 +64,15 @@ namespace Pharma_Pulse.Pages.SuperAdmin
                 return Page();
             }
 
+            // Server-side: override price from hardcoded dictionary (never trust JS value)
+            if (!PlanPrices.TryGetValue(Input.PlanName, out decimal basePrice))
+            {
+                TempData["Error"] = "Invalid plan selected.";
+                return Page();
+            }
+            Input.PlanPrice = basePrice;
+            Input.NetPrice = Math.Round(basePrice - (basePrice * Input.DiscountPercent / 100), 2);
+
             var pharmacy = new Pharmacy
             {
                 PharmacyName = Input.PharmacyName,
@@ -58,7 +84,10 @@ namespace Pharma_Pulse.Pages.SuperAdmin
                 Address = Input.Address,
                 PlanName = Input.PlanName,
                 PlanPrice = Input.PlanPrice,
+                DiscountPercent = Input.DiscountPercent,
+                NetPrice = Input.NetPrice,
                 PlanValidTill = Input.PlanValidTill,
+                PaymentMode = Input.PaymentMode,
                 Username = Input.Username,
                 PlainPassword = Input.Password,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(Input.Password),

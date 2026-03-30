@@ -323,6 +323,41 @@
                         <span>₹@p.PlanPrice.ToString("N2")</span>
                     </div>
                     <div class="field">
+                        <label>Discount</label>
+                        <span>
+                            @if (p.DiscountPercent > 0)
+                            {
+                                <span>@p.DiscountPercent.ToString("N2")% off</span>
+                            }
+                            else
+                            {
+                                <span>No discount</span>
+                            }
+                        </span>
+                    </div>
+                    <div class="field">
+                        <label>Net Price</label>
+                        <span>₹@p.NetPrice.ToString("N2")</span>
+                    </div>
+                    <div class="field">
+                        <label>Payment Mode</label>
+                        <span>
+                            @if (p.PaymentMode == "Cash")
+                            {
+                                <i class="fa-solid fa-money-bill-wave"></i>
+                            }
+                            else if (p.PaymentMode == "UPI")
+                            {
+                                <i class="fa-solid fa-mobile-screen"></i>
+                            }
+                            else if (p.PaymentMode == "Card")
+                            {
+                                <i class="fa-solid fa-credit-card"></i>
+                            }
+                            @p.PaymentMode
+                        </span>
+                    </div>
+                    <div class="field">
                         <label>Valid Till</label>
                         <span>
                             @p.PlanValidTill.ToString("dd MMM yyyy")
