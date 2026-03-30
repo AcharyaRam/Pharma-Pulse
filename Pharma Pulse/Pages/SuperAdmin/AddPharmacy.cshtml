@@ -538,38 +538,38 @@
                                 </div>
                             </div>
                             <div class="field">
-                                <label>Owner Name</label>
+                                <label>Owner Name *</label>
                                 <div class="input-wrap">
                                     <i class="fa-solid fa-user"></i>
-                                    <input asp-for="Input.OwnerName" placeholder="e.g. Rajesh Patel" />
+                                    <input asp-for="Input.OwnerName" placeholder="e.g. Rajesh Patel" required />
                                 </div>
                             </div>
                             <div class="field">
-                                <label>Mobile Number</label>
+                                <label>Mobile Number *</label>
                                 <div class="input-wrap">
                                     <i class="fa-solid fa-phone"></i>
-                                    <input asp-for="Input.MobileNumber" placeholder="e.g. 9876543210" />
+                                    <input asp-for="Input.MobileNumber" placeholder="e.g. 9876543210" required />
                                 </div>
                             </div>
                             <div class="field">
-                                <label>Email Address</label>
+                                <label>Email Address *</label>
                                 <div class="input-wrap">
                                     <i class="fa-solid fa-envelope"></i>
-                                    <input asp-for="Input.Email" type="email" placeholder="pharmacy@email.com" />
+                                    <input asp-for="Input.Email" type="email" placeholder="pharmacy@email.com" required />
                                 </div>
                             </div>
                             <div class="field">
-                                <label>GST Number</label>
+                                <label>GST Number *</label>
                                 <div class="input-wrap">
                                     <i class="fa-solid fa-file-invoice"></i>
-                                    <input asp-for="Input.GSTNumber" placeholder="e.g. 24AAAAA0000A1Z5" />
+                                    <input asp-for="Input.GSTNumber" placeholder="e.g. 24AAAAA0000A1Z5" required />
                                 </div>
                             </div>
                             <div class="field">
-                                <label>Drug License No</label>
+                                <label>Drug License No *</label>
                                 <div class="input-wrap">
                                     <i class="fa-solid fa-id-card"></i>
-                                    <input asp-for="Input.DrugLicenseNo" placeholder="e.g. DL/GJ/2024/12345" />
+                                    <input asp-for="Input.DrugLicenseNo" placeholder="e.g. DL/GJ/2024/12345" required />
                                 </div>
                             </div>
                         </div>
@@ -578,10 +578,10 @@
                         <div class="section-label">Address</div>
                         <div class="fields-grid" style="grid-template-columns:1fr; margin-bottom:22px">
                             <div class="field">
-                                <label>Full Address</label>
+                                <label>Full Address *</label>
                                 <div class="input-wrap">
                                     <i class="fa-solid fa-location-dot"></i>
-                                    <input asp-for="Input.Address" placeholder="Shop No, Street, City, State, PIN" />
+                                    <input asp-for="Input.Address" placeholder="Shop No, Street, City, State, PIN" required />
                                 </div>
                             </div>
                         </div>
@@ -589,31 +589,75 @@
                         <!-- Subscription Plan -->
                         <div class="section-label">Subscription Plan</div>
                         <div class="fields-grid three">
+
                             <div class="field">
-                                <label>Plan Name</label>
+                                <label>Plan Name *</label>
                                 <div class="input-wrap">
                                     <i class="fa-solid fa-layer-group"></i>
-                                    <select asp-for="Input.PlanName">
+                                    <select asp-for="Input.PlanName" id="planSelect" onchange="onPlanChange()" required>
+                                        <option value="">-- Select Plan --</option>
                                         <option value="Basic">Basic</option>
                                         <option value="Standard">Standard</option>
                                         <option value="Premium">Premium</option>
                                     </select>
                                 </div>
+                                <span class="field-hint">Plan price: <strong id="planPriceLabel">—</strong></span>
+                                <!-- hidden: stores auto-filled price for backend -->
+                                <input type="hidden" asp-for="Input.PlanPrice" id="planPriceHidden" />
                             </div>
+
                             <div class="field">
-                                <label>Plan Price (₹)</label>
+                                <label>Discount % *</label>
                                 <div class="input-wrap">
-                                    <i class="fa-solid fa-indian-rupee-sign"></i>
-                                    <input asp-for="Input.PlanPrice" type="number" min="0" placeholder="e.g. 999" />
+                                    <i class="fa-solid fa-tag"></i>
+                                    <input asp-for="Input.DiscountPercent"
+                                           id="discountInput"
+                                           type="number"
+                                           min="0"
+                                           max="100"
+                                           step="0.01"
+                                           placeholder="e.g. 10  (leave blank if none)"
+                                           oninput="calcNet()" />
                                 </div>
                             </div>
+
                             <div class="field">
-                                <label>Valid Till</label>
+                                <label>Valid Till *</label>
                                 <div class="input-wrap">
                                     <i class="fa-solid fa-calendar-days"></i>
-                                    <input asp-for="Input.PlanValidTill" type="date" />
+                                    <input asp-for="Input.PlanValidTill" type="date" required />
                                 </div>
                             </div>
+
+                        </div>
+
+                        <!-- Net Price display + Payment Mode -->
+                        <div class="fields-grid three" style="margin-top:0">
+
+                            <div class="field">
+                                <label>Mode of Payment *</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-credit-card"></i>
+                                    <select asp-for="Input.PaymentMode" required>
+                                        <option value="">-- Select Mode --</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="UPI">UPI</option>
+                                        <option value="Card">Card</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Net payable box — spans remaining 2 cols -->
+                            <div class="net-price-box" id="netPriceBox" style="display:none; grid-column: span 2;">
+                                <div>
+                                    <span class="net-label">Net Payable Amount</span>
+                                    <span class="saving" id="savingLabel"></span>
+                                </div>
+                                <span class="net-value" id="netPriceVal">—</span>
+                            </div>
+                            <!-- hidden: stores computed net price for backend -->
+                            <input type="hidden" asp-for="Input.NetPrice" id="netPriceHidden" />
+
                         </div>
 
                         <!-- Login Credentials -->
@@ -650,6 +694,110 @@
                         </a>
                     </div>
                 </form>
+
+                @* ── Extra CSS (add these rules to your existing stylesheet) ── *@
+                <style>
+                    .field-hint {
+                        font-size: 12px;
+                        color: #6c757d;
+                        margin-top: 4px;
+                        display: block;
+                    }
+
+                    .net-price-box {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        background: #f0fdf4;
+                        border: 1px solid #bbf7d0;
+                        border-radius: 8px;
+                        padding: 10px 16px;
+                        margin-top: 4px;
+                    }
+
+                    .net-label {
+                        font-size: 12px;
+                        color: #6c757d;
+                        display: block;
+                    }
+
+                    .saving {
+                        font-size: 11px;
+                        color: #16a34a;
+                        display: block;
+                        margin-top: 2px;
+                    }
+
+                    .net-value {
+                        font-size: 20px;
+                        font-weight: 600;
+                        color: #15803d;
+                    }
+                </style>
+
+                @* ── JavaScript ── *@
+                <script>
+                    // ── Hardcoded plan prices — update here if prices change ──
+                    const planPrices = {
+                        'Basic':    999,
+                        'Standard': 2499,
+                        'Premium':  4999
+                    };
+
+                    function onPlanChange() {
+                        const plan   = document.getElementById('planSelect').value;
+                        const label  = document.getElementById('planPriceLabel');
+                        const hidden = document.getElementById('planPriceHidden');
+
+                        if (plan && planPrices[plan] !== undefined) {
+                            label.textContent = '₹' + planPrices[plan].toLocaleString('en-IN');
+                            hidden.value = planPrices[plan];
+                        } else {
+                            label.textContent = '—';
+                            hidden.value = '';
+                        }
+                        calcNet();
+                    }
+
+                    function calcNet() {
+                        const plan      = document.getElementById('planSelect').value;
+                        const disc      = parseFloat(document.getElementById('discountInput').value) || 0;
+                        const netBox    = document.getElementById('netPriceBox');
+                        const netVal    = document.getElementById('netPriceVal');
+                        const saving    = document.getElementById('savingLabel');
+                        const netHidden = document.getElementById('netPriceHidden');
+
+                        if (plan && planPrices[plan] !== undefined) {
+                            const price      = planPrices[plan];
+                            const savedAmt   = Math.round(price * disc / 100);
+                            const net        = price - savedAmt;
+
+                            netVal.textContent  = '₹' + net.toLocaleString('en-IN');
+                            netHidden.value     = net;
+                            saving.textContent  = disc > 0
+                                ? 'Saving ₹' + savedAmt.toLocaleString('en-IN') + ' (' + disc.toFixed(2) + '% off)'
+                                : '';
+                            netBox.style.display = 'flex';
+                        } else {
+                            netBox.style.display = 'none';
+                            netHidden.value = '';
+                        }
+                    }
+
+                    function togglePwd() {
+                        const f = document.getElementById('pwdField');
+                        const i = document.getElementById('eyeIcon');
+                        f.type          = f.type === 'password' ? 'text' : 'password';
+                        i.className     = f.type === 'password' ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash';
+                    }
+
+                    // Edit mode — if plan already selected on load, populate price
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const plan = document.getElementById('planSelect').value;
+                        if (plan) onPlanChange();
+                    });
+                </script>
+
             </div>
 
         </div>

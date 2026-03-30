@@ -28,6 +28,10 @@ namespace Pharma_Pulse.Models
         public string Username { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
 
+        public decimal DiscountPercent { get; set; } = 0;  // optional, default 0
+        public decimal NetPrice { get; set; }
+        public string PaymentMode { get; set; } = string.Empty;
+
         // Subscription & Settings
         public string? PrintFormat { get; set; }
 
