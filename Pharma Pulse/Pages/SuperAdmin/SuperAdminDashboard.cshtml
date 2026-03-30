@@ -600,6 +600,40 @@
                 grid-template-columns: 1fr 1fr;
             }
         }
+
+        /* Logout Button */
+        .logout-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 0;
+            margin-top: 10px;
+            border-radius: 10px;
+            background: transparent;
+            border: 1.5px solid #c8deda;
+            color: #4a8c7f;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+            font-family: inherit;
+        }
+
+            .logout-btn:hover {
+                background: #e74c3c;
+                color: #ffffff;
+                border-color: #e74c3c;
+            }
+
+                .logout-btn:hover i {
+                    transform: translateX(2px);
+                }
+
+            .logout-btn i {
+                transition: transform 0.2s;
+            }
     </style>
 </head>
 <body>
@@ -649,9 +683,16 @@
                 <div class="avatar">SA</div>
                 <div>
                     <p>Super Admin</p>
-                    <span>admin@pharmapulse.in</span>
+                    <span>admin@@pharmapulse.in</span>
                 </div>
             </div>
+
+            <form method="post">
+                <button type="submit" asp-page-handler="Logout" class="logout-btn">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+            </form>
+           
         </div>
     </aside>
 

@@ -170,93 +170,7 @@
                     </form>
                 </div>
 
-                <!-- Billing Print Settings -->
-                <div class="card">
-                    <h2>Billing Print Settings</h2>
-                    <p class="subtitle">Select your default pharmacy bill print format</p>
-
-                    <!-- THERMAL -->
-                    <div class="print-option">
-                        <label class="radio-box">
-                            <input type="radio" name="print" checked />
-                            <div>
-                                <h4>Thermal Receipt (80mm)</h4>
-                                <p>Most common medical shop billing slip</p>
-                            </div>
-                        </label>
-                        <div class="preview-box">
-                            <div class="invoice-preview thermal">
-                                <h5>PHARMA PULSE</h5>
-                                <p>INV-12345</p>
-                                <hr />
-                                <p>Paracetamol x2 ₹40</p>
-                                <p>Ibuprofen x1 ₹20</p>
-                                <hr />
-                                <strong>Total ₹60</strong>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- A5 -->
-                    <div class="print-option">
-                        <label class="radio-box">
-                            <input type="radio" name="print" />
-                            <div>
-                                <h4>A5 Invoice (Half Page)</h4>
-                                <p>Compact pharmacy invoice format</p>
-                            </div>
-                        </label>
-                        <div class="preview-box">
-                            <div class="invoice-preview a5">
-                                <h4>PHARMA PULSE MEDICAL</h4>
-                                <p><b>Customer:</b> Priya</p>
-                                <table>
-                                    <tr><td>Paracetamol</td><td>2</td><td>₹40</td></tr>
-                                </table>
-                                <hr />
-                                <strong>Total ₹60</strong>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- A4 -->
-                    <div class="print-option">
-                        <label class="radio-box">
-                            <input type="radio" name="print" />
-                            <div>
-                                <h4>A4 GST Invoice (Full Page)</h4>
-                                <p>Detailed invoice for hospitals & wholesale</p>
-                            </div>
-                        </label>
-                        <div class="preview-box">
-                            <div class="invoice-preview a4">
-                                <h3>PHARMA PULSE MEDICAL</h3>
-                                <p>GSTIN: 24ABCDE1234F1Z5</p>
-                                <hr />
-                                <table>
-                                    <tr>
-                                        <th>Medicine</th>
-                                        <th>Qty</th>
-                                        <th>Total</th>
-                                    </tr>
-                                    <tr>
-                                        <td>Paracetamol</td>
-                                        <td>2</td>
-                                        <td>₹40</td>
-                                    </tr>
-                                </table>
-                                <hr />
-                                <p>CGST ₹5.40</p>
-                                <p>SGST ₹5.40</p>
-                                <h4>Grand Total ₹60</h4>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button class="green-btn">Save Print Format</button>
-                </div>
-
-            </div>
+               
 
             <!-- RIGHT COLUMN -->
             <div class="right-section">
@@ -284,14 +198,7 @@
                         <span>Status</span>
                         <span class="status">@(Model.Pharmacy.IsActive ? "Active" : "Inactive")</span>
                     </div>
-                    <div class="btn-row">
-                        <button class="blue-btn"
-                                data-bs-toggle="modal"
-                                data-bs-target="#upgradeModal">
-                            Upgrade Plan
-                        </button>
-                        <button class="outline-btn">View All Plans</button>
-                    </div>
+              
                 </div>
 
             </div>
@@ -305,7 +212,7 @@
         <div class="modal-content p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3>Select Your Plan</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                
             </div>
             <div class="row text-center">
 
@@ -319,11 +226,6 @@
                             <li>✔ Stock Management</li>
                             <li>✔ Basic Reports</li>
                         </ul>
-                        <button class="btn btn-outline-success w-100 select-plan"
-                                data-plan="Basic"
-                                data-price="499">
-                            Choose Plan
-                        </button>
                     </div>
                 </div>
 
