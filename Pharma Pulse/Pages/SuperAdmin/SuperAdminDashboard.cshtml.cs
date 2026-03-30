@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Pharma_Pulse.Data;  // ✅ your actual namespace
 
@@ -35,6 +37,14 @@ namespace Pharma_Pulse.Pages.SuperAdmin
 
         public int ExpiringPlans { get; set; }
         public List<PharmacyRow> RecentPharmacies { get; set; } = new();
+
+
+        public async Task<IActionResult> OnPostLogoutAsync()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToPage("/SuperAdmin/SuperAdminLogin");
+        }
+
 
         public async Task OnGetAsync()
         {
