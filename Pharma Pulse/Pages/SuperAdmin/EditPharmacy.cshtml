@@ -1,0 +1,798 @@
+﻿@page "{id:int}"
+@model Pharma_Pulse.Pages.SuperAdmin.EditPharmacyModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Pharmacy – Pharma Pulse</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --teal: #6b9e9e;
+            --teal-dark: #4e8282;
+            --teal-light: #e8f2f2;
+            --bg: #f4f7f7;
+            --surface: #ffffff;
+            --border: #dde8e8;
+            --text: #1a2e2e;
+            --muted: #7a9898;
+            --danger: #e05c5c;
+            --success: #4caf83;
+            --warning: #e09e3e;
+            --sidebar-w: 240px;
+            --radius: 12px;
+            --shadow: 0 2px 12px rgba(107,158,158,0.10);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            padding: 22px 20px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+            .sidebar-logo h2 {
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 17px;
+                font-weight: 700;
+                color: var(--teal-dark);
+            }
+
+            .sidebar-logo span {
+                font-size: 11px;
+                color: var(--muted);
+                margin-top: 2px;
+                display: block;
+            }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 14px 12px;
+            overflow-y: auto;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 12px 8px 5px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 9px 12px;
+            border-radius: 8px;
+            color: var(--muted);
+            font-size: 13.5px;
+            font-weight: 500;
+            text-decoration: none;
+            margin-bottom: 2px;
+            transition: all .18s;
+        }
+
+            .nav-item i {
+                width: 17px;
+                text-align: center;
+            }
+
+            .nav-item:hover {
+                background: var(--teal-light);
+                color: var(--teal-dark);
+            }
+
+            .nav-item.active {
+                background: var(--teal);
+                color: #fff;
+            }
+
+        .sidebar-foot {
+            padding: 14px 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .admin-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--teal-light);
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--teal);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .admin-card p {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .admin-card span {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* ── Main ── */
+        .main {
+            margin-left: var(--sidebar-w);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 13px 26px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+            .topbar h1 {
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 19px;
+                font-weight: 700;
+            }
+
+            .topbar p {
+                font-size: 12.5px;
+                color: var(--muted);
+                margin-top: 1px;
+            }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all .18s;
+            text-decoration: none;
+        }
+
+            .icon-btn:hover {
+                background: var(--teal-light);
+                color: var(--teal-dark);
+            }
+
+        /* ── Body ── */
+        .body {
+            padding: 26px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+
+            .breadcrumb a {
+                color: var(--teal-dark);
+                text-decoration: none;
+                font-weight: 500;
+            }
+
+            .breadcrumb i {
+                font-size: 10px;
+            }
+
+        /* ── Form Card ── */
+        .form-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .form-card-header {
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hicon {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            background: var(--teal-light);
+            color: var(--teal-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .form-card-header h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .form-card-header p {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .form-body {
+            padding: 24px 22px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: .8px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .fields-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+
+            .fields-grid.three {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+            .field label {
+                font-size: 12.5px;
+                font-weight: 600;
+                color: var(--text);
+            }
+
+        .input-wrap {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            transition: border-color .18s;
+        }
+
+            .input-wrap:focus-within {
+                border-color: var(--teal);
+                background: #fff;
+            }
+
+            .input-wrap i {
+                padding: 0 12px;
+                color: var(--muted);
+                font-size: 12px;
+                flex-shrink: 0;
+            }
+
+            .input-wrap input, .input-wrap select {
+                flex: 1;
+                border: none;
+                background: transparent;
+                padding: 10px 12px 10px 0;
+                font-size: 13.5px;
+                font-family: 'DM Sans', sans-serif;
+                color: var(--text);
+                outline: none;
+            }
+
+            .input-wrap select {
+                cursor: pointer;
+            }
+
+        .toggle-eye {
+            padding: 0 12px;
+            color: var(--muted);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 12px;
+        }
+
+            .toggle-eye:hover {
+                color: var(--teal-dark);
+            }
+
+        .pwd-hint {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .field-hint {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+            display: block;
+        }
+
+        /* Alerts */
+        .err-box {
+            background: #fdeaea;
+            border: 1px solid #f5c6c6;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 12.5px;
+            color: var(--danger);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Net price box */
+        .net-price-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin-top: 4px;
+        }
+
+        .net-label {
+            font-size: 12px;
+            color: var(--muted);
+            display: block;
+        }
+
+        .saving {
+            font-size: 11px;
+            color: #16a34a;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .net-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #15803d;
+        }
+
+        /* Footer */
+        .form-footer {
+            padding: 16px 22px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg);
+        }
+
+        .btn-primary {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 22px;
+            background: var(--teal-dark);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .18s;
+        }
+
+            .btn-primary:hover {
+                background: #3a6b6b;
+            }
+
+        .btn-secondary {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 18px;
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13.5px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all .18s;
+        }
+
+            .btn-secondary:hover {
+                background: var(--teal-light);
+                border-color: var(--teal);
+                color: var(--teal-dark);
+            }
+
+        @@media(max-width:900px) {
+            .fields-grid, .fields-grid.three {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @@media(max-width:600px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .fields-grid, .fields-grid.three {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <h2>⚕ Pharma Pulse</h2>
+            <span>Super Admin Panel</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-label">Main</div>
+            <a class="nav-item" href="/SuperAdmin/SuperAdminDashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+            <div class="nav-label">Pharmacy</div>
+            <a class="nav-item active" href="/SuperAdmin/Pharmacies"><i class="fa-solid fa-store"></i> Pharmacies</a>
+            <a class="nav-item" href="/SuperAdmin/Workers"><i class="fa-solid fa-user-tie"></i> Workers</a>
+            <div class="nav-label">Finance</div>
+            <a class="nav-item" href="/SuperAdmin/SubscriptionPlans"><i class="fa-solid fa-file-invoice-dollar"></i> Billing & Plans</a>
+            <a class="nav-item" href="/SuperAdmin/PaymentHistory"><i class="fa-solid fa-clock-rotate-left"></i> Payment History</a>
+            <div class="nav-label">Medicine</div>
+            <a class="nav-item" href="/SuperAdmin/Medicines"><i class="fa-solid fa-capsules"></i> Global Medicines</a>
+            <div class="nav-label">System</div>
+            <a class="nav-item" href="/SuperAdmin/Notifications"><i class="fa-solid fa-bell"></i> Notifications</a>
+            <a class="nav-item" href="/SuperAdmin/Security"><i class="fa-solid fa-shield-halved"></i> Security & Access</a>
+            <a class="nav-item" href="/SuperAdmin/Settings"><i class="fa-solid fa-gear"></i> Settings</a>
+        </nav>
+        <div class="sidebar-foot">
+            <div class="admin-card">
+                <div class="avatar">SA</div>
+                <div><p>Super Admin</p><span>admin@pharmapulse.in</span></div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+        <div class="topbar">
+            <div>
+                <h1>Edit Pharmacy</h1>
+                <p>Update pharmacy details and subscription</p>
+            </div>
+            <div class="topbar-right">
+                <a class="icon-btn" href="/SuperAdmin/SuperAdminDashboard"><i class="fa-solid fa-house"></i></a>
+                <a class="icon-btn" href="/SuperAdmin/SuperAdminLogout"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+            </div>
+        </div>
+
+        <div class="body">
+            <div class="breadcrumb">
+                <a href="/SuperAdmin/SuperAdminDashboard">Dashboard</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <a href="/SuperAdmin/Pharmacies">Pharmacies</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>Edit Pharmacy</span>
+            </div>
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="err-box">
+                    <i class="fa-solid fa-circle-exclamation"></i> @TempData["Error"]
+                </div>
+            }
+
+            <div class="form-card">
+                <div class="form-card-header">
+                    <div class="hicon"><i class="fa-solid fa-pen-to-square"></i></div>
+                    <div>
+                        <h3>Edit Pharmacy Details</h3>
+                        <p>Changes will be saved immediately to the database</p>
+                    </div>
+                </div>
+
+                <form method="post">
+                    <div class="form-body">
+
+                        <!-- Basic Info -->
+                        <div class="section-label">Basic Information</div>
+                        <div class="fields-grid">
+                            <div class="field">
+                                <label>Pharmacy Name *</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-store"></i>
+                                    <input asp-for="Input.PharmacyName" placeholder="e.g. City Medical Store" required />
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Owner Name *</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-user"></i>
+                                    <input asp-for="Input.OwnerName" placeholder="e.g. Rajesh Patel" required />
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Mobile Number *</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-phone"></i>
+                                    <input asp-for="Input.MobileNumber" placeholder="e.g. 9876543210" required />
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Email Address *</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <input asp-for="Input.Email" type="email" placeholder="pharmacy@email.com" required />
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>GST Number *</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-file-invoice"></i>
+                                    <input asp-for="Input.GSTNumber" placeholder="e.g. 24AAAAA0000A1Z5" required />
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Drug License No *</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-id-card"></i>
+                                    <input asp-for="Input.DrugLicenseNo" placeholder="e.g. DL/GJ/2024/12345" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="section-label">Address</div>
+                        <div class="fields-grid" style="grid-template-columns:1fr; margin-bottom:22px">
+                            <div class="field">
+                                <label>Full Address *</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <input asp-for="Input.Address" placeholder="Shop No, Street, City, State, PIN" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Subscription Plan -->
+                        <div class="section-label">Subscription Plan</div>
+                        <div class="fields-grid three">
+
+                            <div class="field">
+                                <label>Plan Name *</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-layer-group"></i>
+                                    <select asp-for="Input.PlanName" id="planSelect" onchange="onPlanChange()" required>
+                                        <option value="">-- Select Plan --</option>
+                                        <option value="Basic">Basic</option>
+                                        <option value="Standard">Standard</option>
+                                        <option value="Premium">Premium</option>
+                                    </select>
+                                </div>
+                                <span class="field-hint">Plan price: <strong id="planPriceLabel">—</strong></span>
+                                <input type="hidden" asp-for="Input.PlanPrice" id="planPriceHidden" />
+                            </div>
+
+                            <div class="field">
+                                <label>Discount %</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-tag"></i>
+                                    <input asp-for="Input.DiscountPercent"
+                                           id="discountInput"
+                                           type="number"
+                                           min="0"
+                                           max="100"
+                                           step="0.01"
+                                           placeholder="e.g. 10  (leave blank if none)"
+                                           oninput="calcNet()" />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label>Valid Till *</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-calendar-days"></i>
+                                    <input asp-for="Input.PlanValidTill" type="date" required />
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Net Price + Payment Mode -->
+                        <div class="fields-grid three" style="margin-top:0">
+
+                            <div class="field">
+                                <label>Mode of Payment *</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-credit-card"></i>
+                                    <select asp-for="Input.PaymentMode" required>
+                                        <option value="">-- Select Mode --</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="UPI">UPI</option>
+                                        <option value="Card">Card</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="net-price-box" id="netPriceBox" style="display:none; grid-column: span 2;">
+                                <div>
+                                    <span class="net-label">Net Payable Amount</span>
+                                    <span class="saving" id="savingLabel"></span>
+                                </div>
+                                <span class="net-value" id="netPriceVal">—</span>
+                            </div>
+                            <input type="hidden" asp-for="Input.NetPrice" id="netPriceHidden" />
+
+                        </div>
+
+                        <!-- Login Credentials -->
+                        <div class="section-label">Login Credentials</div>
+                        <div class="fields-grid">
+                            <div class="field">
+                                <label>Username *</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-at"></i>
+                                    <input asp-for="Input.Username" placeholder="e.g. citymedical01" required autocomplete="off" />
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Password <span style="font-size:11px; font-weight:400; color:var(--muted)">(leave blank to keep current)</span></label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-lock"></i>
+                                    <input asp-for="Input.Password" type="password" id="pwdField" placeholder="Leave blank to keep current password" />
+                                    <button type="button" class="toggle-eye" onclick="togglePwd()">
+                                        <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                                    </button>
+                                </div>
+                                <span class="pwd-hint">Only fill this if you want to change the password.</span>
+                            </div>
+                        </div>
+
+                    </div><!-- /form-body -->
+
+                    <div class="form-footer">
+                        <button type="submit" class="btn-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> Save Changes
+                        </button>
+                        <a href="/SuperAdmin/Pharmacies" class="btn-secondary">
+                            <i class="fa-solid fa-xmark"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const planPrices = { 'Basic': 999, 'Standard': 2499, 'Premium': 4999 };
+
+        function onPlanChange() {
+            const plan   = document.getElementById('planSelect').value;
+            const label  = document.getElementById('planPriceLabel');
+            const hidden = document.getElementById('planPriceHidden');
+            if (plan && planPrices[plan] !== undefined) {
+                label.textContent = '₹' + planPrices[plan].toLocaleString('en-IN');
+                hidden.value = planPrices[plan];
+            } else {
+                label.textContent = '—';
+                hidden.value = '';
+            }
+            calcNet();
+        }
+
+        function calcNet() {
+            const plan      = document.getElementById('planSelect').value;
+            const disc      = parseFloat(document.getElementById('discountInput').value) || 0;
+            const netBox    = document.getElementById('netPriceBox');
+            const netVal    = document.getElementById('netPriceVal');
+            const saving    = document.getElementById('savingLabel');
+            const netHidden = document.getElementById('netPriceHidden');
+
+            if (plan && planPrices[plan] !== undefined) {
+                const price    = planPrices[plan];
+                const savedAmt = Math.round(price * disc / 100);
+                const net      = price - savedAmt;
+                netVal.textContent  = '₹' + net.toLocaleString('en-IN');
+                netHidden.value     = net;
+                saving.textContent  = disc > 0
+                    ? 'Saving ₹' + savedAmt.toLocaleString('en-IN') + ' (' + disc.toFixed(2) + '% off)'
+                    : '';
+                netBox.style.display = 'flex';
+            } else {
+                netBox.style.display = 'none';
+                netHidden.value = '';
+            }
+        }
+
+        function togglePwd() {
+            const f = document.getElementById('pwdField');
+            const i = document.getElementById('eyeIcon');
+            f.type      = f.type === 'password' ? 'text' : 'password';
+            i.className = f.type === 'password' ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash';
+        }
+
+        // On load — populate price display from existing plan value
+        document.addEventListener('DOMContentLoaded', function () {
+            const plan = document.getElementById('planSelect').value;
+            if (plan) onPlanChange();
+        });
+    </script>
+</body>
+</html>
