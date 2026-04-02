@@ -298,6 +298,22 @@
                         <label>Address</label>
                         <span>@(p.Address ?? "—")</span>
                     </div>
+                    <div class="field">
+                        <label>License Type</label>
+                        <span>@(string.IsNullOrEmpty(p.LicenseType) ? "—" : p.LicenseType)</span>
+                    </div>
+                    <div class="field">
+                        <label>State Code</label>
+                        <span>@(string.IsNullOrEmpty(p.StateCode) ? "—" : p.StateCode)</span>
+                    </div>
+                    <div class="field">
+                        <label>PAN Number</label>
+                        <span>@(string.IsNullOrEmpty(p.PANNumber) ? "—" : p.PANNumber)</span>
+                    </div>
+                    <div class="field">
+                        <label>FSSAI Number</label>
+                        <span>@(string.IsNullOrEmpty(p.FSSAINumber) ? "—" : p.FSSAINumber)</span>
+                    </div>
                 </div>
             </div>
         </div>

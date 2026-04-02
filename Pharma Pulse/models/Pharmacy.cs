@@ -45,5 +45,11 @@ namespace Pharma_Pulse.Models
 
         // NEW — TRACKING
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        // SuperAdmin Managed
+        public string LicenseType { get; set; } = string.Empty;
+        public string StateCode { get; set; } = string.Empty;
+        public string PANNumber { get; set; } = string.Empty;
+        public string? FSSAINumber { get; set; }
     }
 }
