@@ -78,6 +78,14 @@
                         <input asp-for="Medicine.BatchNo" type="text" class="form-input" />
                     </div>
 
+                    <!-- ✅ GST % -->
+                    <div class="form-group">
+                        <label>GST %</label>
+                        <input asp-for="Medicine.GstPercent" type="number"
+                               step="0.01" min="0" max="100"
+                               placeholder="e.g. 18" class="form-input" />
+                    </div>
+
                     <!-- ✅ NEW MFG Date -->
                     <div class="form-group">
                         <label>MFG Date</label>
@@ -88,6 +96,13 @@
                     <div class="form-group">
                         <label>HSN / SAC</label>
                         <input asp-for="Medicine.HsnSac" type="text" class="form-input" />
+                    </div>
+
+                    <!-- ✅ Supplier Name -->
+                    <div class="form-group">
+                        <label>Supplier Name</label>
+                        <input asp-for="Medicine.SupplierName" type="text"
+                               placeholder="e.g. Sun Pharma" class="form-input" />
                     </div>
 
                     <!-- ✅ Total Stock Units -->

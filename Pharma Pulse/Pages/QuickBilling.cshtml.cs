@@ -161,13 +161,29 @@ namespace Pharma_Pulse.Pages
         // ================= CALCULATE TOTALS =================
         private void CalculateTotals()
         {
+            foreach (var item in BillItems)
+            {
+                decimal baseAmount = item.Price * item.Quantity;
+                decimal gstAmount = baseAmount * (item.GstPercent / 100);
+
+                // ✅ Item Total = MRP + GST only (NO discount here)
+                item.Total = baseAmount + gstAmount;
+            }
+
+            // ✅ SubTotal = Sare items ka Total WITH GST, WITHOUT discount
+            // Ye KABHI nahi badlega discount se
             SubTotal = BillItems.Sum(x => x.Total);
 
-            decimal discountAmount = SubTotal * (DiscountPercent / 100);
-            decimal afterDiscount = SubTotal - discountAmount;
+            // GST Amount (without discount)
+            GstAmount = BillItems.Sum(x =>
+            {
+                decimal baseAmount = x.Price * x.Quantity;
+                return baseAmount * (x.GstPercent / 100);
+            });
 
-            GstAmount = afterDiscount * (SelectedGstPercent / 100);
-            GrandTotal = afterDiscount + GstAmount;
+            // ✅ Discount sirf GrandTotal pe lagao
+            decimal discountAmount = SubTotal * (DiscountPercent / 100);
+            GrandTotal = SubTotal - discountAmount;
         }
 
         // ================= ADD ITEM =================
@@ -184,9 +200,12 @@ namespace Pharma_Pulse.Pages
             if (med == null || Quantity <= 0)
                 return RedirectToPage();
 
-            // ✅ FIX: Force Unit mode if medicine doesn't support strips
-            if (med.SellType != "Both")
+            // ✅ SellMode fix
+            if (med.SellType == "Unit" || med.SellType == "Pack")
                 SellMode = "Unit";
+            else if (med.SellType == "Strip")
+                SellMode = "Strip";
+            // Both ke liye user ka SellMode rahega
 
             if (string.IsNullOrEmpty(SellMode))
                 SellMode = "Unit";
@@ -213,20 +232,20 @@ namespace Pharma_Pulse.Pages
                 return RedirectToPage();
             }
 
-            // ✅ FIX: Strip price = SellingPrice × UnitsPerStrip
             decimal itemPrice = SellMode == "Strip"
                 ? med.SellingPrice * med.UnitsPerStrip
                 : med.SellingPrice;
 
+            // ✅ GST multiplier
+            decimal gstMultiplier = 1 + (med.GstPercent / 100);
+
             if (existingItem != null)
             {
-                // ✅ FIX: Update quantity AND recalculate Total
                 existingItem.Quantity += Quantity;
-                existingItem.Total = existingItem.Price * existingItem.Quantity;
+                existingItem.Total = existingItem.Price * existingItem.Quantity * (1 + existingItem.GstPercent / 100);
             }
             else
             {
-                // ✅ FIX: Set Total on new item
                 BillItems.Add(new BillItem
                 {
                     MedicineName = med.MedicineName,
@@ -237,7 +256,9 @@ namespace Pharma_Pulse.Pages
                     Quantity = Quantity,
                     SaleMode = SellMode,
                     Price = itemPrice,
-                    Total = itemPrice * Quantity
+                    Total = itemPrice * Quantity * gstMultiplier,  // ✅ GST included
+                    GstPercent = med.GstPercent,
+                    SupplierName = med.SupplierName
                 });
             }
 

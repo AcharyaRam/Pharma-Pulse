@@ -105,6 +105,8 @@ namespace Pharma_Pulse.Pages
                     existing.SellType = Medicine.SellType;
                     existing.ExpiryDate = Medicine.ExpiryDate;
                     existing.UnitsPerStrip = Medicine.UnitsPerStrip; // ✅ FIX: Save UnitsPerStrip
+                    existing.GstPercent = Medicine.GstPercent;
+                    existing.SupplierName = Medicine.SupplierName;
 
                     if (existing.ExpiryDate.Date < DateTime.Today)
                         existing.IsActive = false;

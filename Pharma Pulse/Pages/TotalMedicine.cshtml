@@ -109,6 +109,8 @@
                         <th>Low Limit</th>
                         <th>Buy ₹</th>
                         <th>Sell ₹</th>
+                        <th>GST %</th>      <!-- ✅ ADD -->
+                        <th>Supplier</th>
                         <th>Action</th>
                         <th>Status</th>
                     </tr>
@@ -137,6 +139,8 @@
                             <td>@med.LowStockLimit</td>
                             <td>@med.BuyingPrice</td>
                             <td>@med.SellingPrice</td>
+                            <td>@med.GstPercent %</td>    <!-- ✅ ADD -->
+                            <td>@med.SupplierName</td>
                             <td>
                                 @if (med.ExpiryDate.Date < DateTime.Today)
                                 {
@@ -165,6 +169,8 @@
                                             data-sell="@med.SellingPrice"
                                             data-hsn="@med.HsnSac"
                                             data-mode="@med.SellType"
+                                            data-gst="@med.GstPercent"
+                                            data-supplier="@med.SupplierName"
                                             data-units="@med.UnitsPerStrip"
                                             data-expiry="@med.ExpiryDate.ToString("yyyy-MM-dd")">
                                         Update
@@ -262,6 +268,15 @@
                     <label>HSN</label>
                     <input asp-for="Medicine.HsnSac" required />
                 </div>
+                <div>
+                    <label>GST %</label>
+                    <input asp-for="Medicine.GstPercent" type="number" step="0.01" min="0" max="100" placeholder="e.g. 18" />
+                </div>
+
+                <div>
+                    <label>Supplier Name</label>
+                    <input asp-for="Medicine.SupplierName" type="text" placeholder="e.g. Sun Pharma" />
+                </div>
 
                 <div>
                     <label>Selling Mode</label>
@@ -355,6 +370,10 @@
         document.querySelector('[name="Medicine.BuyingPrice"]').value = button.dataset.buy;
         document.querySelector('[name="Medicine.SellingPrice"]').value = button.dataset.sell;
         document.querySelector('[name="Medicine.HsnSac"]').value = button.dataset.hsn;
+
+        document.querySelector('[name="Medicine.GstPercent"]').value = button.dataset.gst;
+        document.querySelector('[name="Medicine.SupplierName"]').value = button.dataset.supplier;
+
         document.querySelector('[name="Medicine.SellType"]').value = button.dataset.mode;
         document.querySelector('[name="Medicine.ExpiryDate"]').value = button.dataset.expiry;
 
