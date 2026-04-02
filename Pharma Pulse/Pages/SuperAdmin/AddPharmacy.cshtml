@@ -586,6 +586,54 @@
                             </div>
                         </div>
 
+                        <!-- License & Compliance -->
+                        <div class="section-label">License & Compliance</div>
+                        <div class="fields-grid">
+
+                            <div class="field">
+                                <label>License Type *</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-certificate"></i>
+                                    <select asp-for="Input.LicenseType" required>
+                                        <option value="">-- Select Type --</option>
+                                        <option value="Retail">Retail</option>
+                                        <option value="Wholesale">Wholesale</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label>State Code *</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-map-pin"></i>
+                                    <input asp-for="Input.StateCode" placeholder="e.g. GJ, MH, DL" required />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label>PAN Number *</label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-id-card"></i>
+                                    <input asp-for="Input.PANNumber"
+                                           placeholder="e.g. ABCDE1234F"
+                                           style="text-transform:uppercase"
+                                           maxlength="10"
+                                           required />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label>FSSAI Number <span style="font-weight:400; color:var(--muted);">(Optional)</span></label>
+                                <div class="input-wrap">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                    <input asp-for="Input.FSSAINumber"
+                                           placeholder="e.g. 12345678901234"
+                                           maxlength="14" />
+                                </div>
+                            </div>
+
+                        </div>
+
                         <!-- Subscription Plan -->
                         <div class="section-label">Subscription Plan</div>
                         <div class="fields-grid three">

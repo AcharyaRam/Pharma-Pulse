@@ -44,6 +44,11 @@ namespace Pharma_Pulse.Pages.SuperAdmin
             // Login
             public string Username { get; set; } = string.Empty;
             public string Password { get; set; } = string.Empty;
+
+            public string LicenseType { get; set; } = string.Empty;  // Retail/Wholesale
+            public string StateCode { get; set; } = string.Empty;
+            public string PANNumber { get; set; } = string.Empty;
+            public string? FSSAINumber { get; set; }  // nullable = optional
         }
 
         public IActionResult OnGet()
@@ -92,7 +97,12 @@ namespace Pharma_Pulse.Pages.SuperAdmin
                 PlainPassword = Input.Password,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(Input.Password),
                 IsActive = true,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+
+                LicenseType = Input.LicenseType,
+                StateCode = Input.StateCode,
+                PANNumber = Input.PANNumber,
+                FSSAINumber = Input.FSSAINumber
             };
 
             _db.Pharmacies.Add(pharmacy);

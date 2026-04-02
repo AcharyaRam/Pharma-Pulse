@@ -27,6 +27,12 @@ namespace Pharma_Pulse.Pages
 
         public string SearchTerm { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public int? ExpiryFilter { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string StockFilter { get; set; }
+
         public void OnGet(int pageNumber = 1, string search = "")
         {
             var allMedicines = _service.GetAllMedicines(CurrentPharmacyId);
@@ -46,13 +52,42 @@ namespace Pharma_Pulse.Pages
             if (!string.IsNullOrWhiteSpace(search))
             {
                 search = search.Trim();
+
                 allMedicines = allMedicines
                     .Where(m =>
-                        !string.IsNullOrEmpty(m.MedicineName) &&
-                        m.MedicineName.StartsWith(search, StringComparison.OrdinalIgnoreCase)
+                        (!string.IsNullOrEmpty(m.MedicineName) &&
+                         m.MedicineName.StartsWith(search, StringComparison.OrdinalIgnoreCase))
+
+                        ||
+
+                        (!string.IsNullOrEmpty(m.SupplierName) &&
+                         m.SupplierName.StartsWith(search, StringComparison.OrdinalIgnoreCase)) // ✅ NEW
                     )
                     .ToList();
             }
+
+
+
+            if (ExpiryFilter.HasValue)
+            {
+                var cutoff = DateTime.Today.AddDays(ExpiryFilter.Value);
+                allMedicines = allMedicines
+                    .Where(m => m.ExpiryDate.Date <= cutoff && m.ExpiryDate.Date >= DateTime.Today)
+                    .ToList();
+            }
+            // Stock Filter
+            if (!string.IsNullOrEmpty(StockFilter))
+            {
+                if (StockFilter == "low")
+                    allMedicines = allMedicines
+                        .Where(m => m.StockUnits > 0 && m.StockUnits <= m.LowStockLimit)
+                        .ToList();
+                else if (StockFilter == "out")
+                    allMedicines = allMedicines
+                        .Where(m => m.StockUnits == 0)
+                        .ToList();
+            }
+
 
             TotalPages = (int)Math.Ceiling(allMedicines.Count / (double)PageSize);
             CurrentPage = pageNumber;
@@ -62,6 +97,8 @@ namespace Pharma_Pulse.Pages
                 .Take(PageSize)
                 .ToList();
         }
+
+
 
         public IActionResult OnPostSaveMedicine()
         {

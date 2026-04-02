@@ -82,21 +82,65 @@
 
             <div class="card-header">
                 <h2>Total Medicines</h2>
-                <button type="button" class="btn-add" id="openAddMedicine">
-                    + Add Medicine
-                </button>
+
+                <div style="display:flex; align-items:center; gap:10px;">
+
+                    <!-- Expiry Filter -->
+                    <form method="get" id="expiryForm">
+                        <input type="hidden" name="search" value="@Model.SearchTerm" />
+                        <select name="expiryFilter" onchange="this.form.submit()" style="
+                padding: 8px 14px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                font-size: 14px;
+                cursor: pointer;
+                background: #fff;
+                color: #333;">
+                            <option value="">All Medicines</option>
+                            <option value="30" selected="@(Model.ExpiryFilter == 30)">Expiring in 30 Days</option>
+                            <option value="60" selected="@(Model.ExpiryFilter == 60)">Expiring in 60 Days</option>
+                            <option value="90" selected="@(Model.ExpiryFilter == 90)">Expiring in 90 Days</option>
+                        </select>
+                    </form>
+                     <form method="get" id="stockForm">
+        <input type="hidden" name="search" value="@Model.SearchTerm" />
+        <input type="hidden" name="expiryFilter" value="@Model.ExpiryFilter" />
+        <select name="stockFilter" onchange="this.form.submit()" style="
+            padding: 8px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            background: #fff;
+            color: #333;">
+            <option value="">All Stock</option>
+            <option value="low" selected="@(Model.StockFilter == "low")">Low Stock</option>
+            <option value="out" selected="@(Model.StockFilter == "out")">Out of Stock</option>
+        </select>
+    </form>
+
+
+
+                    <!-- Add Medicine Button -->
+                    <button type="button" class="btn-add" id="openAddMedicine">
+                        + Add Medicine
+                    </button>
+
+                </div>
             </div>
 
+            <!-- Search bar ALAG neeche rakho — card-header ke bahar -->
             <form method="get" class="search-bar">
                 <div class="search-input">
                     <span class="search-icon">🔍</span>
                     <input type="text" name="search" value="@Model.SearchTerm" placeholder="Search medicine name" />
-                    <button type="submit" class="btn-search">
-                        Search
-                    </button>
+                  
+                    <input type="hidden" name="expiryFilter" value="@Model.ExpiryFilter" />
+                    <input type="hidden" name="stockFilter" value="@Model.StockFilter" /> <!-- ✅ ADD -->
+
+                    <button type="submit" class="btn-search">Search</button>
                 </div>
             </form>
-
             <table class="sales-table">
                 <thead>
                     <tr>
@@ -391,7 +435,8 @@
         <a class="page-btn"
            asp-page="/TotalMedicine"
            asp-route-pageNumber="@(Model.CurrentPage - 1)"
-           asp-route-search="@Model.SearchTerm">
+           asp-route-search="@Model.SearchTerm"
+           asp-route-expiryFilter="@Model.ExpiryFilter">  <!-- ✅ ADD THIS -->
             ⬅ Previous
         </a>
     }
@@ -405,7 +450,8 @@
         <a class="page-btn"
            asp-page="/TotalMedicine"
            asp-route-pageNumber="@(Model.CurrentPage + 1)"
-           asp-route-search="@Model.SearchTerm">
+           asp-route-search="@Model.SearchTerm"
+           asp-route-expiryFilter="@Model.ExpiryFilter">
             Next ➡
         </a>
     }

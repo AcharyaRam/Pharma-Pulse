@@ -119,6 +119,25 @@
                             <span>Address</span>
                             <strong>@Model.Pharmacy.Address</strong>
                         </div>
+                        <div class="info-row">
+                            <span>License Type</span>
+                            <strong>@Model.Pharmacy.LicenseType</strong>
+                        </div>
+                        <div class="info-row">
+                            <span>State Code</span>
+                            <strong>@Model.Pharmacy.StateCode</strong>
+                        </div>
+                        <div class="info-row">
+                            <span>PAN Number</span>
+                            <strong>@Model.Pharmacy.PANNumber</strong>
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.Pharmacy.FSSAINumber))
+                        {
+                            <div class="info-row">
+                                <span>FSSAI Number</span>
+                                <strong>@Model.Pharmacy.FSSAINumber</strong>
+                            </div>
+                        }
                         <button class="blue-btn" onclick="enableEdit()">Edit Info</button>
                     </div>
 
@@ -160,6 +179,25 @@
                             <input asp-for="Pharmacy.Address" class="form-input" />
                         </div>
 
+                        <div class="info-row">
+                            <span>License Type</span>
+                            <strong>@Model.Pharmacy.LicenseType</strong>
+                        </div>
+                        <div class="info-row">
+                            <span>State Code</span>
+                            <strong>@Model.Pharmacy.StateCode</strong>
+                        </div>
+                        <div class="info-row">
+                            <span>PAN Number</span>
+                            <strong>@Model.Pharmacy.PANNumber</strong>
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.Pharmacy.FSSAINumber))
+                        {
+                            <div class="info-row">
+                                <span>FSSAI Number</span>
+                                <strong>@Model.Pharmacy.FSSAINumber</strong>
+                            </div>
+                        }
                         <div style="margin-top:15px;">
                             <button type="submit" id="saveBtn" class="green-btn">
                                 <span class="btn-text">Save Profile</span>

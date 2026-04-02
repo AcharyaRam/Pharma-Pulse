@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+ï»¿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Pharma_Pulse.Data;
 using Pharma_Pulse.Models;
@@ -37,9 +37,14 @@ namespace Pharma_Pulse.Pages.SuperAdmin
             public string PaymentMode { get; set; } = string.Empty;
             public string Username { get; set; } = string.Empty;
             public string Password { get; set; } = string.Empty; // blank = keep current
+
+            public string LicenseType { get; set; } = string.Empty;
+            public string StateCode { get; set; } = string.Empty;
+            public string PANNumber { get; set; } = string.Empty;
+            public string? FSSAINumber { get; set; }
         }
 
-        // GET — load existing pharmacy data into form
+        // GET â€” load existing pharmacy data into form
         public IActionResult OnGet(int id)
         {
             if (HttpContext.Session.GetString("SuperAdmin") != "true")
@@ -66,13 +71,18 @@ namespace Pharma_Pulse.Pages.SuperAdmin
                 PlanValidTill = pharmacy.PlanValidTill,
                 PaymentMode = pharmacy.PaymentMode,
                 Username = pharmacy.Username,
-                Password = string.Empty  // never pre-fill password
+                Password = string.Empty , // never pre-fill password
+                // âœ… Yeh add karo
+                LicenseType = pharmacy.LicenseType,
+                StateCode = pharmacy.StateCode,
+                PANNumber = pharmacy.PANNumber,
+                FSSAINumber = pharmacy.FSSAINumber
             };
 
             return Page();
         }
 
-        // POST — save updated data
+        // POST â€” save updated data
         public IActionResult OnPost(int id)
         {
             if (HttpContext.Session.GetString("SuperAdmin") != "true")
@@ -113,8 +123,12 @@ namespace Pharma_Pulse.Pages.SuperAdmin
             pharmacy.PlanValidTill = Input.PlanValidTill;
             pharmacy.PaymentMode = Input.PaymentMode;
             pharmacy.Username = Input.Username;
+            pharmacy.LicenseType = Input.LicenseType;
+            pharmacy.StateCode = Input.StateCode;
+            pharmacy.PANNumber = Input.PANNumber;
+            pharmacy.FSSAINumber = Input.FSSAINumber;
 
-            // Password — only update if user typed a new one
+            // Password â€” only update if user typed a new one
             if (!string.IsNullOrWhiteSpace(Input.Password))
             {
                 pharmacy.PlainPassword = Input.Password;
