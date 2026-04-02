@@ -10,6 +10,8 @@
         public int PharmacyId { get; set; }
 
         public DateTime ExpiryDate { get; set; }
+        public decimal GstPercent { get; set; }
+        public string SupplierName { get; set; }
 
         public DateTime MfgDate { get; set; }
         public string HsnSac { get; set; }

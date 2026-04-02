@@ -9,6 +9,10 @@ namespace Pharma_Pulse.Models
 
         public int PharmacyId { get; set; }
 
+        // Medicine.cs (ya jahan bhi tera model hai)
+        public int GstPercent { get; set; } = 0;
+        public string SupplierName { get; set; } = "";
+
         // ✅ Basic Info
         public string MedicineName { get; set; }
         public string Category { get; set; }

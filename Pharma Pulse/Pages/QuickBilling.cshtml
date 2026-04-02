@@ -7,70 +7,16 @@
 <!-- SIDEBAR -->
 <aside class="sidebar">
     <h2 class="sidebar-title">Pharma Pulse</h2>
-
     <ul class="sidebar-menu">
-        <li>
-            <a asp-page="/Dashboard" class="menu-link">
-                <i data-lucide="layout-dashboard" class="icon"></i>
-                <span class="text">Dashboard</span>
-            </a>
-        </li>
-
-        <li>
-            <a asp-page="/QuickBilling" class="menu-link active">
-                <span class="icon rupee-icon">₹</span>
-                <span class="text">Quick Billing</span>
-            </a>
-        </li>
-
-        <li>
-            <a asp-page="/SalesSummary" class="menu-link">
-                <i data-lucide="bar-chart-3" class="icon"></i>
-                <span class="text">Sales Summary</span>
-            </a>
-        </li>
-
-        <li>
-            <a asp-page="/TotalMedicine" class="menu-link">
-                <i data-lucide="pill" class="icon"></i>
-                <span class="text">Medicines</span>
-            </a>
-        </li>
-
-        <li>
-            <a asp-page="/TotalCustomers" class="menu-link">
-                <i data-lucide="users" class="icon"></i>
-                <span class="text">Customers</span>
-            </a>
-        </li>
-
-        <li>
-            <a asp-page="/LowStockAlerts" class="menu-link">
-                <i data-lucide="alert-triangle" class="icon"></i>
-                <span class="text">Low Stock Alerts</span>
-            </a>
-        </li>
-
-        <li>
-            <a asp-page="/ExpiryAlerts" class="menu-link">
-                <i data-lucide="alarm-clock" class="icon"></i>
-                <span class="text">Expiry Alerts</span>
-            </a>
-        </li>
-        <li>
-            <a asp-page="/Profile" class="menu-link">
-                <i data-lucide="user-cog" class="icon"></i>
-                <span class="text">Profile</span>
-            </a>
-        </li>
-
-
-        <li>
-            <a asp-page="/Login" class="menu-link">
-                <i data-lucide="log-out" class="icon"></i>
-                <span class="text">Logout</span>
-            </a>
-        </li>
+        <li><a asp-page="/Dashboard" class="menu-link"><i data-lucide="layout-dashboard" class="icon"></i><span class="text">Dashboard</span></a></li>
+        <li><a asp-page="/QuickBilling" class="menu-link active"><span class="icon rupee-icon">₹</span><span class="text">Quick Billing</span></a></li>
+        <li><a asp-page="/SalesSummary" class="menu-link"><i data-lucide="bar-chart-3" class="icon"></i><span class="text">Sales Summary</span></a></li>
+        <li><a asp-page="/TotalMedicine" class="menu-link"><i data-lucide="pill" class="icon"></i><span class="text">Medicines</span></a></li>
+        <li><a asp-page="/TotalCustomers" class="menu-link"><i data-lucide="users" class="icon"></i><span class="text">Customers</span></a></li>
+        <li><a asp-page="/LowStockAlerts" class="menu-link"><i data-lucide="alert-triangle" class="icon"></i><span class="text">Low Stock Alerts</span></a></li>
+        <li><a asp-page="/ExpiryAlerts" class="menu-link"><i data-lucide="alarm-clock" class="icon"></i><span class="text">Expiry Alerts</span></a></li>
+        <li><a asp-page="/Profile" class="menu-link"><i data-lucide="user-cog" class="icon"></i><span class="text">Profile</span></a></li>
+        <li><a asp-page="/Login" class="menu-link"><i data-lucide="log-out" class="icon"></i><span class="text">Logout</span></a></li>
     </ul>
 </aside>
 
@@ -80,26 +26,17 @@
     <p>Invoice: @Model.InvoiceNumber</p>
     <hr />
 
-    <!-- CUSTOMER -->
+    <!-- ✅ CUSTOMER SEARCH (dropdown hata diya, search box aaya) -->
     <h3>Select Customer</h3>
-    <form method="post" asp-page-handler="SelectCustomer">
 
-        <select asp-for="SelectedCustomerId" class="form-control" onchange="this.form.submit()">
+    <div class="search-box-wrap">
+        <input type="text" id="customerSearchInput" placeholder="Search by name or mobile..." autocomplete="off" class="search-input" />
+        <div id="customerSuggestions" class="suggestions-dropdown"></div>
+    </div>
 
-            <option value="">-- Select Customer --</option>
-
-            @foreach (var customer in Model.AllCustomers)
-            {
-                <option value="@customer.CustomerId"
-                        selected="@(customer.CustomerId == Model.SelectedCustomerId ? "selected" : null)">
-
-                    @customer.FirstName @customer.Surname (@customer.MobileNumber)
-
-                </option>
-            }
-
-        </select>
-
+    <!-- Hidden form to submit selected customer -->
+    <form method="post" asp-page-handler="SelectCustomer" id="customerSelectForm">
+        <input type="hidden" asp-for="SelectedCustomerId" id="hiddenCustomerId" />
     </form>
 
     @if (Model.SelectedCustomer != null)
@@ -121,31 +58,31 @@
 
     <hr />
 
-    <!-- ADD MEDICINE -->
-    <!-- ADD MEDICINE -->
+    <!-- ✅ MEDICINE SEARCH (dropdown hata diya, search + suggestions aaye) -->
     <h3>Add Medicine</h3>
-    <form method="post" asp-page-handler="AddItem">
-        <select asp-for="SelectedMedicine" id="medicineDropdown" required>
-            <option value="">-- Select Medicine --</option>
-            @foreach (var med in Model.AllMedicines)
-            {
-                <option value="@med.MedicineName">@med.MedicineName</option>
-            }
-        </select>
+    <form method="post" asp-page-handler="AddItem" id="addMedicineForm">
 
-        <select asp-for="SellMode" id="sellModeDropdown" style="display:none;">
-            <option value="Unit">Unit</option>
-            <option value="Strip">Strip</option>
-        </select>
+        <div class="search-box-wrap">
+            <input type="text" id="medicineSearchInput" placeholder="Search medicine..." autocomplete="off" class="search-input" />
+            <input type="hidden" asp-for="SelectedMedicine" id="hiddenMedicineName" />
+            <div id="medicineSuggestions" class="suggestions-dropdown"></div>
+        </div>
 
-        <input asp-for="Quantity" type="number" min="1" value="1" />
+        <!-- ✅ SellMode - dynamically dikhega (Unit / Strip / Both) -->
+        <div id="sellModeWrap" style="display:none; margin-top: 8px;">
+            <label>Sell Mode</label>
+            <select asp-for="SellMode" id="sellModeDropdown">
+                <option value="Unit">Unit</option>
+                <option value="Strip">Strip</option>
+            </select>
+        </div>
+
+        <input asp-for="Quantity" type="number" min="1" value="1" style="margin-top: 8px;" />
         <button type="submit">Add</button>
 
         @if (TempData["StockError"] != null)
         {
-            <div class="stock-error">
-                @TempData["StockError"]
-            </div>
+            <div class="stock-error">@TempData["StockError"]</div>
         }
 
     </form>
@@ -163,12 +100,13 @@
                 <th>BATCH</th>
                 <th>Mode</th>
                 <th>EXP</th>
+                <th>Cost</th>
+                <th>GST%</th>       <!-- ✅ ADD -->
+                <th>Supplier</th>   <!-- ✅ ADD -->
                 <th>MRP</th>
-                <th>Total</th>
                 <th>Action</th>
             </tr>
         </thead>
-
         <tbody>
             @foreach (var item in Model.BillItems)
             {
@@ -181,7 +119,9 @@
                     <td>@item.SaleMode</td>
                     <td>@item.ExpiryDate.ToString("MM/yyyy")</td>
                     <td>₹@item.Price</td>
-                    <td>₹@item.Total</td>
+                    <td>₹@((item.Price * item.Quantity * (item.GstPercent / 100)).ToString("0.00"))</td>     <!-- ✅ ADD -->
+                    <td>@item.SupplierName</td>      <!-- ✅ ADD -->
+                    <td>₹@item.Total.ToString("0.00")</td>
                     <td>
                         <form method="post" asp-page-handler="DeleteItem">
                             <input type="hidden" name="medicineName" value="@item.MedicineName" />
@@ -190,36 +130,24 @@
                     </td>
                 </tr>
             }
-
             <tr class="summary-row">
-                <td colspan="7"></td>
+                <td colspan="9"></td>
                 <td><b>Subtotal</b></td>
-                <td><b>₹@Model.SubTotal</b></td>
+                <td><b>₹@Model.SubTotal.ToString("0.00")</b></td>
                 <td></td>
             </tr>
         </tbody>
     </table>
 
-    <!-- NEW COMPACT SUMMARY -->
+    <!-- BILLING SUMMARY (GST box hata diya) -->
     <div class="billing-summary">
 
         <form method="post" asp-page-handler="UpdateBill">
-
             <div class="bill-row">
 
                 <div class="small-field">
                     <label>Discount (%)</label>
                     <input asp-for="DiscountPercent" type="number" step="0.01" />
-                </div>
-
-                <div class="small-field">
-                    <label>GST %</label>
-                    <select asp-for="SelectedGstPercent">
-                        <option value="0">0%</option>
-                        <option value="5">5%</option>
-                        <option value="12">12%</option>
-                        <option value="18">18%</option>
-                    </select>
                 </div>
 
                 <div class="small-field">
@@ -232,33 +160,21 @@
                     </select>
                 </div>
 
-                <!-- ✅ Professional Update Button -->
-                <button type="submit" class="update-btn">
-                    Update Bill
-                </button>
+                <button type="submit" class="update-btn">Update Bill</button>
 
             </div>
         </form>
 
-
-
         <div class="amount-section">
-
-
             <div class="total-row">
-                <span class="total-text">Grand Total :</span>
-                <span class="total-price">₹@Model.GrandTotal.ToString("0.00")</span>
+                <span class="total-text"><b>Grand Total :</b></span>
+                <span class="total-price"><b>₹@Model.GrandTotal.ToString("0.00")</b></span>
             </div>
-
         </div>
-
-
 
         <div class="action-buttons">
             <form method="post" asp-page-handler="CompleteSale">
-                <button type="button" onclick="completeSale()" class="complete-btn">
-                    Complete Sale
-                </button>
+                <button type="button" onclick="completeSale()" class="complete-btn">Complete Sale</button>
             </form>
             <button type="button" class="print-btn" onclick="printInvoice()">🖨 Print Bill</button>
         </div>
@@ -267,76 +183,28 @@
 
 </div>
 
-<script>
-     const medicineDropdown = document.getElementById("medicineDropdown");
-    const sellModeDropdown = document.getElementById("sellModeDropdown");
-
-    const medicineSellTypes = {
-    @foreach (var med in Model.AllMedicines)
-    {
-        <text>"@med.MedicineName": "@med.SellType",</text>
-    }
-    };
-
-    medicineDropdown.addEventListener("change", function () {
-
-        const type = medicineSellTypes[this.value];
-
-        if (type === "Both") {
-            sellModeDropdown.style.display = "block";
-
-            // ✅ Default Select Unit
-            sellModeDropdown.value = "Unit";
-        }
-        else {
-            sellModeDropdown.style.display = "none";
-        }
-
-    });
-</script>
-
-<script>
-    function printInvoice(){
-        window.print();
-    }
-</script>
-
-
 <!-- ================= PRINT BILL ================= -->
 <div id="printBill" class="print-bill">
-
     <div class="bill-header">
         <h2>PHARMA PULSE MEDICAL</h2>
         <p>Near City Hospital, Vadodara, Gujarat</p>
         <p>GSTIN: 24ABCDE1234F1Z5 | DL No: GJ-122345</p>
         <p>Phone: 9999999999</p>
     </div>
-
     <hr />
-
     <div class="bill-info">
         <div>
             <b>Invoice No:</b> @Model.InvoiceNumber <br />
             <b>Date:</b> @DateTime.Now.ToString("dd/MM/yyyy hh:mm tt")
         </div>
-
         <div>
             <b>Customer:</b> @Model.SelectedCustomer?.FirstName @Model.SelectedCustomer?.Surname <br />
             <b>Mobile:</b> @Model.SelectedCustomer?.MobileNumber
         </div>
     </div>
-
     <table class="invoice-table">
         <thead>
-            <tr>
-                <th>#</th>
-                <th>Medicine</th>
-                <th>Batch</th>
-                <th>Expiry</th>
-                <th>Qty</th>
-                <th>MRP</th>
-                <th>Total</th>
-            </tr>
+            <tr><th>#</th><th>Medicine</th><th>Batch</th><th>Expiry</th><th>Qty</th><th>MRP</th><th>Total</th></tr>
         </thead>
         <tbody>
             @{
@@ -357,44 +225,169 @@
             }
         </tbody>
     </table>
-
     <div class="totals">
-        <p>Subtotal : ₹@Model.SubTotal.ToString("0.00")</p>
-        <p>Discount : @Model.DiscountPercent %</p>
-        <p>GST (@Model.SelectedGstPercent%) : ₹@Model.GstAmount.ToString("0.00")</p>
-
+  <!-- ✅ UPDATED -->
         <h2>Net Amount : ₹@Model.GrandTotal.ToString("0.00")</h2>
     </div>
-
-    <div class="sign">
-        <p>Pharmacist Signature</p>
-    </div>
-
+    <div class="sign"><p>Pharmacist Signature</p></div>
     <p class="thanks">*** Thank You Visit Again ***</p>
-
 </div>
 
+
+<!-- ================= ALL SCRIPTS ================= -->
 <script>
-    function submitWithScroll(form) {
+    // ─── CUSTOMER DATA ───────────────────────────────────────
+    const allCustomers = [
+        @foreach (var c in Model.AllCustomers)
+        {
+                <text>{ id: @c.CustomerId, name: "@c.FirstName @c.Surname", mobile: "@c.MobileNumber" },</text>
+        }
+    ];
 
-        // Save scroll before submit
-        document.getElementById("scrollPos").value = window.scrollY;
+    const customerInput = document.getElementById("customerSearchInput");
+    const customerSuggestions = document.getElementById("customerSuggestions");
+    const hiddenCustomerId = document.getElementById("hiddenCustomerId");
+    const customerSelectForm = document.getElementById("customerSelectForm");
 
-        form.submit();
+    customerInput.addEventListener("input", function () {
+        const query = this.value.trim().toLowerCase();
+        customerSuggestions.innerHTML = "";
+
+        if (!query) { customerSuggestions.style.display = "none"; return; }
+
+        const filtered = allCustomers.filter(c =>
+            c.name.toLowerCase().includes(query) || c.mobile.includes(query)
+        ).slice(0, 8);
+
+        if (filtered.length === 0) { customerSuggestions.style.display = "none"; return; }
+
+        filtered.forEach(c => {
+            const div = document.createElement("div");
+            div.className = "suggestion-item";
+            div.textContent = `${c.name} (${c.mobile})`;
+            div.addEventListener("click", () => selectCustomer(c));
+            customerSuggestions.appendChild(div);
+        });
+
+        customerSuggestions.style.display = "block";
+    });
+
+    // Enter key pe bhi select hoga (pehla result)
+    customerInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            const first = customerSuggestions.querySelector(".suggestion-item");
+            if (first) first.click();
+        }
+    });
+
+    function selectCustomer(c) {
+        customerInput.value = `${c.name} (${c.mobile})`;
+        hiddenCustomerId.value = c.id;
+        customerSuggestions.style.display = "none";
+        customerSelectForm.submit();
     }
 
-    window.addEventListener("load", function () {
-
-        let pos = document.getElementById("scrollPos").value;
-
-        if (pos && pos > 0) {
-            window.scrollTo(0, pos);
+    document.addEventListener("click", function (e) {
+        if (!e.target.closest(".search-box-wrap")) {
+            customerSuggestions.style.display = "none";
         }
     });
 </script>
+
+<script>
+    // ─── MEDICINE DATA ────────────────────────────────────────
+    const allMedicines = [
+        @foreach (var med in Model.AllMedicines)
+        {
+                <text>{ name: "@med.MedicineName", sellType: "@med.SellType" },</text>
+        }
+    ];
+
+    const medInput = document.getElementById("medicineSearchInput");
+    const medSuggestions = document.getElementById("medicineSuggestions");
+    const hiddenMedName = document.getElementById("hiddenMedicineName");
+    const sellModeWrap = document.getElementById("sellModeWrap");
+    const sellModeDropdown = document.getElementById("sellModeDropdown");
+
+    medInput.addEventListener("input", function () {
+        const query = this.value.trim().toLowerCase();
+        medSuggestions.innerHTML = "";
+
+        if (!query) { medSuggestions.style.display = "none"; return; }
+
+        const filtered = allMedicines.filter(m =>
+            m.name.toLowerCase().includes(query)
+        ).slice(0, 10);
+
+        if (filtered.length === 0) { medSuggestions.style.display = "none"; return; }
+
+        filtered.forEach(m => {
+            const div = document.createElement("div");
+            div.className = "suggestion-item";
+
+            // SellType badge dikhao
+            const badge = m.sellType === "Both" ? "Unit / Strip" : m.sellType;
+            div.innerHTML = `${m.name} <span class="sell-badge">${badge}</span>`;
+
+            div.addEventListener("click", () => selectMedicine(m));
+            medSuggestions.appendChild(div);
+        });
+
+        medSuggestions.style.display = "block";
+    });
+
+    // Enter key pe pehla result select
+    medInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            const first = medSuggestions.querySelector(".suggestion-item");
+            if (first) first.click();
+        }
+    });
+
+    function selectMedicine(m) {
+        medInput.value = m.name;
+        hiddenMedName.value = m.name;
+        medSuggestions.style.display = "none";
+
+        // Sell mode show/hide
+        if (m.sellType === "Both") {
+            sellModeWrap.style.display = "block";
+            sellModeDropdown.value = "Unit";
+        } else {
+            sellModeWrap.style.display = "none";
+            sellModeDropdown.value = m.sellType; // Unit ya Strip directly set
+        }
+    }
+
+    document.addEventListener("click", function (e) {
+        if (!e.target.closest("#addMedicineForm")) {
+            medSuggestions.style.display = "none";
+        }
+    });
+
+        // ✅ YEH NAYa CODE ADD KARO YAHAN
+    document.getElementById("addMedicineForm").addEventListener("submit", function (e) {
+        if (!hiddenMedName.value) {
+            e.preventDefault();
+            alert("Please select a medicine from the list.");
+            medInput.focus();
+            return;
+        }
+
+        if (sellModeDropdown.value === "Pack") {
+            sellModeDropdown.value = "Unit";
+        }
+    });
+</script>
+
+<script>
+    function printInvoice() { window.print(); }
+</script>
+
 <script>
     function completeSale() {
-
         fetch('?handler=CompleteSale', {
             method: 'POST',
             headers: {
@@ -402,65 +395,37 @@
                     document.querySelector('input[name="__RequestVerificationToken"]').value
             }
         })
-        .then(response => response.json())
+        .then(r => r.json())
         .then(data => {
-
             if (data.success) {
-
-                alert(data.message);   // ✅ Sale Saved Successfully!
-
-                // Bill clear
+                alert(data.message);
                 fetch('?handler=ClearBill', {
                     method: 'POST',
                     headers: {
                         'RequestVerificationToken':
                             document.querySelector('input[name="__RequestVerificationToken"]').value
                     }
-                })
-                .then(() => {
-                    window.location.href = '/SalesSummary';
-                });
-
+                }).then(() => { window.location.href = '/SalesSummary'; });
             } else {
                 alert(data.message);
             }
-
         })
-        .catch(error => {
-            alert("Server Error!");
-            console.log(error);
-        });
+        .catch(() => alert("Server Error!"));
     }
 </script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-
         const isReviewMode = document.querySelector(".review-mode");
-
         if (isReviewMode) {
-
-            // Sab forms block
             document.querySelectorAll("form").forEach(form => {
-                form.addEventListener("submit", function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    alert("Review Mode - Editing Disabled");
-                });
+                form.addEventListener("submit", function (e) { e.preventDefault(); alert("Review Mode - Editing Disabled"); });
             });
-
-            // JS buttons block (like CompleteSale)
             document.querySelectorAll("button").forEach(btn => {
                 btn.addEventListener("click", function (e) {
-
-                    if (btn.type === "button") {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        alert("Review Mode - Editing Disabled");
-                    }
+                    if (btn.type === "button") { e.preventDefault(); alert("Review Mode - Editing Disabled"); }
                 });
             });
-
         }
-
     });
 </script>
