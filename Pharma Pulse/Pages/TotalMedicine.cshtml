@@ -97,9 +97,10 @@
                 background: #fff;
                 color: #333;">
                             <option value="">All Medicines</option>
-                            <option value="30" selected="@(Model.ExpiryFilter == 30)">Expiring in 30 Days</option>
-                            <option value="60" selected="@(Model.ExpiryFilter == 60)">Expiring in 60 Days</option>
-                            <option value="90" selected="@(Model.ExpiryFilter == 90)">Expiring in 90 Days</option>
+                            <option value="30" selected="@(Model.ExpiryFilter == 30 ? "selected" : null)"></option>
+                            <option value="60" selected="@(Model.ExpiryFilter == 60 ? "selected" : null)"></option>
+                            <option value="90" selected="@(Model.ExpiryFilter == 90 ? "selected" : null)"></option>
+
                         </select>
                     </form>
                      <form method="get" id="stockForm">
@@ -114,8 +115,8 @@
             background: #fff;
             color: #333;">
             <option value="">All Stock</option>
-            <option value="low" selected="@(Model.StockFilter == "low")">Low Stock</option>
-            <option value="out" selected="@(Model.StockFilter == "out")">Out of Stock</option>
+            <option value="low" selected="@(Model.StockFilter == "low" ? "selected" : null)"></option>
+            <option value="out" selected="@(Model.StockFilter == "out" ? "selected" : null)"></option>
         </select>
     </form>
 
@@ -262,7 +263,7 @@
               asp-page-handler="SaveMedicine"
               class="medicine-form"
               id="medicineForm">
-
+            @Html.AntiForgeryToken()
             <!-- HIDDEN ID -->
             <input asp-for="Medicine.Id" type="hidden" id="MedicineId" />
 
@@ -374,15 +375,29 @@
         }
     }
 
-    // ✅ Open Modal (Add Mode)
+        // ✅ Open Modal — Add Mode
     openBtn.onclick = () => {
-        medicineModal.style.display = "flex";
-        document.getElementById("medicineForm").reset();
-        document.getElementById("MedicineId").value = 0;
         document.getElementById("modalTitle").innerText = "Add New Medicine";
-        toggleUnitsPack();
-    };
+        document.getElementById("MedicineId").value = "0";
 
+        document.querySelector('[name="Medicine.MedicineName"]').value  = "";
+        document.querySelector('[name="Medicine.Category"]').value      = "";
+        document.querySelector('[name="Medicine.BatchNo"]').value       = "";
+        document.querySelector('[name="Medicine.MfgDate"]').value       = "";
+        document.querySelector('[name="Medicine.StockUnits"]').value    = "";
+        document.querySelector('[name="Medicine.LowStockLimit"]').value = "";
+        document.querySelector('[name="Medicine.BuyingPrice"]').value   = "";
+        document.querySelector('[name="Medicine.SellingPrice"]').value  = "";
+        document.querySelector('[name="Medicine.HsnSac"]').value        = "";
+        document.querySelector('[name="Medicine.GstPercent"]').value    = "";
+        document.querySelector('[name="Medicine.SupplierName"]').value  = "";
+        document.querySelector('[name="Medicine.ExpiryDate"]').value    = "";
+        document.querySelector('[name="Medicine.SellType"]').value      = "Unit";
+        unitsPackInput.value = "1";
+
+        toggleUnitsPack();
+        medicineModal.style.display = "flex";
+    };
     // ✅ Close Modal
     closeBtn.onclick = () => {
         medicineModal.style.display = "none";
@@ -399,31 +414,27 @@
     sellTypeSelect.addEventListener("change", toggleUnitsPack);
     toggleUnitsPack();
 
-    // ================= EDIT FUNCTION =================
+        // ✅ Edit Modal — set ALL values before calling toggleUnitsPack
     function openEditModal(button) {
-        medicineModal.style.display = "flex";
         document.getElementById("modalTitle").innerText = "Update Medicine";
-
         document.getElementById("MedicineId").value = button.dataset.id;
-        document.querySelector('[name="Medicine.MedicineName"]').value = button.dataset.name;
-        document.querySelector('[name="Medicine.Category"]').value = button.dataset.category;
-        document.querySelector('[name="Medicine.BatchNo"]').value = button.dataset.batch;
-        document.querySelector('[name="Medicine.MfgDate"]').value = button.dataset.mfg;
-        document.querySelector('[name="Medicine.StockUnits"]').value = button.dataset.stock;
+        document.querySelector('[name="Medicine.MedicineName"]').value  = button.dataset.name;
+        document.querySelector('[name="Medicine.Category"]').value      = button.dataset.category;
+        document.querySelector('[name="Medicine.BatchNo"]').value       = button.dataset.batch;
+        document.querySelector('[name="Medicine.MfgDate"]').value       = button.dataset.mfg;
+        document.querySelector('[name="Medicine.StockUnits"]').value    = button.dataset.stock;
         document.querySelector('[name="Medicine.LowStockLimit"]').value = button.dataset.low;
-        document.querySelector('[name="Medicine.BuyingPrice"]').value = button.dataset.buy;
-        document.querySelector('[name="Medicine.SellingPrice"]').value = button.dataset.sell;
-        document.querySelector('[name="Medicine.HsnSac"]').value = button.dataset.hsn;
-
-        document.querySelector('[name="Medicine.GstPercent"]').value = button.dataset.gst;
-        document.querySelector('[name="Medicine.SupplierName"]').value = button.dataset.supplier;
-
-        document.querySelector('[name="Medicine.SellType"]').value = button.dataset.mode;
-        document.querySelector('[name="Medicine.ExpiryDate"]').value = button.dataset.expiry;
-
-        // ✅ FIX: Set UnitsPerStrip and show/hide field correctly
-        unitsPackInput.value = button.dataset.units || 1;
+        document.querySelector('[name="Medicine.BuyingPrice"]').value   = button.dataset.buy;
+        document.querySelector('[name="Medicine.SellingPrice"]').value  = button.dataset.sell;
+        document.querySelector('[name="Medicine.HsnSac"]').value        = button.dataset.hsn;
+        document.querySelector('[name="Medicine.GstPercent"]').value    = button.dataset.gst;
+        document.querySelector('[name="Medicine.SupplierName"]').value  = button.dataset.supplier;
+        document.querySelector('[name="Medicine.ExpiryDate"]').value    = button.dataset.expiry;
+        // Set SellType FIRST, then UnitsPerStrip, then toggle
+        sellTypeSelect.value  = button.dataset.mode;
+        unitsPackInput.value  = button.dataset.units || 1;
         toggleUnitsPack();
+        medicineModal.style.display = "flex";
     }
 
 </script>
@@ -436,7 +447,8 @@
            asp-page="/TotalMedicine"
            asp-route-pageNumber="@(Model.CurrentPage - 1)"
            asp-route-search="@Model.SearchTerm"
-           asp-route-expiryFilter="@Model.ExpiryFilter">  <!-- ✅ ADD THIS -->
+           asp-route-expiryFilter="@Model.ExpiryFilter"
+           asp-route-stockFilter="@Model.StockFilter"> <!-- ✅ ADD THIS -->
             ⬅ Previous
         </a>
     }
