@@ -469,3 +469,145 @@
     }
 
 </div>
+
+<!-- ========== AI CHATBOX ========== -->
+<!-- Floating Button -->
+<div onclick="toggleChat()" style="
+    position:fixed; bottom:30px; right:30px;
+    width:60px; height:60px;
+    background:#4CAF50;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; z-index:9999;
+    box-shadow:0 4px 15px rgba(0,0,0,0.25);
+    font-size:28px;">
+    💊
+</div>
+
+<!-- Chat Panel -->
+<div id="chatPanel" style="
+    display:none;
+    position:fixed; bottom:105px; right:30px;
+    width:350px; height:500px;
+    background:white; border-radius:16px;
+    box-shadow:0 8px 30px rgba(0,0,0,0.15);
+    z-index:9998; flex-direction:column;
+    overflow:hidden;">
+
+    <!-- Header -->
+    <div style="
+        background:#4CAF50;
+        padding:16px; color:white;
+        display:flex; justify-content:space-between; align-items:center;">
+        <div>
+            <div style="font-size:16px; font-weight:600;">💊 AI Pharmacist</div>
+            <div style="font-size:12px; opacity:0.9;">Symptoms batao, medicine suggest karunga</div>
+        </div>
+        <span onclick="toggleChat()" style="cursor:pointer; font-size:20px;">✕</span>
+    </div>
+
+    <!-- Messages -->
+    <div id="chatMessages" style="
+        flex:1; overflow-y:auto;
+        padding:16px;
+        display:flex; flex-direction:column;
+        gap:10px; height:360px;">
+
+        <!-- Welcome message -->
+        <div style="
+            background:#f0fdf4; padding:12px 14px;
+            border-radius:12px; font-size:13px;
+            line-height:1.6; color:#333;">
+            👋 Namaste! Main aapka AI Pharmacist hoon.<br><br>
+            Patient ke <b>symptoms</b> batao — main hamare <b>database se best medicines</b> suggest karunga!<br><br>
+            Example: <i>"cold fever headache"</i>
+        </div>
+    </div>
+
+    <!-- Input -->
+    <div style="
+        padding:12px; border-top:1px solid #eee;
+        display:flex; gap:8px;">
+        <input type="text" id="chatInput"
+               placeholder="Symptoms type karo..."
+               onkeypress="if(event.key==='Enter') sendMessage()"
+               style="
+                   flex:1; padding:10px 14px;
+                   border:1px solid #ddd;
+                   border-radius:8px; font-size:13px;
+                   outline:none;" />
+        <button onclick="sendMessage()" style="
+            padding:10px 16px;
+            background:#4CAF50; color:white;
+            border:none; border-radius:8px;
+            cursor:pointer; font-size:13px;
+            font-weight:600;">
+            Send
+        </button>
+    </div>
+</div>
+
+<!-- Chatbox ke baad yeh script add karo -->
+<script>
+
+    // ===== CHATBOX =====
+    function toggleChat() {
+        const panel = document.getElementById('chatPanel');
+        panel.style.display = panel.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    async function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const msg = input.value.trim();
+        if (!msg) return;
+
+        const chatMessages = document.getElementById('chatMessages');
+
+        // User message
+        chatMessages.innerHTML += `
+            <div style="background:#e3f2fd; padding:10px 14px;
+                 border-radius:12px; font-size:13px;
+                 line-height:1.6; color:#333; align-self:flex-end;">
+                🧑 ${msg}
+            </div>`;
+
+        input.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Loading
+        const loadingId = 'loading_' + Date.now();
+        chatMessages.innerHTML += `
+            <div id="${loadingId}" style="background:#f0fdf4; padding:10px 14px;
+                 border-radius:12px; font-size:13px; line-height:1.6; color:#333;">
+                ⏳ AI soch raha hai...
+            </div>`;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        try {
+            const response = await fetch('/AiSuggest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: msg })
+            });
+
+            const data = await response.json();
+
+            document.getElementById(loadingId).remove();
+
+            chatMessages.innerHTML += `
+                <div style="background:#f0fdf4; padding:12px 14px;
+                     border-radius:12px; font-size:13px;
+                     line-height:1.8; color:#333; white-space:pre-wrap;">
+                    💊 ${data.reply}
+                </div>`;
+
+        } catch (e) {
+            document.getElementById(loadingId).innerHTML = '❌ Error! Try again.';
+        }
+
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+</script>

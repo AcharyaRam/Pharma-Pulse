@@ -5,6 +5,8 @@ using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+
 // ✅ QuestPDF
 QuestPDF.Settings.License = LicenseType.Community;
 
@@ -19,6 +21,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<MedicineService>();
 builder.Services.AddScoped<SalesService>();
+builder.Services.AddHttpClient(); // ✅ AddScoped ke saath add karo
 
 builder.Services.AddDistributedMemoryCache();
 
