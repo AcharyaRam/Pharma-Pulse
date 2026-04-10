@@ -5,6 +5,7 @@ using Pharma_Pulse.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pharma_Pulse.Services;
 
 namespace Pharma_Pulse.Pages
 {
@@ -12,11 +13,13 @@ namespace Pharma_Pulse.Pages
     {
         private readonly MedicineService _service;
         private readonly AppDbContext _context;
+        private readonly ChatService _chatService;
 
-        public DashboardModel(MedicineService service, AppDbContext context)
+        public DashboardModel(MedicineService service, AppDbContext context, ChatService chatService)
         {
             _service = service;
             _context = context;
+            _chatService = chatService;
         }
 
         [BindProperty]
@@ -62,7 +65,18 @@ namespace Pharma_Pulse.Pages
             TempData["Success"] = "Customer Saved Successfully!";
             return RedirectToPage();
         }
+        // ================= CHAT =================
 
+        public class ChatRequest
+        {
+            public string Message { get; set; }
+        }
+
+        public JsonResult OnPostChat([FromBody] ChatRequest request)
+        {
+            var reply = _chatService.GetReply(request.Message, CurrentPharmacyId);
+            return new JsonResult(new { reply });
+        }
         // ================= DASHBOARD =================
         private void LoadDashboard()
         {

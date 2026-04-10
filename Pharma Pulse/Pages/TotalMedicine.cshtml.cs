@@ -31,20 +31,19 @@ namespace Pharma_Pulse.Pages
         public int? ExpiryFilter { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public string StockFilter { get; set; }
+        public string? StockFilter { get; set; }
 
         public void OnGet(int pageNumber = 1, string search = "")
         {
             var allMedicines = _service.GetAllMedicines(CurrentPharmacyId);
 
+            // ✅ Sirf IsActive set karo, UpdateMedicine call NAHI
             foreach (var med in allMedicines)
             {
                 if (med.ExpiryDate.Date < DateTime.Today)
                     med.IsActive = false;
                 else
                     med.IsActive = med.StockUnits > 0;
-
-                _service.UpdateMedicine(med, CurrentPharmacyId);
             }
 
             SearchTerm = search;
@@ -52,21 +51,16 @@ namespace Pharma_Pulse.Pages
             if (!string.IsNullOrWhiteSpace(search))
             {
                 search = search.Trim();
-
                 allMedicines = allMedicines
                     .Where(m =>
                         (!string.IsNullOrEmpty(m.MedicineName) &&
                          m.MedicineName.StartsWith(search, StringComparison.OrdinalIgnoreCase))
-
                         ||
-
                         (!string.IsNullOrEmpty(m.SupplierName) &&
-                         m.SupplierName.StartsWith(search, StringComparison.OrdinalIgnoreCase)) // ✅ NEW
+                         m.SupplierName.StartsWith(search, StringComparison.OrdinalIgnoreCase))
                     )
                     .ToList();
             }
-
-
 
             if (ExpiryFilter.HasValue)
             {
@@ -75,7 +69,7 @@ namespace Pharma_Pulse.Pages
                     .Where(m => m.ExpiryDate.Date <= cutoff && m.ExpiryDate.Date >= DateTime.Today)
                     .ToList();
             }
-            // Stock Filter
+
             if (!string.IsNullOrEmpty(StockFilter))
             {
                 if (StockFilter == "low")
@@ -88,7 +82,6 @@ namespace Pharma_Pulse.Pages
                         .ToList();
             }
 
-
             TotalPages = (int)Math.Ceiling(allMedicines.Count / (double)PageSize);
             CurrentPage = pageNumber;
 
@@ -98,61 +91,38 @@ namespace Pharma_Pulse.Pages
                 .ToList();
         }
 
-
-
         public IActionResult OnPostSaveMedicine()
         {
-            if (!ModelState.IsValid)
+            foreach (var error in ModelState)
             {
-                Medicines = _service.GetAllMedicines(CurrentPharmacyId);
-                return Page();
+                if (error.Value.Errors.Count > 0)
+                {
+                    TempData["Error"] = $"Field: {error.Key} — Error: {error.Value.Errors[0].ErrorMessage}";
+                    Medicines = _service.GetAllMedicines(CurrentPharmacyId);
+                    return Page();
+                }
             }
+
+            if (Medicine.SellType == "Unit")
+                Medicine.UnitsPerStrip = 1;
 
             if (Medicine.ExpiryDate.Date < DateTime.Today)
                 Medicine.IsActive = false;
             else
                 Medicine.IsActive = Medicine.StockUnits > 0;
 
-            // ✅ FIX: Force UnitsPerStrip = 1 if Unit only
-            if (Medicine.SellType == "Unit")
-                Medicine.UnitsPerStrip = 1;
-
             if (Medicine.Id == 0)
             {
+                // ✅ ADD
                 Medicine.PharmacyId = CurrentPharmacyId;
                 _service.AddMedicine(Medicine);
                 TempData["Success"] = "Medicine Added Successfully!";
             }
             else
             {
-                var existing = _service.GetAllMedicines(CurrentPharmacyId)
-                    .FirstOrDefault(m => m.Id == Medicine.Id);
-
-                if (existing != null)
-                {
-                    existing.MedicineName = Medicine.MedicineName;
-                    existing.Category = Medicine.Category;
-                    existing.BatchNo = Medicine.BatchNo;
-                    existing.MfgDate = Medicine.MfgDate;
-                    existing.StockUnits = Medicine.StockUnits;
-                    existing.LowStockLimit = Medicine.LowStockLimit;
-                    existing.BuyingPrice = Medicine.BuyingPrice;
-                    existing.SellingPrice = Medicine.SellingPrice;
-                    existing.HsnSac = Medicine.HsnSac;
-                    existing.SellType = Medicine.SellType;
-                    existing.ExpiryDate = Medicine.ExpiryDate;
-                    existing.UnitsPerStrip = Medicine.UnitsPerStrip; // ✅ FIX: Save UnitsPerStrip
-                    existing.GstPercent = Medicine.GstPercent;
-                    existing.SupplierName = Medicine.SupplierName;
-
-                    if (existing.ExpiryDate.Date < DateTime.Today)
-                        existing.IsActive = false;
-                    else
-                        existing.IsActive = existing.StockUnits > 0;
-
-                    _service.UpdateMedicine(existing, CurrentPharmacyId);
-                }
-
+                // ✅ FINAL FIX: GetMedicineById nahi, seedha SQL update
+                Medicine.PharmacyId = CurrentPharmacyId;
+                _service.UpdateMedicine(Medicine, CurrentPharmacyId);
                 TempData["Success"] = "Medicine Updated Successfully!";
             }
 
@@ -161,19 +131,8 @@ namespace Pharma_Pulse.Pages
 
         public IActionResult OnPostDeleteMedicine(int id)
         {
-            var medicine = _service.GetAllMedicines(CurrentPharmacyId)
-                .FirstOrDefault(m => m.Id == id);
-
-            if (medicine != null)
-            {
-                _service.DeleteMedicine(id, CurrentPharmacyId);
-                TempData["Success"] = "Medicine Deleted Successfully!";
-            }
-            else
-            {
-                TempData["Error"] = "Medicine not found!";
-            }
-
+            _service.DeleteMedicine(id, CurrentPharmacyId);
+            TempData["Success"] = "Medicine Deleted Successfully!";
             return RedirectToPage();
         }
     }

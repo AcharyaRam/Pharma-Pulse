@@ -10,6 +10,7 @@ QuestPDF.Settings.License = LicenseType.Community;
 
 // ✅ Services
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<ChatService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(

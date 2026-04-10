@@ -1,4 +1,5 @@
-﻿using Pharma_Pulse.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Pharma_Pulse.Data;
 using Pharma_Pulse.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,6 @@ namespace Pharma_Pulse.Services
             _context = context;
         }
 
-        // ✅ Get Medicines for CURRENT pharmacy ONLY
         public List<Medicine> GetAllMedicines(int pharmacyId)
         {
             return _context.Medicines
@@ -22,34 +22,65 @@ namespace Pharma_Pulse.Services
                 .ToList();
         }
 
-        // ✅ Add Medicine (PharmacyId already set from PageModel)
         public void AddMedicine(Medicine medicine)
         {
             _context.Medicines.Add(medicine);
             _context.SaveChanges();
         }
 
-        // ✅ Find Medicine by Name (only for current pharmacy)
         public Medicine? GetMedicineByName(string name, int pharmacyId)
         {
             return _context.Medicines
                 .FirstOrDefault(m => m.MedicineName == name && m.PharmacyId == pharmacyId);
         }
 
-        // ✅ Update Medicine (only if belongs to current pharmacy)
-        public void UpdateMedicine(Medicine medicine, int pharmacyId)
+        public Medicine? GetMedicineById(int id, int pharmacyId)
         {
-            var existing = _context.Medicines
-                .FirstOrDefault(m => m.Id == medicine.Id && m.PharmacyId == pharmacyId);
-
-            if (existing != null)
-            {
-                _context.Entry(existing).CurrentValues.SetValues(medicine);
-                _context.SaveChanges();
-            }
+            return _context.Medicines
+                .FirstOrDefault(m => m.Id == id && m.PharmacyId == pharmacyId);
         }
 
-        // ✅ Delete Medicine (only from current pharmacy)
+        // ✅ FINAL FIX: Raw SQL — EF Core tracking bypass
+        public void UpdateMedicine(Medicine medicine, int pharmacyId)
+        {
+            _context.Database.ExecuteSqlRaw(
+                @"UPDATE Medicines SET
+                    MedicineName = {0},
+                    Category = {1},
+                    BatchNo = {2},
+                    MfgDate = {3},
+                    StockUnits = {4},
+                    LowStockLimit = {5},
+                    BuyingPrice = {6},
+                    SellingPrice = {7},
+                    HsnSac = {8},
+                    SellType = {9},
+                    ExpiryDate = {10},
+                    UnitsPerStrip = {11},
+                    GstPercent = {12},
+                    SupplierName = {13},
+                    IsActive = {14}
+                  WHERE Id = {15} AND PharmacyId = {16}",
+                medicine.MedicineName,
+                medicine.Category,
+                medicine.BatchNo,
+                medicine.MfgDate,
+                medicine.StockUnits,
+                medicine.LowStockLimit,
+                medicine.BuyingPrice,
+                medicine.SellingPrice,
+                medicine.HsnSac,
+                medicine.SellType,
+                medicine.ExpiryDate,
+                medicine.UnitsPerStrip,
+                medicine.GstPercent,
+                medicine.SupplierName,
+                medicine.IsActive,
+                medicine.Id,
+                pharmacyId
+            );
+        }
+
         public void DeleteMedicine(int id, int pharmacyId)
         {
             var medicine = _context.Medicines

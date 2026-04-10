@@ -425,3 +425,74 @@
 .menu-link.active .text {
     font-weight: 700;
 }
+/* ===== CHATBOT FINAL ===== */
+.chatbot {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    z-index: 999999;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Header */
+.chat-header {
+    background: #4ca6a8;
+    color: white;
+    padding: 12px;
+    border-radius: 12px 12px 0 0;
+    font-weight: 600;
+}
+
+/* Body */
+.chat-body {
+    padding: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+/* Buttons */
+.quick-btn {
+    background: #f1f1f1;
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .quick-btn:hover {
+        background: #d9f3f3;
+    }
+
+/* Text */
+.bot-msg {
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+/* Floating Icon */
+.chat-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #4ca6a8;
+    color: white;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 999999;
+}
+
+/* Initially hidden */
+#chatbot {
+    display: none;
+}

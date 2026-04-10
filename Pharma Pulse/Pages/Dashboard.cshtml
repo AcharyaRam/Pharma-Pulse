@@ -6,6 +6,7 @@
 
 <link rel="stylesheet" href="~/css/dashboard.css" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <div class="dashboard-wrapper">
 
@@ -265,8 +266,73 @@
     </div>
 </div>
 
+ <!-- dashboard-wrapper END -->
+<!-- ✅ CHATBOT START -->
+<div id="chatbot" class="chatbot">
+
+    <div class="chat-header">
+        🤖 Assistant
+    </div>
+
+    <div class="chat-body" id="chatBody">
+
+        <div class="bot-msg">Quick Actions:</div>
+
+        <div class="quick-btn" onclick="sendQuick('stock')">
+            💊 Check Paracetamol stock
+        </div>
+
+        <div class="quick-btn" onclick="sendQuick('sales')">
+            📊 Today's sales
+        </div>
+
+        <div style="margin-top:10px;">
+            <input type="text" id="chatInput" placeholder="Type your message..."
+                   style="width:70%; padding:8px; border-radius:8px; border:1px solid #ccc;" />
+
+            <button onclick="sendMessage(document.getElementById('chatInput').value)"
+                    style="padding:8px 12px; border:none; background:#4CAF50; color:white; border-radius:8px;">
+                Send
+            </button>
+        </div>
+
+    </div>
+
+</div>
+<!-- ✅ CHAT ICON BUTTON -->
+<div id="chatToggle" class="chat-toggle" onclick="toggleChat()">
+    <i class="fa-solid fa-comments"></i>
+</div>
+<!-- ✅ CHATBOT END -->
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    function sendQuick(type) {
+
+        let response = "";
+
+        if (type === "stock") {
+            response = "Paracetamol available hai (Qty: 120)";
+        }
+        else if (type === "sales") {
+            response = "Aaj ka total sale ₹0.00 hai";
+        }
+
+        // Chat body me add karo
+        let chatBody = document.getElementById("chatBody");
+
+        let msg = document.createElement("div");
+        msg.style.marginTop = "10px";
+        msg.innerHTML = "🤖 " + response;
+
+        chatBody.appendChild(msg);
+
+        // Auto scroll bottom
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+</script>
 
 <script>
     const revenueLabels = @Html.Raw(Json.Serialize(Model.Days));
@@ -315,4 +381,89 @@
     }
 </script>
 
+<script>
+    let autoCloseTimer;
 
+    // Page load pe auto popup
+    window.onload = function () {
+
+        let chatbot = document.getElementById("chatbot");
+        let toggle = document.getElementById("chatToggle");
+
+        chatbot.style.display = "block";
+        toggle.style.display = "none";
+
+        startAutoClose();
+    };
+
+    // Toggle function
+    function toggleChat() {
+
+        let chatbot = document.getElementById("chatbot");
+        let toggle = document.getElementById("chatToggle");
+
+        if (chatbot.style.display === "none") {
+            chatbot.style.display = "block";
+            toggle.style.display = "none";
+            startAutoClose();
+        } else {
+            chatbot.style.display = "none";
+            toggle.style.display = "flex";
+            clearTimeout(autoCloseTimer);
+        }
+    }
+
+    // ⏱️ Auto close function
+    function startAutoClose() {
+
+        clearTimeout(autoCloseTimer);
+
+        autoCloseTimer = setTimeout(() => {
+            document.getElementById("chatbot").style.display = "none";
+            document.getElementById("chatToggle").style.display = "flex";
+        }, 5000);
+    }
+
+    // 🧠 User interaction pe timer reset
+    document.addEventListener("click", function (e) {
+
+        let chatbot = document.getElementById("chatbot");
+
+        if (chatbot.style.display === "block") {
+            startAutoClose();
+        }
+
+    });
+</script>
+
+<script>
+    async function sendMessage(msg) {
+        const formData = new FormData();
+        formData.append("Message", msg);
+
+        const res = await fetch("/Dashboard?handler=Chat", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await res.json();
+        console.log(data.reply);
+
+        // yahan tum apna chat UI update karoge
+    }
+</script>
+<script>
+    async function sendMessage(msg) {
+        const formData = new FormData();
+        formData.append("Message", msg);
+
+        const res = await fetch("/Dashboard?handler=Chat", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await res.json();
+
+        document.getElementById("chatResponse").innerText = data.reply;
+    }
+</script>
