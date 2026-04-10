@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Pharma_Pulse</RootNamespace>
+    <UserSecretsId>697c5749-3ad9-4f88-9a14-7819cfae6a87</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
