@@ -35,6 +35,11 @@ namespace Pharma_Pulse.Pages
 
         public void OnGet(int pageNumber = 1, string search = "")
         {
+            // ✅ DEBUG
+            var sessionId = HttpContext.Session.GetInt32("PharmacyId");
+            System.Diagnostics.Debug.WriteLine($"=== SESSION PharmacyId = {sessionId} ===");
+            System.Diagnostics.Debug.WriteLine($"=== CurrentPharmacyId = {CurrentPharmacyId} ===");
+
             var allMedicines = _service.GetAllMedicines(CurrentPharmacyId);
 
             foreach (var med in allMedicines)
@@ -98,67 +103,62 @@ namespace Pharma_Pulse.Pages
                 .ToList();
         }
 
-
-
-        public IActionResult OnPostSaveMedicine()
+            public IActionResult OnPostSaveMedicine()
         {
+
+            System.Diagnostics.Debug.WriteLine("=== OnPostSaveMedicine CALLED ==="); // ✅ TOP PAR
+
+            // ✅ Remove fields set by code, not form
+            ModelState.Remove("Medicine.PharmacyId");
+            ModelState.Remove("Medicine.IsActive");
+            ModelState.Remove("StockFilter");
+
+            // ✅ DEBUG - add kar
+            foreach (var error in ModelState)
+            {
+                foreach (var err in error.Value.Errors)
+                {
+                    System.Diagnostics.Debug.WriteLine($"=== MODELSTATE ERROR: {error.Key} = {err.ErrorMessage} ===");
+                }
+            }
+            System.Diagnostics.Debug.WriteLine($"=== IsValid = {ModelState.IsValid} ===");
+            System.Diagnostics.Debug.WriteLine($"=== Medicine.Id = {Medicine?.Id} ===");
+            System.Diagnostics.Debug.WriteLine($"=== CurrentPharmacyId = {CurrentPharmacyId} ===");
+
             if (!ModelState.IsValid)
             {
                 Medicines = _service.GetAllMedicines(CurrentPharmacyId);
+                TotalPages = (int)Math.Ceiling(Medicines.Count / (double)PageSize);
+                CurrentPage = 1;
                 return Page();
             }
 
-            if (Medicine.ExpiryDate.Date < DateTime.Today)
-                Medicine.IsActive = false;
-            else
-                Medicine.IsActive = Medicine.StockUnits > 0;
+            // ✅ IsActive set karo
+            Medicine.IsActive = Medicine.ExpiryDate.Date < DateTime.Today
+                ? false
+                : Medicine.StockUnits > 0;
 
-            // ✅ FIX: Force UnitsPerStrip = 1 if Unit only
+            // ✅ Unit mode mein UnitsPerStrip = 1
             if (Medicine.SellType == "Unit")
                 Medicine.UnitsPerStrip = 1;
 
             if (Medicine.Id == 0)
             {
+                // ✅ ADD Medicine
                 Medicine.PharmacyId = CurrentPharmacyId;
                 _service.AddMedicine(Medicine);
                 TempData["Success"] = "Medicine Added Successfully!";
             }
             else
             {
-                var existing = _service.GetAllMedicines(CurrentPharmacyId)
-                    .FirstOrDefault(m => m.Id == Medicine.Id);
-
-                if (existing != null)
-                {
-                    existing.MedicineName = Medicine.MedicineName;
-                    existing.Category = Medicine.Category;
-                    existing.BatchNo = Medicine.BatchNo;
-                    existing.MfgDate = Medicine.MfgDate;
-                    existing.StockUnits = Medicine.StockUnits;
-                    existing.LowStockLimit = Medicine.LowStockLimit;
-                    existing.BuyingPrice = Medicine.BuyingPrice;
-                    existing.SellingPrice = Medicine.SellingPrice;
-                    existing.HsnSac = Medicine.HsnSac;
-                    existing.SellType = Medicine.SellType;
-                    existing.ExpiryDate = Medicine.ExpiryDate;
-                    existing.UnitsPerStrip = Medicine.UnitsPerStrip; // ✅ FIX: Save UnitsPerStrip
-                    existing.GstPercent = Medicine.GstPercent;
-                    existing.SupplierName = Medicine.SupplierName;
-
-                    if (existing.ExpiryDate.Date < DateTime.Today)
-                        existing.IsActive = false;
-                    else
-                        existing.IsActive = existing.StockUnits > 0;
-
-                    _service.UpdateMedicine(existing, CurrentPharmacyId);
-                }
-
+                // ✅ UPDATE Medicine — directly pass karo, service mein sab handle hai
+                Medicine.PharmacyId = CurrentPharmacyId;
+                _service.UpdateMedicine(Medicine, CurrentPharmacyId);
                 TempData["Success"] = "Medicine Updated Successfully!";
             }
 
             return RedirectToPage();
         }
-
         public IActionResult OnPostDeleteMedicine(int id)
         {
             var medicine = _service.GetAllMedicines(CurrentPharmacyId)

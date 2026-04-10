@@ -44,7 +44,24 @@ namespace Pharma_Pulse.Services
 
             if (existing != null)
             {
-                _context.Entry(existing).CurrentValues.SetValues(medicine);
+                // ✅ Manually set fields — PharmacyId kabhi overwrite nahi hoga
+                existing.MedicineName = medicine.MedicineName;
+                existing.Category = medicine.Category;
+                existing.BatchNo = medicine.BatchNo;
+                existing.MfgDate = medicine.MfgDate;
+                existing.ExpiryDate = medicine.ExpiryDate;
+                existing.StockUnits = medicine.StockUnits;
+                existing.LowStockLimit = medicine.LowStockLimit;
+                existing.BuyingPrice = medicine.BuyingPrice;
+                existing.SellingPrice = medicine.SellingPrice;
+                existing.HsnSac = medicine.HsnSac;
+                existing.SellType = medicine.SellType;
+                existing.UnitsPerStrip = medicine.UnitsPerStrip;
+                existing.GstPercent = medicine.GstPercent;
+                existing.SupplierName = medicine.SupplierName;
+                existing.IsActive = medicine.IsActive;
+                // ✅ PharmacyId touch nahi kiya — safe rehta hai
+
                 _context.SaveChanges();
             }
         }
