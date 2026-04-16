@@ -348,36 +348,46 @@ namespace Pharma_Pulse.Pages
             HttpContext.Session.Remove("GST");
             HttpContext.Session.Remove("PaymentMode");
             HttpContext.Session.Remove("InvoiceNumber");
-
-            // ✅ SMS safely bhej (billing ko affect nahi karega)
+            //sms 
             try
             {
+                var pharmacy = _context.Pharmacies
+                    .FirstOrDefault(p => p.Id == CurrentPharmacyId);
+
+                var pharmacyName = pharmacy?.PharmacyName ?? "Your Pharmacy";
+
                 Console.WriteLine("Mobile: " + SelectedCustomer?.MobileNumber);
+
                 if (!string.IsNullOrEmpty(SelectedCustomer?.MobileNumber))
                 {
                     _smsService.SendSms(
                         "+91" + SelectedCustomer.MobileNumber,
-                        $"Your bill of ₹{GrandTotal:F2} is generated. Thank you for choosing Pharma Pulse!"
+                        $"Your bill of ₹{GrandTotal:F2} is generated. Thank you for choosing {pharmacyName}!"
                     );
                 }
             }
             catch (Exception ex)
             {
                 // ❌ SMS fail ho gaya to bhi ignore karo
-                // Future me yaha logging add kar sakta hai
             }
             // ✅ EMAIL safely bhej (billing ko affect nahi karega)
             try
             {
+                var pharmacy = _context.Pharmacies
+                    .FirstOrDefault(p => p.Id == CurrentPharmacyId);
+
+                var pharmacyName = pharmacy?.PharmacyName ?? "Your Pharmacy";
+
                 Console.WriteLine("Email: " + SelectedCustomer?.Email);
 
                 if (!string.IsNullOrEmpty(SelectedCustomer?.Email))
                 {
                     Console.WriteLine("Email function called");
+
                     await _emailService.SendEmail(
                         SelectedCustomer.Email,
-                        "Pharma Pulse - Bill Generated",
-                        $"Your bill of ₹{GrandTotal:F2} is generated.\nThank you for choosing Pharma Pulse!"
+                        $"{pharmacyName} - Bill Generated",   // ✅ FIXED
+                        $"Your bill of ₹{GrandTotal:F2} is generated.\nThank you for choosing {pharmacyName}!"
                     );
                 }
             }
