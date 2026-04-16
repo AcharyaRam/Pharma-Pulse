@@ -1,7 +1,8 @@
-﻿using Pharma_Pulse.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Pharma_Pulse.Data;
 using Pharma_Pulse.Services;
-using Microsoft.EntityFrameworkCore;
 using QuestPDF.Infrastructure;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<MedicineService>();
 builder.Services.AddScoped<SalesService>();
+builder.Services.AddScoped<SmsService>();
 builder.Services.AddHttpClient(); // ✅ AddScoped ke saath add karo
 
 builder.Services.AddDistributedMemoryCache();
