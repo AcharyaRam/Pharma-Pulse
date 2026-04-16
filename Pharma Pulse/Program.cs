@@ -24,6 +24,7 @@ builder.Services.AddScoped<MedicineService>();
 builder.Services.AddScoped<SalesService>();
 builder.Services.AddScoped<SmsService>();
 builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<WhatsAppService>();
 builder.Services.AddHttpClient(); // ✅ AddScoped ke saath add karo
 
 builder.Services.AddDistributedMemoryCache();

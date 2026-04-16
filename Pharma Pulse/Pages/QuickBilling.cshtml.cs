@@ -16,13 +16,15 @@ namespace Pharma_Pulse.Pages
         private readonly AppDbContext _context;
         private readonly SmsService _smsService;
         private readonly EmailService _emailService;
+        private readonly WhatsAppService _whatsappService;
 
-        public QuickBillingModel(MedicineService service, AppDbContext context, SmsService smsService, EmailService emailService)
+        public QuickBillingModel(MedicineService service, AppDbContext context, SmsService smsService, EmailService emailService, WhatsAppService whatsappService)
         {
             _service = service;
             _context = context;
             _smsService = smsService;
             _emailService = emailService;
+            _whatsappService = whatsappService;
         }
 
         public bool IsReviewMode { get; set; } = false;
@@ -394,6 +396,26 @@ namespace Pharma_Pulse.Pages
             catch (Exception ex)
             {
                 Console.WriteLine("Email Error: " + ex.Message);
+            }
+
+            try
+            {
+                var pharmacy = _context.Pharmacies
+                    .FirstOrDefault(p => p.Id == CurrentPharmacyId);
+
+                var pharmacyName = pharmacy?.PharmacyName ?? "Your Pharmacy";
+
+                if (!string.IsNullOrEmpty(SelectedCustomer?.MobileNumber))
+                {
+                    _whatsappService.SendWhatsApp(
+                        "+91" + SelectedCustomer.MobileNumber,
+                        $"Your bill of ₹{GrandTotal:F2} is generated. Thank you for choosing {pharmacyName}!"
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("WhatsApp Error: " + ex.Message);
             }
 
             // ✅ Always return success (billing ho chuka hai)
