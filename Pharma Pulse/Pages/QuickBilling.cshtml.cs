@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Pharma_Pulse.Data;
 using Pharma_Pulse.Helpers;
 using Pharma_Pulse.Models;
 using Pharma_Pulse.Services;
-using Pharma_Pulse.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
 
 namespace Pharma_Pulse.Pages
 {
@@ -13,11 +14,13 @@ namespace Pharma_Pulse.Pages
     {
         private readonly MedicineService _service;
         private readonly AppDbContext _context;
+        private readonly SmsService _smsService;
 
-        public QuickBillingModel(MedicineService service, AppDbContext context)
+        public QuickBillingModel(MedicineService service, AppDbContext context, SmsService smsService)
         {
             _service = service;
             _context = context;
+            _smsService = smsService;
         }
 
         public bool IsReviewMode { get; set; } = false;
@@ -344,7 +347,27 @@ namespace Pharma_Pulse.Pages
             HttpContext.Session.Remove("PaymentMode");
             HttpContext.Session.Remove("InvoiceNumber");
 
+            // ✅ SMS safely bhej (billing ko affect nahi karega)
+            try
+            {
+                Console.WriteLine("Mobile: " + SelectedCustomer?.MobileNumber);
+                if (!string.IsNullOrEmpty(SelectedCustomer?.MobileNumber))
+                {
+                    _smsService.SendSms(
+                        "+91" + SelectedCustomer.MobileNumber,
+                        $"Your bill of ₹{GrandTotal:F2} is generated. Thank you for choosing Pharma Pulse!"
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                // ❌ SMS fail ho gaya to bhi ignore karo
+                // Future me yaha logging add kar sakta hai
+            }
+
+            // ✅ Always return success (billing ho chuka hai)
             return new JsonResult(new { success = true, message = "Sale Saved Successfully!" });
+
         }
 
         // ================= CLEAR BILL =================
