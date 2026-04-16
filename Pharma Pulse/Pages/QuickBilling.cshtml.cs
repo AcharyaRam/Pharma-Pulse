@@ -15,12 +15,14 @@ namespace Pharma_Pulse.Pages
         private readonly MedicineService _service;
         private readonly AppDbContext _context;
         private readonly SmsService _smsService;
+        private readonly EmailService _emailService;
 
-        public QuickBillingModel(MedicineService service, AppDbContext context, SmsService smsService)
+        public QuickBillingModel(MedicineService service, AppDbContext context, SmsService smsService, EmailService emailService)
         {
             _service = service;
             _context = context;
             _smsService = smsService;
+            _emailService = emailService;
         }
 
         public bool IsReviewMode { get; set; } = false;
@@ -280,7 +282,7 @@ namespace Pharma_Pulse.Pages
         }
 
         // ================= COMPLETE SALE =================
-        public JsonResult OnPostCompleteSale()
+        public async Task<JsonResult> OnPostCompleteSale()
         {
             LoadNewBill();
 
@@ -363,6 +365,25 @@ namespace Pharma_Pulse.Pages
             {
                 // ❌ SMS fail ho gaya to bhi ignore karo
                 // Future me yaha logging add kar sakta hai
+            }
+            // ✅ EMAIL safely bhej (billing ko affect nahi karega)
+            try
+            {
+                Console.WriteLine("Email: " + SelectedCustomer?.Email);
+
+                if (!string.IsNullOrEmpty(SelectedCustomer?.Email))
+                {
+                    Console.WriteLine("Email function called");
+                    await _emailService.SendEmail(
+                        SelectedCustomer.Email,
+                        "Pharma Pulse - Bill Generated",
+                        $"Your bill of ₹{GrandTotal:F2} is generated.\nThank you for choosing Pharma Pulse!"
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Email Error: " + ex.Message);
             }
 
             // ✅ Always return success (billing ho chuka hai)
